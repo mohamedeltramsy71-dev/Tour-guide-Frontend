@@ -1,0 +1,14 @@
+:root {
+  --primary: #C85C3A;
+  --dark: #1A2340;
+  --gold: #D4A853;
+  --light-bg: #FAF8F5;
+  --text-gray: #6B7280;
+}
+.hero-section {
+  margin-top: -1px;
+}
+
+router-outlet + * {
+  display: block;
+}

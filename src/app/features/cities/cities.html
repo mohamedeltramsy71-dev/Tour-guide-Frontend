@@ -1,0 +1,81 @@
+<!-- Hero Slider -->
+<section class="cities-slider position-relative">
+  <div class="slider-wrapper">
+    <div class="slide" *ngFor="let slide of slides; let i = index" [class.active]="i === currentSlide">
+      <img [src]="slide.image" [alt]="slide.title" class="slide-img">
+      <div class="slide-overlay">
+        <div class="slide-content text-white text-center">
+          <h2 class="fw-bold display-5">{{ slide.title }}</h2>
+          <p class="lead opacity-75">{{ slide.subtitle }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dots -->
+  <div class="slider-dots">
+    <span *ngFor="let slide of slides; let i = index"
+      class="dot" [class.active]="i === currentSlide"
+      (click)="goToSlide(i)">
+    </span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-overlay position-absolute bottom-0 start-50 translate-middle-x w-100 pb-4">
+    <div class="container">
+      <div class="search-box bg-white rounded-4 shadow-lg px-4 py-3 d-flex align-items-center gap-3">
+        <i class="fas fa-search text-muted"></i>
+        <input
+          type="text"
+          class="form-control border-0 shadow-none fs-5"
+          placeholder="Search cities..."
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearch()">
+        <span class="badge rounded-pill px-3 py-2" style="background-color: var(--primary);">
+          {{ filteredCities.length }} Cities
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cities Grid -->
+<section class="py-5" style="background-color: var(--light-bg);">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4 col-lg-3" *ngFor="let city of filteredCities">
+        <div class="city-card card border-0 shadow-sm rounded-4 overflow-hidden h-100"
+          [routerLink]="['/cities', city.id]" style="cursor:pointer;">
+          <div class="position-relative">
+            <img [src]="city.imageUrl" [alt]="city.nameEn" class="card-img-top" style="height: 220px; object-fit: cover;">
+            <div class="city-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3">
+              <div class="text-white">
+                <h5 class="fw-bold mb-0">{{ city.nameEn }}</h5>
+                <small class="opacity-75">{{ city.nameAr }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="text-muted small mb-2">{{ city.description | slice:0:80 }}...</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                <i class="fas fa-map-marker-alt me-1" style="color: var(--primary);"></i>
+                {{ city.landmarksCount }} Landmarks
+              </small>
+              <span class="btn btn-sm text-white px-3" style="background-color: var(--primary);">
+                Explore →
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="col-12 text-center py-5" *ngIf="filteredCities.length === 0">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">No cities found</h5>
+        <p class="text-muted">Try searching with a different keyword</p>
+      </div>
+    </div>
+  </div>
+</section>

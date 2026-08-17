@@ -1,0 +1,218 @@
+<!-- Hero Section -->
+<section class="hero-section position-relative">
+  <img src="images/hero.jpg" alt="Hero" class="hero-img w-100">
+  <div class="hero-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 text-white">
+          <p class="hero-tag mb-2">✦ Your Journey Awaits</p>
+          <h1 class="display-4 fw-bold mb-3">
+            Discover <span style="color: var(--gold);">Egypt</span><br>
+            Like Never Before
+          </h1>
+          <p class="lead mb-4 opacity-75">
+            Explore timeless history, breathtaking landmarks and authentic
+            experiences with certified local tour guides.
+          </p>
+          <div class="d-flex gap-3">
+            <a routerLink="/packages" class="btn btn-lg text-white px-4" style="background-color: var(--primary);">
+              <i class="fas fa-compass me-2"></i> Explore Tours
+            </a>
+            <a routerLink="/guides" class="btn btn-lg btn-outline-light px-4">
+              How It Works
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-bar-wrapper w-100">
+    <div class="container">
+      <div class="search-card bg-white rounded-4 shadow-lg p-4">
+        <!-- Tabs -->
+        <div class="d-flex gap-3 mb-3">
+          <button class="search-tab" [class.active]="activeTab === 'packages'" (click)="setTab('packages')">
+            <i class="fas fa-box me-2"></i>Packages
+          </button>
+          <button class="search-tab" [class.active]="activeTab === 'landmarks'" (click)="setTab('landmarks')">
+            <i class="fas fa-landmark me-2"></i>Landmarks
+          </button>
+          <button class="search-tab" [class.active]="activeTab === 'guides'" (click)="setTab('guides')">
+            <i class="fas fa-user-tie me-2"></i>Guides
+          </button>
+        </div>
+
+        <!-- Search Fields -->
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label small fw-semibold text-muted">Destination</label>
+            <select class="form-select" [(ngModel)]="selectedCity">
+              <option value="">Where do you want to go?</option>
+              <option *ngFor="let city of allCities" [value]="city.id">{{ city.nameEn }}</option>
+            </select>
+          </div>
+          <div class="col-md-3" *ngIf="activeTab === 'packages'">
+            <label class="form-label small fw-semibold text-muted">Travel Dates</label>
+            <input type="date" class="form-control" [(ngModel)]="selectedDate">
+          </div>
+          <div class="col-md-3" *ngIf="activeTab === 'packages'">
+            <label class="form-label small fw-semibold text-muted">Travelers</label>
+            <select class="form-select" [(ngModel)]="selectedPersons">
+              <option value="1">1 Adult</option>
+              <option value="2">2 Adults</option>
+              <option value="3">3 Adults</option>
+              <option value="4">4 Adults</option>
+              <option value="5">5+ Adults</option>
+            </select>
+          </div>
+          <div class="col-md-2 ms-auto">
+            <button class="btn w-100 text-white py-2" style="background-color: var(--primary);" (click)="onSearch()">
+              <i class="fas fa-search me-2"></i>Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="py-5 mt-5" style="background-color: var(--light-bg);">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-md-3">
+        <div class="feature-icon mb-3"><i class="fas fa-shield-alt fa-2x" style="color: var(--primary);"></i></div>
+        <h6 class="fw-bold">Certified Guides</h6>
+        <p class="text-muted small">Travel with verified experts</p>
+      </div>
+      <div class="col-md-3">
+        <div class="feature-icon mb-3"><i class="fas fa-map fa-2x" style="color: var(--primary);"></i></div>
+        <h6 class="fw-bold">Curated Itineraries</h6>
+        <p class="text-muted small">Handpicked experiences</p>
+      </div>
+      <div class="col-md-3">
+        <div class="feature-icon mb-3"><i class="fas fa-credit-card fa-2x" style="color: var(--primary);"></i></div>
+        <h6 class="fw-bold">Secure Booking</h6>
+        <p class="text-muted small">Safe & trusted payments</p>
+      </div>
+      <div class="col-md-3">
+        <div class="feature-icon mb-3"><i class="fas fa-headset fa-2x" style="color: var(--primary);"></i></div>
+        <h6 class="fw-bold">Local Support</h6>
+        <p class="text-muted small">We are here for you</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How Rihla Works -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="text-uppercase fw-semibold mb-2" style="color: var(--primary); letter-spacing: 2px;">— HOW RIHLA WORKS —</p>
+      <h2 class="fw-bold" style="color: var(--dark);">Plan Your Perfect Trip in 3 Simple Steps</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="step-card rounded-4 overflow-hidden shadow-sm">
+          <div class="position-relative">
+            <img src="images/step1.jpg" alt="Step 1" class="w-100" style="height: 220px; object-fit: cover;">
+            <div class="step-number">01</div>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-bold mb-2">Choose Destination</h5>
+            <p class="text-muted small">Browse cities, landmarks and amazing tours across Egypt.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-card rounded-4 overflow-hidden shadow-sm">
+          <div class="position-relative">
+            <img src="images/step2.jpg" alt="Step 2" class="w-100" style="height: 220px; object-fit: cover;">
+            <div class="step-number">02</div>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-bold mb-2">Book with Confidence</h5>
+            <p class="text-muted small">Pick your guide or package and book instantly.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-card rounded-4 overflow-hidden shadow-sm">
+          <div class="position-relative">
+            <img src="images/step3.jpg" alt="Step 3" class="w-100" style="height: 220px; object-fit: cover;">
+            <div class="step-number">03</div>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-bold mb-2">Enjoy the Journey</h5>
+            <p class="text-muted small">Live an unforgettable travel experience with local guides.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Destinations -->
+<section class="py-5" style="background-color: var(--light-bg);">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold" style="color: var(--dark);">Popular Destinations</h2>
+        <p class="text-muted">Explore Egypt's most loved cities and their iconic landmarks</p>
+      </div>
+      <a routerLink="/cities" class="btn btn-outline-danger">View All →</a>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-3" *ngFor="let city of trendingCities | slice:0:4">
+        <div class="card border-0 shadow-sm rounded-3 overflow-hidden h-100" [routerLink]="['/cities', city.id]" style="cursor:pointer;">
+          <img [src]="city.imageUrl" [alt]="city.nameEn" class="card-img-top" style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h6 class="fw-bold mb-1">{{ city.nameEn }}</h6>
+            <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>{{ city.landmarksCount }} Landmarks</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Packages -->
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold" style="color: var(--dark);">Featured Packages</h2>
+        <p class="text-muted">Handpicked tours for you</p>
+      </div>
+      <a routerLink="/packages" class="btn btn-outline-danger">View All →</a>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-3" *ngFor="let pkg of featuredPackages">
+        <div class="card border-0 shadow-sm rounded-3 overflow-hidden h-100" [routerLink]="['/packages', pkg.id]" style="cursor:pointer;">
+          <img [src]="pkg.images[0]" [alt]="pkg.title" class="card-img-top" style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h6 class="fw-bold mb-1">{{ pkg.title }}</h6>
+            <p class="text-muted small mb-2"><i class="fas fa-clock me-1"></i>{{ pkg.durationDays }} Days</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold" style="color: var(--primary);">EGP {{ pkg.price | number }}</span>
+              <small class="text-muted"><i class="fas fa-users me-1"></i>{{ pkg.maxPersons }} Persons</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 text-white text-center" style="background-color: var(--primary);">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Ready to Start Your Rihla?</h2>
+    <p class="mb-4 opacity-75">Join thousands of travelers discovering the real Egypt.</p>
+    <a routerLink="/auth/register" class="btn btn-light btn-lg px-5" style="color: var(--primary);">
+      Create Your Account →
+    </a>
+  </div>
+</section>

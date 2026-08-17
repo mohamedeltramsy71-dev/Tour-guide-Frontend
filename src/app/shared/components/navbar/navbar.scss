@@ -1,0 +1,17 @@
+.nav-link {
+  color: var(--dark) !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+  padding-top: 0.4rem !important;
+  padding-bottom: 0.4rem !important;
+
+  &:hover {
+    color: var(--primary) !important;
+  }
+}
+
+.active-link {
+  color: var(--primary) !important;
+  font-weight: 600;
+}

@@ -1,0 +1,134 @@
+<!-- Page Header -->
+<section class="landmarks-hero py-5" style="background-color: var(--dark);">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 text-white">
+        <h1 class="fw-bold display-5 mb-2">Explore Landmarks</h1>
+        <p class="opacity-75">Discover Egypt's most iconic historical and natural wonders</p>
+      </div>
+      <div class="col-lg-6">
+        <div class="search-box bg-white rounded-4 px-4 py-3 d-flex align-items-center gap-3">
+          <i class="fas fa-search text-muted"></i>
+          <input type="text" class="form-control border-0 shadow-none"
+            placeholder="Search landmarks..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onFilterChange()">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Filters -->
+<section class="py-3 sticky-top" style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 100;">
+  <div class="container">
+    <div class="d-flex gap-3 align-items-center flex-wrap">
+
+      <!-- City Filter -->
+      <select class="form-select w-auto" [(ngModel)]="selectedCity" (ngModelChange)="onFilterChange()">
+        <option value="">All Cities</option>
+        <option *ngFor="let city of cities" [value]="city.id">{{ city.nameEn }}</option>
+      </select>
+
+      <!-- Category Filter -->
+      <div class="d-flex gap-2 flex-wrap">
+        <button class="category-btn" [class.active]="selectedCategory === ''"
+          (click)="selectedCategory = ''; onFilterChange()">
+          All
+        </button>
+        <button class="category-btn" *ngFor="let cat of categories"
+          [class.active]="selectedCategory === cat"
+          (click)="selectedCategory = cat; onFilterChange()">
+          <i [class]="getCategoryIcon(cat) + ' me-1'"></i>{{ cat }}
+        </button>
+      </div>
+
+      <!-- Clear -->
+      <button class="btn btn-sm btn-outline-secondary ms-auto" (click)="clearFilters()"
+        *ngIf="searchQuery || selectedCity || selectedCategory">
+        <i class="fas fa-times me-1"></i>Clear Filters
+      </button>
+
+    </div>
+  </div>
+</section>
+
+<!-- Landmarks Grid -->
+<section class="py-5" style="background-color: var(--light-bg);">
+  <div class="container">
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <div class="spinner-border" style="color: var(--primary);" role="status"></div>
+      <p class="text-muted mt-3">Loading landmarks...</p>
+    </div>
+
+    <!-- Results Count -->
+    <div class="d-flex justify-content-between align-items-center mb-4" *ngIf="!isLoading">
+      <p class="text-muted mb-0">
+        <span class="fw-bold" style="color: var(--dark);">{{ landmarks.length }}</span> landmarks found
+      </p>
+    </div>
+
+    <!-- Grid -->
+    <div class="row g-4" *ngIf="!isLoading">
+      <div class="col-md-4 col-lg-3" *ngFor="let landmark of landmarks">
+        <div class="landmark-card card border-0 shadow-sm rounded-4 overflow-hidden h-100"
+          [routerLink]="['/landmarks', landmark.id]" style="cursor:pointer;">
+
+          <!-- Image -->
+          <div class="position-relative">
+            <img [src]="landmark.images?.[0] || 'images/hero.jpg'"
+              [alt]="landmark.nameEn"
+              class="card-img-top"
+              style="height: 200px; object-fit: cover;">
+            <div class="position-absolute top-0 end-0 m-2">
+              <span class="badge rounded-pill px-3 py-2 text-white" style="background-color: var(--primary);">
+                <i [class]="getCategoryIcon(landmark.category) + ' me-1'"></i>
+                {{ landmark.category }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body">
+            <h6 class="fw-bold mb-1">{{ landmark.nameEn }}</h6>
+            <p class="text-muted small mb-0">{{ landmark.nameAr }}</p>
+            <p class="text-muted small mt-2 mb-3">{{ landmark.description | slice:0:70 }}...</p>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-star text-warning me-1"></i>
+                <small class="fw-bold">{{ landmark.averageRating }}</small>
+              </div>
+              <div>
+                <span class="fw-bold" style="color: var(--primary);">
+                  {{ landmark.entryFee === 0 ? 'Free' : 'EGP ' + landmark.entryFee }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
+            <small class="text-muted">
+              <i class="fas fa-map-marker-alt me-1" style="color: var(--primary);"></i>
+              {{ landmark.location }}
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="col-12 text-center py-5" *ngIf="landmarks.length === 0">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">No landmarks found</h5>
+        <p class="text-muted">Try adjusting your filters</p>
+        <button class="btn text-white px-4" style="background-color: var(--primary);" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
