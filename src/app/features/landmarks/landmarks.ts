@@ -18,14 +18,22 @@ export class Landmarks implements OnInit {
   landmarks: Landmark[] = [];
   cities: City[] = [];
   isLoading = true;
+  currentSlide = 0;
 
-  // Filters
   searchQuery = '';
   selectedCity = '';
   selectedCategory = '';
 
   categories = [
     'Historical', 'Entertainment', 'Nature', 'Religious', 'Beach', 'Museum'
+  ];
+
+  slides = [
+    { image: 'images/cities/slide1.jpg', title: 'Ancient Wonders', subtitle: 'Explore Egypt\'s timeless monuments' },
+    { image: 'images/cities/slide2.jpg', title: 'Coastal Beauty', subtitle: 'Discover stunning Red Sea destinations' },
+    { image: 'images/cities/slide3.jpg', title: 'Sacred Temples', subtitle: 'Walk through ancient history' },
+    { image: 'images/cities/slide4.jpg', title: 'Mediterranean Magic', subtitle: 'Experience Alexandria\'s heritage' },
+    { image: 'images/cities/slide5.jpg', title: 'Desert Adventures', subtitle: 'Explore golden sand landscapes' },
   ];
 
   constructor(
@@ -36,11 +44,21 @@ export class Landmarks implements OnInit {
 
   ngOnInit(): void {
     this.cityService.getCities().subscribe(data => this.cities = data);
-
     this.route.queryParams.subscribe(params => {
       if (params['city']) this.selectedCity = params['city'];
       this.loadLandmarks();
     });
+    this.startSlider();
+  }
+
+  startSlider() {
+    setInterval(() => {
+      this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+    }, 3000);
+  }
+
+  goToSlide(index: number) {
+    this.currentSlide = index;
   }
 
   loadLandmarks() {

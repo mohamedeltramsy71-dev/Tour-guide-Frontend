@@ -17,6 +17,11 @@ export const routes: Routes = [
       import('./features/landmarks/landmarks').then(m => m.Landmarks),
   },
   {
+    path: 'packages',
+    loadComponent: () =>
+      import('./features/packages/packages').then(m => m.Packages),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

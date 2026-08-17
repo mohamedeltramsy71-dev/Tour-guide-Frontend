@@ -10,8 +10,13 @@ export class PackageService {
 
   constructor(private api: ApiService) {}
 
-  getPackages(): Observable<Package[]> {
-    return this.api.get<Package[]>('packages');
+  getPackages(params?: any): Observable<Package[]> {
+    let query = 'packages';
+    if (params) {
+      const queryString = new URLSearchParams(params).toString();
+      if (queryString) query += `?${queryString}`;
+    }
+    return this.api.get<Package[]>(query);
   }
 
   getPackageById(id: number): Observable<Package> {

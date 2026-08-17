@@ -1,0 +1,193 @@
+<!-- Page Header -->
+<!-- Hero Slider -->
+<section class="packages-slider position-relative">
+  <div class="slider-wrapper">
+    <div class="slide" *ngFor="let slide of slides; let i = index" [class.active]="i === currentSlide">
+      <img [src]="slide.image" [alt]="slide.title" class="slide-img">
+      <div class="slide-overlay">
+        <div class="slide-content text-white text-center">
+          <h2 class="fw-bold display-5">{{ slide.title }}</h2>
+          <p class="lead opacity-75">{{ slide.subtitle }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dots -->
+  <div class="slider-dots">
+    <span *ngFor="let slide of slides; let i = index"
+      class="dot" [class.active]="i === currentSlide"
+      (click)="goToSlide(i)">
+    </span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-overlay position-absolute bottom-0 start-50 translate-middle-x w-100 pb-4">
+    <div class="container">
+      <div class="search-box bg-white rounded-4 shadow-lg px-4 py-3 d-flex align-items-center gap-3">
+        <i class="fas fa-search text-muted"></i>
+        <input type="text" class="form-control border-0 shadow-none fs-5"
+          placeholder="Search packages..."
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onFilterChange()">
+        <span class="badge rounded-pill px-3 py-2 text-white" style="background-color: var(--primary);">
+          {{ filteredPackages.length }} Packages
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Filters -->
+<section class="py-3 sticky-top" style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 100;">
+  <div class="container">
+    <div class="d-flex gap-3 align-items-center flex-wrap">
+
+      <!-- City -->
+      <select class="form-select w-auto" [(ngModel)]="selectedCity" (ngModelChange)="onServerFilterChange()">
+        <option value="">All Cities</option>
+        <option *ngFor="let city of cities" [value]="city.id">{{ city.nameEn }}</option>
+      </select>
+
+      <!-- Duration -->
+      <select class="form-select w-auto" [(ngModel)]="selectedDuration" (ngModelChange)="onFilterChange()">
+        <option value="">Any Duration</option>
+        <option *ngFor="let d of durations" [value]="d.value">{{ d.label }}</option>
+      </select>
+
+      <!-- Max Price -->
+      <div class="d-flex align-items-center gap-2">
+        <label class="text-muted small">Max Price:</label>
+        <input type="number" class="form-control w-auto" placeholder="EGP"
+          [(ngModel)]="maxPrice" (ngModelChange)="onServerFilterChange()" style="width: 120px !important;">
+      </div>
+
+      <!-- Results -->
+      <span class="text-muted small ms-auto">
+        <span class="fw-bold" style="color: var(--dark);">{{ filteredPackages.length }}</span> packages found
+      </span>
+
+      <!-- Clear -->
+      <button class="btn btn-sm btn-outline-secondary" (click)="clearFilters()"
+        *ngIf="searchQuery || selectedCity || selectedDuration || maxPrice">
+        <i class="fas fa-times me-1"></i>Clear
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Compare Bar -->
+<div class="compare-bar" *ngIf="compareList.length > 0">
+  <div class="container d-flex align-items-center gap-3">
+    <span class="fw-bold text-white">Compare ({{ compareList.length }}/3):</span>
+    <div class="d-flex gap-2">
+      <span *ngFor="let pkg of compareList" class="badge bg-white text-dark px-3 py-2">
+        {{ pkg.title }}
+        <i class="fas fa-times ms-2" style="cursor:pointer;" (click)="toggleCompare(pkg)"></i>
+      </span>
+    </div>
+    <a *ngIf="compareList.length >= 2"
+      [routerLink]="['/packages/compare']"
+      [queryParams]="{ids: compareList.map(p => p.id).join(',')}"
+      class="btn btn-light btn-sm ms-auto px-4">
+      Compare Now →
+    </a>
+    <button class="btn btn-outline-light btn-sm" (click)="clearCompare()">Clear</button>
+  </div>
+</div>
+
+<!-- Packages Grid -->
+<section class="py-5" style="background-color: var(--light-bg);">
+  <div class="container">
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <div class="spinner-border" style="color: var(--primary);" role="status"></div>
+      <p class="text-muted mt-3">Loading packages...</p>
+    </div>
+
+    <!-- Grid -->
+    <div class="row g-4" *ngIf="!isLoading">
+      <div class="col-md-4 col-lg-3" *ngFor="let pkg of filteredPackages">
+        <div class="package-card card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+
+          <!-- Image -->
+          <div class="position-relative">
+            <img [src]="pkg.images?.[0] || 'images/hero.jpg'"
+              [alt]="pkg.title"
+              class="card-img-top"
+              style="height: 220px; object-fit: cover;"
+              [routerLink]="['/packages', pkg.id]"
+              style="cursor:pointer;">
+
+            <!-- Compare Toggle -->
+            <button class="compare-btn position-absolute top-0 start-0 m-2"
+              [class.active]="isInCompare(pkg)"
+              (click)="toggleCompare(pkg)"
+              [disabled]="!isInCompare(pkg) && compareList.length >= 3">
+              <i class="fas fa-balance-scale me-1"></i>
+              {{ isInCompare(pkg) ? 'Added' : 'Compare' }}
+            </button>
+
+            <!-- City Badge -->
+            <span class="position-absolute top-0 end-0 m-2 badge text-white px-3 py-2"
+              style="background-color: var(--dark);">
+              <i class="fas fa-map-marker-alt me-1"></i>{{ pkg.cityNameEn }}
+            </span>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body" [routerLink]="['/packages', pkg.id]" style="cursor:pointer;">
+            <h6 class="fw-bold mb-1">{{ pkg.title }}</h6>
+            <p class="text-muted small mb-3">{{ pkg.description | slice:0:80 }}...</p>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <small class="text-muted d-flex align-items-center gap-1">
+                  <i class="fas fa-clock" style="color: var(--primary);"></i>
+                  {{ pkg.durationDays }} Days
+                </small>
+              </div>
+              <div class="col-6">
+                <small class="text-muted d-flex align-items-center gap-1">
+                  <i class="fas fa-users" style="color: var(--primary);"></i>
+                  Max {{ pkg.maxPersons }}
+                </small>
+              </div>
+              <div class="col-6">
+                <small class="text-muted d-flex align-items-center gap-1">
+                  <i class="fas fa-star text-warning"></i>
+                  {{ pkg.averageRating }}
+                </small>
+              </div>
+              <div class="col-6">
+                <small class="text-muted d-flex align-items-center gap-1">
+                  <i class="fas fa-user-tie" style="color: var(--primary);"></i>
+                  {{ pkg.guideName }}
+                </small>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold fs-5" style="color: var(--primary);">EGP {{ pkg.price | number }}</span>
+              <a [routerLink]="['/packages', pkg.id]" class="btn btn-sm text-white px-3"
+                style="background-color: var(--primary);">
+                View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="col-12 text-center py-5" *ngIf="filteredPackages.length === 0">
+        <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">No packages found</h5>
+        <p class="text-muted">Try adjusting your filters</p>
+        <button class="btn text-white px-4" style="background-color: var(--primary);" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
