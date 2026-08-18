@@ -1,0 +1,68 @@
+<div class="register-select-wrapper">
+    <!-- Background Image -->
+    <img src="images/auth/auth.png" alt="Rihla" class="bg-img">
+
+    <!-- Overlay -->
+    <div class="overlay">
+
+        <!-- Content -->
+        <div class="content">
+
+            <!-- Logo -->
+            <div class="text-center mb-4">
+                <img src="images/logo.png" alt="Rihla Logo" height="80" class="mb-2">
+                <h2 class="fw-bold" style="color: var(--gold);">RIHLA</h2>
+                <p class="text-white opacity-75">DISCOVER. EXPLORE. REMEMBER.</p>
+            </div>
+
+            <!-- Title -->
+            <h3 class="fw-bold text-white text-center mb-2">Join Rihla</h3>
+            <p class="text-white opacity-75 text-center mb-5">How would you like to use Rihla?</p>
+
+            <!-- Cards -->
+            <div class="cards-row">
+
+                <!-- Tourist Card -->
+                <div class="role-card" (click)="goToTourist()">
+                    <div class="role-icon">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">I'm a Tourist</h5>
+                    <p class="text-white opacity-75 mb-0">
+                        Explore Egypt's landmarks and book guided tours
+                    </p>
+                    <div class="card-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+
+                <!-- Guide Card -->
+                <div class="role-card" (click)="goToGuide()">
+                    <div class="role-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">I'm a Tour Guide</h5>
+                    <p class="text-white opacity-75 mb-0">
+                        Share your expertise and host unforgettable tours
+                    </p>
+                    <div class="card-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Links -->
+            <div class="text-center mt-5">
+                <p class="text-white opacity-75 mb-2">
+                    Already have an account?
+                    <a routerLink="/auth/login" class="footer-link">Login</a>
+                </p>
+                <a routerLink="/" class="back-home">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Home
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

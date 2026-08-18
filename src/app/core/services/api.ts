@@ -1,19 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ApiService {
-
   private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  get<T>(endpoint: string): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}/${endpoint}`);
+  get<T>(endpoint: string, options?: { params?: HttpParams }): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}/${endpoint}`, options);
   }
 
   post<T>(endpoint: string, body: any): Observable<T> {

@@ -33,8 +33,66 @@
 
       <!-- Auth Buttons -->
       <div class="d-flex gap-2 align-items-center">
-        <a routerLink="/auth/login" class="btn btn-outline-danger px-4">Login</a>
-        <a routerLink="/auth/register" class="btn px-4 text-white" style="background-color: var(--primary);">Sign Up</a>
+
+        <!-- Guest -->
+        <ng-container *ngIf="!isLoggedIn">
+          <a routerLink="/auth/login" class="btn btn-outline-danger px-4">Login</a>
+          <a routerLink="/auth/register" class="btn px-4 text-white" style="background-color: var(--primary);">Sign Up</a>
+        </ng-container>
+
+        <!-- Logged In -->
+        <ng-container *ngIf="isLoggedIn">
+
+          <!-- Dashboard link حسب الـ Role -->
+          <a *ngIf="role === 'Admin'" routerLink="/admin"
+            class="btn btn-sm btn-outline-secondary px-3">
+            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+          </a>
+          <a *ngIf="role === 'Guide'" routerLink="/guide-dashboard"
+            class="btn btn-sm btn-outline-secondary px-3">
+            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+          </a>
+
+          <!-- User Dropdown -->
+          <div class="dropdown">
+            <button class="btn d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+              style="background-color: rgba(200,92,58,0.08); border: 1px solid rgba(200,92,58,0.2);"
+              data-bs-toggle="dropdown">
+              <div class="avatar-circle">
+                <i class="fas fa-user"></i>
+              </div>
+              <span class="fw-semibold" style="color: var(--dark); font-size: 0.9rem;">
+                {{ user?.fullName }}
+              </span>
+              <i class="fas fa-chevron-down" style="font-size: 0.7rem; color: var(--text-gray);"></i>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
+              <li>
+                <a class="dropdown-item py-2" routerLink="/profile">
+                  <i class="fas fa-user me-2" style="color: var(--primary);"></i> My Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2" routerLink="/bookings">
+                  <i class="fas fa-calendar-check me-2" style="color: var(--primary);"></i> My Bookings
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2" routerLink="/notifications">
+                  <i class="fas fa-bell me-2" style="color: var(--primary);"></i> Notifications
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <button class="dropdown-item py-2 text-danger" (click)="onLogout()">
+                  <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+
+        </ng-container>
       </div>
     </div>
 

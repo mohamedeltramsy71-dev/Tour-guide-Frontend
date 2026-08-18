@@ -1,0 +1,85 @@
+<div class="admin-shell" [class.collapsed]="sidebarCollapsed()">
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <img src="images/logo.png" alt="Rihla" class="sidebar-logo" />
+      <span class="sidebar-brand">Rihla</span>
+      <button class="sidebar-toggle ms-auto" (click)="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        @for (item of navItems; track item.route) {
+          <li>
+            <a [routerLink]="item.route"
+               routerLinkActive="active"
+               [routerLinkActiveOptions]="{ exact: item.route === '/admin/dashboard' }"
+               class="sidebar-link">
+              <i [class]="item.icon"></i>
+              <span class="link-label">{{ item.label }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="sidebar-link w-100 text-start border-0 bg-transparent" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="link-label">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════ MAIN AREA ══════════════ -->
+  <div class="admin-main">
+
+    <!-- Top Navbar -->
+    <header class="admin-topbar">
+      <button class="topbar-toggle d-lg-none" (click)="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <div class="topbar-title">
+        <!-- page title injected via router -->
+      </div>
+
+      <div class="topbar-right ms-auto">
+        <div class="dropdown">
+          <button class="admin-profile-btn dropdown-toggle"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="admin-avatar">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="admin-info d-none d-md-block">
+              <span class="admin-name">{{ fullName }}</span>
+              <span class="admin-role">Super Admin</span>
+            </div>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" routerLink="/admin/profile">
+                <i class="fas fa-user me-2"></i> My Profile
+              </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button class="dropdown-item text-danger" (click)="logout()">
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="admin-content">
+      <router-outlet />
+    </main>
+
+  </div>
+</div>

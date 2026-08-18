@@ -1,0 +1,128 @@
+.register-select-wrapper {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    .bg-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.7));
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .content {
+        width: 100%;
+        max-width: 780px;
+    }
+}
+
+// ── Cards Row ──────────────────────────────────────────────
+.cards-row {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.role-card {
+    flex: 1;
+    max-width: 340px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    text-align: center;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: var(--gold);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+        .role-icon {
+            background: var(--gold);
+            color: #fff;
+        }
+
+        .card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+}
+
+.role-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.8rem;
+    color: var(--gold);
+    transition: all 0.3s ease;
+}
+
+.card-arrow {
+    position: absolute;
+    bottom: 20px;
+    right: 24px;
+    color: var(--gold);
+    font-size: 1rem;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.3s ease;
+}
+
+// ── Footer Links ───────────────────────────────────────────
+.footer-link {
+    color: var(--gold);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 4px;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.back-home {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.3s;
+
+    &:hover {
+        color: #fff;
+    }
+}

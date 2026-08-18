@@ -1,17 +1,32 @@
-.nav-link {
-  color: var(--dark) !important;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: color 0.3s;
-  padding-top: 0.4rem !important;
-  padding-bottom: 0.4rem !important;
-
-  &:hover {
-    color: var(--primary) !important;
-  }
-}
-
 .active-link {
   color: var(--primary) !important;
   font-weight: 600;
+}
+
+.avatar-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+.dropdown-menu {
+  min-width: 200px;
+
+  .dropdown-item {
+    font-size: 0.9rem;
+    border-radius: 8px;
+    margin: 2px 8px;
+    width: calc(100% - 16px);
+    transition: background 0.2s;
+
+    &:hover {
+      background-color: rgba(200, 92, 58, 0.08);
+    }
+  }
 }

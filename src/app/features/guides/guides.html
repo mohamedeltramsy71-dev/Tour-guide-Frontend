@@ -1,0 +1,165 @@
+<!-- Hero Slider -->
+<section class="guides-slider position-relative">
+  <div class="slider-wrapper">
+    <div class="slide" *ngFor="let slide of slides; let i = index" [class.active]="i === currentSlide">
+      <img [src]="slide.image" [alt]="slide.title" class="slide-img">
+      <div class="slide-overlay">
+        <div class="slide-content text-white text-center">
+          <h2 class="fw-bold display-5">{{ slide.title }}</h2>
+          <p class="lead opacity-75">{{ slide.subtitle }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dots -->
+  <div class="slider-dots">
+    <span *ngFor="let slide of slides; let i = index"
+      class="dot" [class.active]="i === currentSlide"
+      (click)="goToSlide(i)">
+    </span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-overlay position-absolute bottom-0 start-50 translate-middle-x w-100 pb-4">
+    <div class="container">
+      <div class="search-box bg-white rounded-4 shadow-lg px-4 py-3 d-flex align-items-center gap-3">
+        <i class="fas fa-search text-muted"></i>
+        <input type="text" class="form-control border-0 shadow-none fs-5"
+          placeholder="Search guides..."
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onFilterChange()">
+        <span class="badge rounded-pill px-3 py-2 text-white" style="background-color: var(--primary);">
+          {{ filteredGuides.length }} Guides
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Filters -->
+<section class="py-3 sticky-top" style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 100;">
+  <div class="container">
+    <div class="d-flex gap-3 align-items-center flex-wrap">
+
+      <!-- City Filter -->
+      <select class="form-select w-auto" [(ngModel)]="selectedCity" (ngModelChange)="onFilterChange()">
+        <option value="">All Cities</option>
+        <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+      </select>
+
+      <!-- Language Filter -->
+      <select class="form-select w-auto" [(ngModel)]="selectedLanguage" (ngModelChange)="onFilterChange()">
+        <option value="">All Languages</option>
+        <option *ngFor="let lang of languages" [value]="lang">{{ lang }}</option>
+      </select>
+
+      <!-- Available Only -->
+      <div class="form-check mb-0">
+        <input class="form-check-input" type="checkbox" id="availableOnly"
+          [(ngModel)]="availableOnly" (ngModelChange)="onFilterChange()">
+        <label class="form-check-label text-muted" for="availableOnly">
+          Available Only
+        </label>
+      </div>
+
+      <!-- Results -->
+      <span class="text-muted small ms-auto">
+        <span class="fw-bold" style="color: var(--dark);">{{ filteredGuides.length }}</span> guides found
+      </span>
+
+      <!-- Clear -->
+      <button class="btn btn-sm btn-outline-secondary" (click)="clearFilters()"
+        *ngIf="searchQuery || selectedCity || selectedLanguage || availableOnly">
+        <i class="fas fa-times me-1"></i>Clear
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Guides Grid -->
+<section class="py-5" style="background-color: var(--light-bg);">
+  <div class="container">
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="isLoading">
+      <div class="spinner-border" style="color: var(--primary);" role="status"></div>
+      <p class="text-muted mt-3">Loading guides...</p>
+    </div>
+
+    <!-- Grid -->
+    <div class="row g-4" *ngIf="!isLoading">
+      <div class="col-md-4 col-lg-3" *ngFor="let guide of filteredGuides">
+        <div class="guide-card card border-0 shadow-sm rounded-4 overflow-hidden h-100"
+          [routerLink]="['/guides', guide.userId]" style="cursor:pointer;">
+
+          <!-- Avatar -->
+          <div class="guide-avatar-wrapper text-center pt-4 pb-2">
+            <div class="guide-avatar mx-auto">
+              <img [src]="guide.avatarUrl || 'images/logo.png'"
+                [alt]="guide.fullName"
+                class="rounded-circle"
+                style="width: 100px; height: 100px; object-fit: cover; border: 3px solid var(--primary);">
+            </div>
+            <div class="mt-2">
+              <span class="badge px-3 py-1 rounded-pill"
+                [class]="guide.isAvailable ? 'bg-success' : 'bg-secondary'">
+                {{ guide.isAvailable ? 'Available' : 'Unavailable' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body text-center">
+            <h6 class="fw-bold mb-1">{{ guide.fullName }}</h6>
+
+            <!-- Rating -->
+            <div class="mb-2">
+              <i class="fas fa-star text-warning" *ngFor="let s of getStars(guide.averageRating)"></i>
+              <small class="ms-1 text-muted">({{ guide.totalReviews }} reviews)</small>
+            </div>
+
+            <!-- Experience -->
+            <p class="text-muted small mb-2">
+              <i class="fas fa-briefcase me-1" style="color: var(--primary);"></i>
+              {{ guide.experienceYears }} Years Experience
+            </p>
+
+            <!-- Languages -->
+            <div class="mb-2">
+              <small class="text-muted">
+                <i class="fas fa-language me-1" style="color: var(--primary);"></i>
+                {{ guide.languages?.join(', ') }}
+              </small>
+            </div>
+
+            <!-- Cities -->
+            <div class="d-flex gap-1 justify-content-center flex-wrap mb-3">
+              <span *ngFor="let city of guide.coveredCities"
+                class="badge rounded-pill px-2 py-1"
+                style="background-color: var(--light-bg); color: var(--dark); border: 1px solid #dee2e6;">
+                <i class="fas fa-map-marker-alt me-1" style="color: var(--primary);"></i>{{ city }}
+              </span>
+            </div>
+
+            <a [routerLink]="['/guides', guide.userId]"
+              class="btn w-100 text-white"
+              style="background-color: var(--primary);">
+              View Profile
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="col-12 text-center py-5" *ngIf="filteredGuides.length === 0">
+        <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">No guides found</h5>
+        <p class="text-muted">Try adjusting your filters</p>
+        <button class="btn text-white px-4" style="background-color: var(--primary);" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

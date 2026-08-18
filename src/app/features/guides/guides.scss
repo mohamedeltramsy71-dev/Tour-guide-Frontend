@@ -1,0 +1,92 @@
+.guides-slider {
+  height: 70vh;
+  overflow: hidden;
+
+  .slider-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+
+    &.active {
+      opacity: 1;
+    }
+
+    .slide-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slide-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .slider-dots {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &.active {
+        background: #fff;
+        width: 24px;
+        border-radius: 5px;
+      }
+    }
+  }
+
+  .search-overlay {
+    z-index: 10;
+  }
+
+  .search-box {
+    input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+}
+
+.guide-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+  }
+}
+
+.guide-avatar {
+  position: relative;
+  display: inline-block;
+}

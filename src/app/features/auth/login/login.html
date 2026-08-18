@@ -1,0 +1,109 @@
+<div class="auth-wrapper">
+    <!-- Left Side — Image -->
+    <div class="auth-left">
+        <img src="images/auth/auth.png" alt="Rihla" class="bg-img">
+        <div class="auth-left-overlay">
+            <div class="auth-left-content">
+                <h2 class="fw-bold" style="color: var(--gold);">RIHLA</h2>
+                <p class="text-white opacity-75 mb-4">DISCOVER. EXPLORE. REMEMBER.</p>
+                <h3 class="fw-bold text-white">Discover <span style="color: var(--gold);">Egypt</span><br>Like Never Before</h3>
+                <p class="text-white opacity-75 mt-3">
+                    Explore timeless history, breathtaking landmarks and<br>
+                    authentic experiences with certified local tour guides.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side — Form -->
+    <div class="auth-right">
+        <div class="auth-form-wrapper">
+
+            <!-- Logo -->
+            <div class="text-center mb-4">
+                <img src="images/logo.png" alt="Rihla Logo" height="80">
+            </div>
+
+            <!-- Header -->
+            <h2 class="fw-bold mb-1" style="color: var(--dark);">Welcome Back</h2>
+            <p class="text-muted mb-4">Login to your <span style="color: var(--primary);">Rihla</span> account</p>
+
+            <!-- Error -->
+            <div class="alert alert-danger rounded-3" *ngIf="errorMessage">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ errorMessage }}
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Email Address</label>
+                <div class="input-group-custom">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" class="form-control custom-input" placeholder="Enter your email"
+                        [(ngModel)]="email">
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-2">
+                <label class="form-label fw-semibold">Password</label>
+                <div class="input-group-custom">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input [type]="showPassword ? 'text' : 'password'" class="form-control custom-input"
+                        placeholder="Enter your password" [(ngModel)]="password">
+                    <i class="fas input-icon-right" [class]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                        (click)="togglePassword()" style="cursor:pointer;"></i>
+                </div>
+            </div>
+
+            <!-- Remember + Forgot -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rememberMe" [(ngModel)]="rememberMe">
+                    <label class="form-check-label text-muted" for="rememberMe">Remember me</label>
+                </div>
+                <a routerLink="/auth/forgot-password" style="color: var(--primary); font-size: 0.9rem;">
+                    Forgot Password?
+                </a>
+            </div>
+
+            <!-- Login Button -->
+            <button class="btn w-100 text-white py-3 mb-3 rounded-3 fw-bold"
+                style="background-color: var(--primary);"
+                (click)="onLogin()" [disabled]="isLoading">
+                <span *ngIf="!isLoading">Login <i class="fas fa-arrow-right ms-2"></i></span>
+                <span *ngIf="isLoading">
+                    <span class="spinner-border spinner-border-sm me-2"></span>Logging in...
+                </span>
+            </button>
+
+            <!-- Divider -->
+            <div class="divider my-3">
+                <span class="text-muted">or</span>
+            </div>
+
+            <!-- Google (Tourists Only) -->
+            <button class="btn w-100 btn-outline-secondary py-2 mb-3 rounded-3"
+                (click)="onGoogleLogin()" [disabled]="isGoogleLoading">
+                <span *ngIf="!isGoogleLoading">
+                    <img src="https://www.google.com/favicon.ico" width="18" class="me-2">
+                    Continue with Google <span style="font-size:0.75rem; color: var(--text-gray);">(Tourists only)</span>
+                </span>
+                <span *ngIf="isGoogleLoading">
+                    <span class="spinner-border spinner-border-sm me-2"></span>Connecting...
+                </span>
+            </button>
+
+            <!-- Sign Up Link -->
+            <p class="text-center text-muted mt-3">
+                Don't have an account?
+                <a routerLink="/auth/register" style="color: var(--primary); font-weight: 600;">Sign Up</a>
+            </p>
+
+            <!-- Back to Home -->
+            <a routerLink="/" class="back-home mt-2 d-inline-flex align-items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+
+        </div>
+    </div>
+</div>

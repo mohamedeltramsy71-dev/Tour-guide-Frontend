@@ -1,11 +1,12 @@
 export interface Guide {
-  id: number;
+  userId: string;
   fullName: string;
   bio: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   experienceYears: number;
   averageRating: number;
   languages: string[];
-  cities: string[];
+  coveredCities: string[];
   totalReviews: number;
+  isAvailable: boolean;
 }

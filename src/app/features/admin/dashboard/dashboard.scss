@@ -1,0 +1,323 @@
+$primary: #C85C3A;
+$dark:    #1A2340;
+$gold:    #D4A853;
+
+// ─── Page Header ─────────────────────────────────────────────────────────────
+.page-header {
+  .page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: $dark;
+    margin: 0;
+  }
+  .page-subtitle {
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin: 4px 0 0;
+  }
+}
+
+// ─── Loading ─────────────────────────────────────────────────────────────────
+.dashboard-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px;
+  color: #6B7280;
+}
+
+// ─── KPI Grid ────────────────────────────────────────────────────────────────
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.kpi-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border: 1px solid #EEF0F4;
+  position: relative;
+  transition: box-shadow 0.2s;
+
+  &:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); }
+
+  &.kpi-alert { border-color: rgba(220,38,38,0.3); }
+}
+
+.kpi-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.kpi-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kpi-label {
+  font-size: 0.78rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.kpi-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $dark;
+  line-height: 1.2;
+}
+
+.kpi-action {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-size: 0.75rem;
+  color: $primary;
+  text-decoration: none;
+  font-weight: 600;
+  &:hover { text-decoration: underline; }
+}
+
+// ─── Chart Cards ─────────────────────────────────────────────────────────────
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 1100px) { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 700px)  { grid-template-columns: 1fr; }
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border: 1px solid #EEF0F4;
+}
+
+.list-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border: 1px solid #EEF0F4;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.chart-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $dark;
+  margin: 0;
+}
+
+.chart-sub {
+  font-size: 0.78rem;
+  color: #9CA3AF;
+}
+
+// ─── Period Toggle ────────────────────────────────────────────────────────────
+.period-toggle {
+  display: flex;
+  gap: 4px;
+  background: #F3F4F6;
+  border-radius: 8px;
+  padding: 3px;
+
+  button {
+    background: transparent;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: #6B7280;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &.active {
+      background: #fff;
+      color: $primary;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+  }
+}
+
+// ─── Bar Chart ───────────────────────────────────────────────────────────────
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 150px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 36px;
+  flex: 1;
+}
+
+.bar-val {
+  font-size: 0.65rem;
+  color: #6B7280;
+  white-space: nowrap;
+}
+
+.bar {
+  width: 100%;
+  background: linear-gradient(to top, $primary, rgba($primary, 0.5));
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+  min-height: 4px;
+}
+
+.bar-gold { background: linear-gradient(to top, $gold, rgba($gold, 0.5)); }
+.bar-dark { background: linear-gradient(to top, $dark, rgba($dark, 0.5)); }
+
+.bar-label {
+  font-size: 0.62rem;
+  color: #9CA3AF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 48px;
+  text-align: center;
+}
+
+.revenue-total {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #6B7280;
+  text-align: right;
+
+  strong { color: $dark; }
+}
+
+// ─── Rank List ───────────────────────────────────────────────────────────────
+.rank-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rank-num {
+  width: 24px;
+  height: 24px;
+  background: #F3F4F6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: $dark;
+  flex-shrink: 0;
+}
+
+.rank-name {
+  flex: 1;
+  font-size: 0.85rem;
+  color: $dark;
+  font-weight: 500;
+}
+
+.rank-badge {
+  font-size: 0.72rem;
+  color: #6B7280;
+  background: #F3F4F6;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+// ─── Table ───────────────────────────────────────────────────────────────────
+.table-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border: 1px solid #EEF0F4;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9CA3AF;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-bottom: 1px solid #F3F4F6;
+    text-align: left;
+  }
+
+  td {
+    padding: 12px;
+    font-size: 0.875rem;
+    color: #374151;
+    border-bottom: 1px solid #F9FAFB;
+    vertical-align: middle;
+  }
+
+  tbody tr:hover { background: #FAFBFC; }
+  tbody tr:last-child td { border-bottom: none; }
+}
+
+.rating-badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $dark;
+}
+
+.no-data {
+  color: #9CA3AF;
+  font-size: 0.85rem;
+  text-align: center;
+  width: 100%;
+  margin: auto;
+}
