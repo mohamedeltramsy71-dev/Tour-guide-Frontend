@@ -1,0 +1,191 @@
+<div class="admin-cities">
+
+  <!-- Header -->
+  <div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="fw-bold mb-1" style="color: var(--dark);">Cities Management</h4>
+      <p class="text-muted mb-0">Add, edit, and manage cities on the platform</p>
+    </div>
+    <button class="btn text-white px-4" style="background-color: var(--primary);" (click)="openAddModal()">
+      <i class="fas fa-plus me-2"></i>Add City
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="text-center py-5" *ngIf="isLoading">
+    <div class="spinner-border" style="color: var(--primary);"></div>
+    <p class="mt-3 text-muted">Loading cities...</p>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card" *ngIf="!isLoading">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Image</th>
+            <th>Name (EN)</th>
+            <th>Name (AR)</th>
+            <th>Description</th>
+            <th>Landmarks</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let city of cities">
+            <td class="fw-bold" style="color: var(--primary);">{{ city.id }}</td>
+            <td>
+              <img *ngIf="city.imageUrl" [src]="city.imageUrl" class="city-thumb" alt="">
+              <div *ngIf="!city.imageUrl" class="city-thumb-placeholder">
+                <i class="fas fa-city"></i>
+              </div>
+            </td>
+            <td class="fw-semibold">{{ city.nameEn }}</td>
+            <td>{{ city.nameAr }}</td>
+            <td class="text-muted desc-cell">{{ city.description || '—' }}</td>
+            <td>
+              <span class="badge bg-light text-dark border">
+                <i class="fas fa-landmark me-1"></i>{{ city.landmarksCount }}
+              </span>
+            </td>
+            <td>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary" (click)="openEditModal(city)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" (click)="openDeleteModal(city)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="cities.length === 0">
+            <td colspan="7" class="text-center py-5 text-muted">
+              <i class="fas fa-city fa-2x mb-3 d-block"></i>
+              No cities found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Add / Edit Modal ───────────────────────────────────── -->
+<div class="modal-backdrop-custom" *ngIf="showModal" (click)="closeModal()"></div>
+<div class="modal-custom" *ngIf="showModal">
+  <div class="modal-custom-content">
+
+    <div class="modal-custom-header">
+      <h5 class="fw-bold mb-0">{{ isEditing ? 'Edit City' : 'Add New City' }}</h5>
+      <button class="btn-close" (click)="closeModal()"></button>
+    </div>
+
+    <div class="modal-custom-body">
+
+      <!-- Success -->
+      <div class="alert alert-success rounded-3" *ngIf="successMsg">
+        <i class="fas fa-check-circle me-2"></i>{{ successMsg }}
+      </div>
+
+      <!-- Error -->
+      <div class="alert alert-danger rounded-3" *ngIf="errorMsg">
+        <i class="fas fa-exclamation-circle me-2"></i>{{ errorMsg }}
+      </div>
+
+      <!-- Name EN -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Name (English) <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" placeholder="e.g. Cairo" [(ngModel)]="form.nameEn">
+      </div>
+
+      <!-- Name AR -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Name (Arabic) <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" placeholder="e.g. القاهرة" [(ngModel)]="form.nameAr">
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Description</label>
+        <textarea class="form-control" rows="3" placeholder="Brief description..." [(ngModel)]="form.description"></textarea>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">City Image</label>
+
+        <!-- Preview -->
+        <div class="img-upload-area" (click)="fileInput.click()">
+          <img *ngIf="form.imageUrl" [src]="form.imageUrl" class="img-preview-full" alt="City Image">
+          <div *ngIf="!form.imageUrl" class="img-placeholder">
+            <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+            <p class="mb-0">Click to upload image</p>
+            <small class="text-muted">JPG, PNG, WEBP</small>
+          </div>
+          <!-- Loading overlay -->
+          <div class="img-uploading" *ngIf="isUploading">
+            <div class="spinner-border text-white"></div>
+            <p class="text-white mt-2 mb-0">Uploading...</p>
+          </div>
+        </div>
+
+        <input type="file" #fileInput accept="image/*" style="display:none"
+          (change)="onImageSelected($event)">
+
+        <button *ngIf="form.imageUrl" class="btn btn-sm btn-outline-danger mt-2"
+          (click)="form.imageUrl = ''">
+          <i class="fas fa-times me-1"></i>Remove Image
+        </button>
+      </div>
+
+    </div>
+
+    <div class="modal-custom-footer">
+      <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+      <button class="btn text-white px-4" style="background-color: var(--primary);"
+        (click)="onSubmit()" [disabled]="isSaving || isUploading">
+        <span *ngIf="!isSaving">{{ isEditing ? 'Save Changes' : 'Add City' }}</span>
+        <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2"></span>Saving...</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Delete Modal ───────────────────────────────────────── -->
+<div class="modal-backdrop-custom" *ngIf="showDeleteModal" (click)="closeDeleteModal()"></div>
+<div class="modal-custom" *ngIf="showDeleteModal">
+  <div class="modal-custom-content" style="max-width: 420px;">
+
+    <div class="modal-custom-header">
+      <h5 class="fw-bold mb-0 text-danger">Delete City</h5>
+      <button class="btn-close" (click)="closeDeleteModal()"></button>
+    </div>
+
+    <div class="modal-custom-body text-center py-3">
+      <div class="delete-icon mb-3">
+        <i class="fas fa-trash-alt"></i>
+      </div>
+      <p class="mb-1">Are you sure you want to delete</p>
+      <p class="fw-bold">"{{ selectedCity?.nameEn }}"?</p>
+      <p class="text-muted small">This action cannot be undone.</p>
+
+      <div class="alert alert-danger rounded-3 mt-3" *ngIf="errorMsg">
+        <i class="fas fa-exclamation-circle me-2"></i>{{ errorMsg }}
+      </div>
+    </div>
+
+    <div class="modal-custom-footer">
+      <button class="btn btn-outline-secondary" (click)="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger px-4" (click)="confirmDelete()" [disabled]="isSaving">
+        <span *ngIf="!isSaving">Delete</span>
+        <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2"></span>Deleting...</span>
+      </button>
+    </div>
+
+  </div>
+</div>

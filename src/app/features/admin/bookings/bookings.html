@@ -1,0 +1,178 @@
+<div class="admin-bookings">
+
+  <!-- Header -->
+  <div class="page-header mb-4">
+    <div>
+      <h4 class="fw-bold mb-1" style="color: var(--dark);">Bookings Management</h4>
+      <p class="text-muted mb-0">View and manage all bookings on the platform</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-card mb-4">
+    <div class="row g-3 align-items-end">
+
+      <!-- Status -->
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">Status</label>
+        <select class="form-select" [(ngModel)]="filters.status" (change)="onFilter()">
+          <option value="">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Cancelled">Cancelled</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+
+      <!-- From Date -->
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">From Date</label>
+        <input type="date" class="form-control" [(ngModel)]="filters.fromDate" (change)="onFilter()">
+      </div>
+
+      <!-- To Date -->
+      <div class="col-md-3">
+        <label class="form-label fw-semibold">To Date</label>
+        <input type="date" class="form-control" [(ngModel)]="filters.toDate" (change)="onFilter()">
+      </div>
+
+      <!-- Reset -->
+      <div class="col-md-3">
+        <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">
+          <i class="fas fa-undo me-2"></i>Reset Filters
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="text-center py-5" *ngIf="isLoading">
+    <div class="spinner-border" style="color: var(--primary);"></div>
+    <p class="mt-3 text-muted">Loading bookings...</p>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card" *ngIf="!isLoading">
+
+    <!-- Summary -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="text-muted">Total: <strong>{{ bookings.length }}</strong> bookings</span>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>#ID</th>
+            <th>Tourist</th>
+            <th>Guide</th>
+            <th>Package</th>
+            <th>Start Date</th>
+            <th>Persons</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let booking of bookings">
+
+            <!-- ID -->
+            <td class="fw-bold" style="color: var(--primary);">#{{ booking.id }}</td>
+
+            <!-- Tourist -->
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="avatar-sm" *ngIf="!booking.touristAvatar">
+                  {{ getInitials(booking.touristName) }}
+                </div>
+                <img [src]="booking.touristAvatar" class="avatar-img" *ngIf="booking.touristAvatar" alt="">
+                <span class="fw-semibold">{{ booking.touristName || '—' }}</span>
+              </div>
+            </td>
+
+            <!-- Guide -->
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="avatar-sm guide" *ngIf="!booking.guideAvatar">
+                  {{ getInitials(booking.guideName) }}
+                </div>
+                <img [src]="booking.guideAvatar" class="avatar-img" *ngIf="booking.guideAvatar" alt="">
+                <span>{{ booking.guideName || '—' }}</span>
+              </div>
+            </td>
+
+            <!-- Package -->
+            <td>
+              <span *ngIf="booking.packageTitle" class="badge bg-light text-dark border">
+                {{ booking.packageTitle }}
+              </span>
+              <span *ngIf="!booking.packageTitle" class="text-muted">Custom Trip</span>
+            </td>
+
+            <!-- Start Date -->
+            <td>{{ booking.startDate | date:'MMM d, y' }}</td>
+
+            <!-- Persons -->
+            <td>
+              <i class="fas fa-users me-1 text-muted"></i>{{ booking.numberOfPersons }}
+            </td>
+
+            <!-- Total Price -->
+            <td class="fw-bold">{{ booking.totalPrice | currency:'EGP ':'code':'1.0-0' }}</td>
+
+            <!-- Status -->
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(booking.status)">
+                {{ booking.status }}
+              </span>
+            </td>
+
+            <!-- Payment -->
+            <td>
+              <span class="status-badge" [ngClass]="getPaymentClass(booking.paymentStatus)">
+                {{ booking.paymentStatus }}
+              </span>
+            </td>
+
+            <!-- Type -->
+            <td>
+              <span class="badge" [ngClass]="booking.isCustom ? 'bg-warning text-dark' : 'bg-info text-white'">
+                {{ booking.isCustom ? 'Custom' : 'Package' }}
+              </span>
+            </td>
+
+          </tr>
+
+          <!-- Empty -->
+          <tr *ngIf="bookings.length === 0">
+            <td colspan="10" class="text-center py-5 text-muted">
+              <i class="fas fa-calendar-times fa-2x mb-3 d-block"></i>
+              No bookings found
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="bookings.length > 0">
+      <span class="text-muted">Page {{ filters.page }} of {{ totalPages }}</span>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-secondary"
+          [disabled]="filters.page === 1" (click)="prevPage()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-secondary"
+          [disabled]="filters.page === totalPages" (click)="nextPage()">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

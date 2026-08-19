@@ -7,6 +7,7 @@ export interface ReviewDto {
   bookingId: number;
   touristName: string;
   touristAvatar?: string;
+  guideName: string;
   rating: number;
   comment?: string;
   createdAt: string;
@@ -28,7 +29,8 @@ export class AdminReviewsComponent implements OnInit {
   pageSize = 10;
   hasMore  = true;
 
-  // Delete modal
+  expandedIds: number[] = [];
+
   selectedReview: ReviewDto | null = null;
   deleteLoading = false;
   deleteSuccess = '';
@@ -42,7 +44,6 @@ export class AdminReviewsComponent implements OnInit {
     this.error   = false;
     this.adminService.getAllReviews(this.page, this.pageSize).subscribe({
       next: (data) => {
-        // handle both array and paginated object
         this.reviews = Array.isArray(data) ? data : (data.items ?? data.data ?? []);
         this.hasMore = this.reviews.length === this.pageSize;
         this.loading = false;
@@ -53,6 +54,22 @@ export class AdminReviewsComponent implements OnInit {
 
   prevPage(): void { if (this.page > 1) { this.page--; this.loadReviews(); } }
   nextPage(): void { if (this.hasMore) { this.page++; this.loadReviews(); } }
+
+  isExpanded(id: number): boolean {
+    return this.expandedIds.includes(id);
+  }
+
+  toggleExpand(id: number): void {
+    if (this.expandedIds.includes(id)) {
+      this.expandedIds = this.expandedIds.filter(i => i !== id);
+    } else {
+      this.expandedIds = [...this.expandedIds, id];
+    }
+  }
+
+  truncate(text: string, limit = 40): string {
+    return text.length > limit ? text.slice(0, limit) + '…' : text;
+  }
 
   openDeleteModal(review: ReviewDto): void {
     this.selectedReview = review;
@@ -79,8 +96,8 @@ export class AdminReviewsComponent implements OnInit {
     });
   }
 
-  getStars(rating: number): number[] {
-    return Array.from({ length: 5 }, (_, i) => i + 1);
+  getStars(count: number): number[] {
+    return Array.from({ length: count }, (_, i) => i + 1);
   }
 
   getInitials(name: string): string {

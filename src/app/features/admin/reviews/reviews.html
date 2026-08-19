@@ -1,6 +1,5 @@
 <div class="reviews-page">
 
-  <!-- Header -->
   <div class="page-header mb-4">
     <div>
       <h1 class="page-title">Reviews</h1>
@@ -8,7 +7,6 @@
     </div>
   </div>
 
-  <!-- Loading -->
   @if (loading) {
     <div class="loading-state">
       <div class="spinner-border" style="color:#C85C3A"></div>
@@ -16,7 +14,6 @@
     </div>
   }
 
-  <!-- Error -->
   @if (error) {
     <div class="alert alert-danger">
       <i class="fas fa-exclamation-circle me-2"></i>
@@ -25,7 +22,6 @@
     </div>
   }
 
-  <!-- Table -->
   @if (!loading && !error) {
     @if (reviews.length === 0) {
       <div class="empty-state">
@@ -40,9 +36,10 @@
             <thead>
               <tr>
                 <th>Tourist</th>
+                <th>Guide</th>
                 <th>Rating</th>
                 <th>Comment</th>
-                <th>Booking ID</th>
+                <th>Booking</th>
                 <th>Date</th>
                 <th>Actions</th>
               </tr>
@@ -61,26 +58,36 @@
                     </div>
                   </td>
                   <td>
+                    @if (review.guideName) {
+                      <span class="guide-name">
+                        <i class="fas fa-compass me-1" style="color:#C85C3A;font-size:0.75rem"></i>
+                        {{ review.guideName }}
+                      </span>
+                    } @else {
+                      <span class="text-muted">—</span>
+                    }
+                  </td>
+                  <td>
                     <div class="stars-row">
                       @for (star of getStars(5); track star) {
-                        <i class="fas fa-star" [class.star-filled]="star <= review.rating" [class.star-empty]="star > review.rating"></i>
+                        <i class="fas fa-star"
+                           [class.star-filled]="star <= review.rating"
+                           [class.star-empty]="star > review.rating"></i>
                       }
                       <span class="rating-num">{{ review.rating }}/5</span>
                     </div>
                   </td>
-                  <td>
+                  <td class="comment-cell">
                     @if (review.comment) {
-                      <span class="comment-text">{{ review.comment }}</span>
+                      <span class="comment-full">{{ review.comment }}</span>
                     } @else {
                       <span class="text-muted fst-italic">No comment</span>
                     }
                   </td>
-                  <td>
-                    <span class="booking-id">#{{ review.bookingId }}</span>
-                  </td>
+                  <td><span class="booking-id">#{{ review.bookingId }}</span></td>
                   <td class="text-muted">{{ formatDate(review.createdAt) }}</td>
                   <td>
-                    <button class="btn-action btn-delete" (click)="openDeleteModal(review)" title="Delete Review">
+                    <button class="btn-action btn-delete" (click)="openDeleteModal(review)" title="Delete">
                       <i class="fas fa-trash"></i>
                     </button>
                   </td>
@@ -90,9 +97,8 @@
           </table>
         </div>
 
-        <!-- Pagination -->
         <div class="table-footer">
-          <span class="table-count">Page {{ page }}</span>
+          <span class="table-count">{{ reviews.length }} review(s)</span>
           <div class="pagination-btns">
             <button class="page-btn" [disabled]="page === 1" (click)="prevPage()">
               <i class="fas fa-chevron-left"></i>
@@ -109,20 +115,16 @@
 
 </div>
 
-<!-- Delete Modal -->
 @if (selectedReview) {
   <div class="modal-overlay" (click)="closeModal()">
     <div class="modal-box" (click)="$event.stopPropagation()">
-
       @if (deleteSuccess) {
         <div class="modal-success">
           <i class="fas fa-check-circle"></i>
           <p>{{ deleteSuccess }}</p>
         </div>
       } @else {
-        <div class="modal-icon">
-          <i class="fas fa-trash"></i>
-        </div>
+        <div class="modal-icon"><i class="fas fa-trash"></i></div>
         <h3 class="modal-title">Delete Review</h3>
         <p class="modal-body">
           Are you sure you want to delete this review by
@@ -137,7 +139,6 @@
           </button>
         </div>
       }
-
     </div>
   </div>
 }

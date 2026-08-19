@@ -25,6 +25,9 @@ rihla/
 │       ├── step3.jpg
 │       ├── auth/
 │       │   └── auth.png
+│       ├── admin/
+│       │   ├── sidebar.png
+│       │   └── background.svg
 │       └── cities/
 │           ├── slide1.jpg
 │           ├── slide2.jpg
@@ -43,14 +46,17 @@ rihla/
 │   │   │   │   ├── landmark.ts           ✅
 │   │   │   │   ├── package.ts            ✅
 │   │   │   │   ├── guide.ts              ✅
-│   │   │   │   └── auth.ts               ✅
+│   │   │   │   ├── auth.ts               ✅
+│   │   │   │   ├── admin.ts              ✅
+│   │   │   │   └── booking.ts            ✅
 │   │   │   └── services/
 │   │   │       ├── api.ts                ✅
 │   │   │       ├── city.ts               ✅
 │   │   │       ├── landmark.ts           ✅
 │   │   │       ├── package.ts            ✅
 │   │   │       ├── guide.ts              ✅
-│   │   │       └── auth.ts               ✅
+│   │   │       ├── auth.ts               ✅
+│   │   │       └── admin.service.ts      ✅
 │   │   ├── shared/
 │   │   │   └── components/
 │   │   │       └── navbar/               ✅
@@ -66,7 +72,8 @@ rihla/
 │   │   │   │   ├── register-tourist/     ✅
 │   │   │   │   ├── register-guide/       ✅
 │   │   │   │   ├── forgot-password/      ✅
-│   │   │   │   └── reset-password/       ✅
+│   │   │   │   ├── reset-password/       ✅
+│   │   │   │   └── confirm-email/        ✅
 │   │   │   ├── profile/                  ⬜
 │   │   │   ├── bookings/                 ⬜
 │   │   │   ├── payment/                  ⬜
@@ -74,7 +81,15 @@ rihla/
 │   │   │   ├── reviews/                  ⬜
 │   │   │   ├── notifications/            ⬜
 │   │   │   ├── guide-dashboard/          ⬜
-│   │   │   └── admin/                    ⬜
+│   │   │   └── admin/
+│   │   │       ├── admin-layout/         ✅
+│   │   │       ├── dashboard/            ✅
+│   │   │       ├── users/                ✅
+│   │   │       ├── guides/               ✅
+│   │   │       ├── reviews/              ✅
+│   │   │       ├── bookings/             ✅
+│   │   │       ├── cities/               ✅
+│   │   │       └── landmarks/            ⬜
 │   │   ├── app.routes.ts                 ✅
 │   │   ├── app.config.ts                 ✅
 │   │   ├── app.ts                        ✅
@@ -105,18 +120,26 @@ rihla/
 
 ### Auth Pages Layout Pattern
 - **Login / Register Tourist / Register Guide:** نصف الشاشة صورة (auth.png) على الشمال + form على اليمين (480px)
-- **Register Select / Forgot Password / Reset Password:** صورة كاملة (full screen) + overlay + content في المنتصف
+- **Register Select / Forgot Password / Reset Password / Confirm Email:** صورة كاملة (full screen) + overlay + content في المنتصف
 - الـ Navbar مش بتظهر في أي صفحة auth
 
-### Auth Image
-- المسار: `images/auth/auth.png`
-- بتتستخدم في كل صفحات الـ auth
+### Admin Layout
+- Sidebar ثابت على الشمال (260px) مع sidebar.png كـ background
+- Collapsible لـ 72px
+- Top Navbar فيها Search + Bell + Profile dropdown
+- الـ Public Navbar مش بتظهر في أي صفحة /admin
 
 ### Navbar — Auth State
 - **مش logged in** → Login + Sign Up buttons
 - **logged in كـ Tourist** → اسمه + dropdown (Profile, Bookings, Notifications, Logout)
 - **logged in كـ Guide** → Dashboard button + dropdown
 - **logged in كـ Admin** → Dashboard button + dropdown
+
+### Admin Pages Pattern
+- جدول + Add button في الـ Header
+- Modal للـ Add/Edit مع image upload عن طريق الـ Backend (Cloudinary)
+- Delete confirmation modal
+- Status badges ملونة
 
 ---
 
@@ -136,30 +159,31 @@ rihla/
 | 10 | Auth — Register Guide | ✅ Done | POST /api/auth/register |
 | 11 | Auth — Forgot Password | ✅ Done | POST /api/auth/forget-password |
 | 12 | Auth — Reset Password | ✅ Done | POST /api/auth/reset-password |
-| 13 | My Profile | ⬜ Not Started | GET/PUT /api/users/me |
-| 14 | City Details | ⬜ Not Started | GET /api/cities/{id} |
-| 15 | Landmark Details | ⬜ Not Started | GET /api/landmarks/{id} |
-| 16 | Package Details | ⬜ Not Started | GET /api/packages/{id} |
-| 17 | Guide Profile (Public) | ⬜ Not Started | GET /api/guides/{id} |
-| 18 | Custom Trip Builder | ⬜ Not Started | POST /api/custom-trips/calculate |
-| 19 | Book a Package | ⬜ Not Started | POST /api/bookings |
-| 20 | My Bookings | ⬜ Not Started | GET /api/bookings/my |
-| 21 | Payment | ⬜ Not Started | POST /api/payments/initiate |
-| 22 | Chat | ⬜ Not Started | SignalR + /api/chat |
-| 23 | Reviews | ⬜ Not Started | POST /api/reviews |
-| 24 | Notifications | ⬜ Not Started | GET /api/notifications |
-| 25 | Guide Dashboard | ⬜ Not Started | GET /api/bookings/guide |
-| 26 | Guide Packages | ⬜ Not Started | GET/POST /api/packages |
-| 27 | Admin Dashboard | ⬜ Not Started | GET /api/admin/dashboard |
-| 28 | Admin Users | ⬜ Not Started | GET /api/admin/users |
-| 29 | Admin Guides | ⬜ Not Started | GET /api/admin/guides/pending |
-| 30 | Admin Cities | ⬜ Not Started | GET/POST /api/cities |
-| 31 | Admin Landmarks | ⬜ Not Started | GET/POST /api/landmarks |
-| 32 | Admin Bookings | ⬜ Not Started | GET /api/admin/bookings |
-| 33 | Admin Reviews | ⬜ Not Started | GET /api/admin/reviews |
-| 34 | Footer Component | ⬜ Not Started | — |
-| 35 | Auth Guard | ✅ Done | — |
-| 36 | JWT Interceptor | ✅ Done | — |
+| 13 | Auth — Confirm Email | ✅ Done | GET /api/auth/confirm-email |
+| 14 | My Profile | ⬜ Not Started | GET/PUT /api/users/me |
+| 15 | City Details | ⬜ Not Started | GET /api/cities/{id} |
+| 16 | Landmark Details | ⬜ Not Started | GET /api/landmarks/{id} |
+| 17 | Package Details | ⬜ Not Started | GET /api/packages/{id} |
+| 18 | Guide Profile (Public) | ⬜ Not Started | GET /api/guides/{id} |
+| 19 | Custom Trip Builder | ⬜ Not Started | POST /api/custom-trips/calculate |
+| 20 | Book a Package | ⬜ Not Started | POST /api/bookings |
+| 21 | My Bookings | ⬜ Not Started | GET /api/bookings/my |
+| 22 | Payment | ⬜ Not Started | POST /api/payments/initiate |
+| 23 | Chat | ⬜ Not Started | SignalR + /api/chat |
+| 24 | Reviews (Tourist) | ⬜ Not Started | POST /api/reviews |
+| 25 | Notifications | ⬜ Not Started | GET /api/notifications |
+| 26 | Guide Dashboard | ⬜ Not Started | GET /api/bookings/guide |
+| 27 | Guide Packages | ⬜ Not Started | GET/POST /api/packages |
+| 28 | Admin Dashboard | ✅ Done | GET /api/admin/dashboard + reports |
+| 29 | Admin Users | ✅ Done | GET /api/admin/users + ban + delete |
+| 30 | Admin Guides | ✅ Done | GET /api/admin/guides/pending + approve/reject/suspend |
+| 31 | Admin Cities | ✅ Done | GET/POST/PUT/DELETE /api/cities + upload-image |
+| 32 | Admin Landmarks | ⬜ Not Started | GET/POST /api/landmarks |
+| 33 | Admin Bookings | ✅ Done | GET /api/bookings/admin |
+| 34 | Admin Reviews | ✅ Done | GET /api/admin/reviews + delete |
+| 35 | Footer Component | ⬜ Not Started | — |
+| 36 | Auth Guard | ✅ Done | — |
+| 37 | JWT Interceptor | ✅ Done | — |
 
 ---
 
@@ -173,113 +197,69 @@ rihla/
 - [x] `skipTests: true` في `angular.json`
 - [x] `environments/` — apiUrl + googleClientId configured
 - [x] `index.html` — Google Identity Services script added
-- [x] `environment.development.ts` → apiUrl = https://tourguidee.runasp.net/api
 
 ### 02 — Navbar ✅
-- [x] `shared/components/navbar/` component
-- [x] Logo من `public/images/logo.png`
-- [x] Links: Home, Cities, Landmarks, Packages, Guides
-- [x] Auth state-aware:
-  - Guest → Login + Sign Up buttons
-  - Logged in → User dropdown (Profile, Bookings, Notifications, Logout)
-  - Guide/Admin → Dashboard button + dropdown
-- [x] `routerLinkActive` للـ active state
-- [x] Sticky top + shadow
-- [x] الـ Navbar مش بتظهر في صفحات الـ auth
+- [x] Auth state-aware: Guest / Tourist / Guide / Admin
+- [x] User dropdown: Profile, Bookings, Notifications, Logout
+- [x] Dashboard button للـ Guide/Admin
+- [x] مش بتظهر في auth أو admin pages
 
 ### 03 — Core Setup ✅
-- [x] `ApiService` — base HTTP service مع `environment.apiUrl`
-- [x] Models: `City`, `Landmark`, `Package`, `Guide`, `Auth`
-- [x] Services: `CityService`, `LandmarkService`, `PackageService`, `GuideService`, `AuthService`
+- [x] `ApiService` — get/post/put/delete مع HttpParams support
+- [x] Models: City, Landmark, Package, Guide, Auth, Admin, Booking
+- [x] Services: CityService (مع admin methods), LandmarkService, PackageService, GuideService, AuthService, AdminService
 
-### 04 — Home Page ✅
-- [x] Hero Section — `hero.jpg` + overlay + text + buttons
-- [x] Search Bar — Packages/Landmarks/Guides tabs
-- [x] Features Section — 4 icons
-- [x] How Rihla Works — 3 steps بالصور
-- [x] Popular Destinations — trending cities من API ✅
-- [x] Featured Packages — 4 packages من API ✅
-- [x] CTA Section
-- [x] Endpoints: `GET /api/cities/trending`, `GET /api/packages`, `GET /api/cities`
-
-### 05 — Cities Page ✅
-- [x] Hero Slider — 5 slides
-- [x] Search Bar
-- [x] Cities Grid
-- [x] Endpoint: `GET /api/cities`
-
-### 06 — Landmarks Page ✅
-- [x] Hero Slider
-- [x] Search Bar + Filters (Cities, Category)
-- [x] Landmarks Grid
-- [x] Endpoint: `GET /api/landmarks` مع filters
-
-### 07 — Packages Page ✅
-- [x] Hero Slider
-- [x] Search Bar + Filters (City, Duration, Max Price)
-- [x] Packages Grid + Compare Bar (max 3)
-- [x] Endpoint: `GET /api/packages` مع filters
-
-### 08 — Guides Page ✅
-- [x] Hero Slider
-- [x] Search Bar + Filters (Cities, Languages, Available Only)
-- [x] Guides Grid
-- [x] Endpoint: `GET /api/guides`
+### 04-08 — Public Pages ✅
+- [x] Home, Cities, Landmarks, Packages, Guides
 
 ### 09 — Auth Infrastructure ✅
-- [x] `core/interceptors/jwt.interceptor.ts`
-  - بيضيف `Authorization: Bearer <token>` أوتوماتيك
-  - Auto refresh token لو رجع 401
-  - Logout + redirect لو Refresh فشل
-- [x] `core/guards/auth.guard.ts`
-  - `authGuard` — يمنع الدخول لو مش logged in
-  - `roleGuard(['Role'])` — يمنع الدخول لو مش عنده الـ Role
-  - `guestGuard` — يمنع الـ logged in يدخل Login/Register
-- [x] `app.config.ts` — `provideHttpClient(withInterceptors([jwtInterceptor]))`
-- [x] `app.routes.ts` — Guards على كل route
+- [x] JWT Interceptor — auto add token + auto refresh + logout on fail
+- [x] Guards: authGuard, roleGuard, guestGuard
+- [x] app.config.ts + app.routes.ts مع guards
 
-### 10 — Auth — Login ✅
-- [x] Layout: صورة (auth.png) على الشمال + form على اليمين
-- [x] Logo في أعلى الـ form
-- [x] Form: Email + Password + Remember Me + Forgot Password
-- [x] Google OAuth — يشتغل عن طريق `google.accounts.id.prompt()`
-- [x] Google button — "(Tourists only)" label
-- [x] Redirect: Admin → /admin, Guide → /guide-dashboard, Tourist → /
-- [x] Endpoint: `POST /api/auth/login` + `POST /api/auth/google`
+### 10-16 — Auth Pages ✅
+- [x] Login (مع Google OAuth — Tourists only)
+- [x] Register Select → Tourist / Guide
+- [x] Register Tourist + Register Guide
+- [x] Forgot Password + Reset Password
+- [x] Confirm Email
 
-### 11 — Auth — Register Select ✅
-- [x] Layout: صورة كاملة + overlay
-- [x] بطاقتين: Tourist + Guide — الضغط يروح مباشرة
+### 17 — Admin Layout ✅
+- [x] Sidebar + Top Navbar + Collapsible
+- [x] Nav items: Dashboard, Users, Guides, Cities, Landmarks, Bookings, Reviews
 
-### 12 — Auth — Register Tourist ✅
-- [x] Form: Full Name + Email + Password + Confirm Password
-- [x] Validation + Success message + redirect لـ Login بعد 3 ثواني
-- [x] Endpoint: `POST /api/auth/register` مع `role: 'Tourist'`
+### 18 — Admin Dashboard ✅
+- [x] KPI Cards + Charts (Bookings, Revenue, User Growth)
+- [x] Top Cities + Top Landmarks + Guide Performance Table
 
-### 13 — Auth — Register Guide ✅
-- [x] نفس Tourist + note صفراء عن الـ Approval
-- [x] Endpoint: `POST /api/auth/register` مع `role: 'Guide'`
+### 19 — Admin Users ✅
+- [x] Table + Search + Filter + Ban/Unban + Delete modal
 
-### 14 — Auth — Forgot Password ✅
-- [x] Layout: صورة كاملة + card في المنتصف
-- [x] Form: Email بس
-- [x] Success message بعد الإرسال
-- [x] Endpoint: `POST /api/auth/forget-password`
+### 20 — Admin Guides ✅
+- [x] Pending tab: Approve/Reject (مع reason)
+- [x] All Guides tab: Suspend toggle
 
-### 15 — Auth — Reset Password ✅
-- [x] Layout: صورة كاملة + card في المنتصف
-- [x] بياخد `email` و `token` من الـ URL query params
-- [x] لو مفيش params → يعرض "Invalid or expired link"
-- [x] Form: New Password + Confirm Password
-- [x] Success + redirect لـ Login بعد 3 ثواني
-- [x] Endpoint: `POST /api/auth/reset-password`
+### 21 — Admin Reviews ✅
+- [x] Table + Delete modal + Pagination
+
+### 22 — Admin Bookings ✅
+- [x] Table مع Tourist/Guide avatars + Status/Payment badges
+- [x] Filter بالـ Status + Date range
+- [x] Endpoint: `GET /api/bookings/admin`
+- [x] ملاحظة: Status filter بيتعمل in-memory بعد الـ fetch (الـ Backend بيخزن كـ string)
+
+### 23 — Admin Cities ✅
+- [x] Table مع City thumbnails + Landmarks count
+- [x] Add/Edit modal مع image upload عن طريق Backend (Cloudinary)
+- [x] Delete confirmation modal
+- [x] Endpoints: GET/POST/PUT/DELETE /api/cities + POST /api/cities/upload-image
+- [x] Backend fix: أضفنا `POST /api/cities/upload-image` في `CitiesController.cs`
 
 ---
 
 ## 🔑 Auth Models (core/models/auth.ts)
 
 ```typescript
-// Requests
 LoginRequest          { email, password }
 RegisterRequest       { fullName, email, password, role: 'Tourist'|'Guide' }
 ForgetPasswordRequest { email }
@@ -287,40 +267,48 @@ ResetPasswordRequest  { email, token, newPassword }
 RefreshTokenRequest   { refreshToken }
 ChangePasswordRequest { currentPassword, newPassword }
 GoogleAuthRequest     { idToken }
-
-// Response — flat object (مش nested)
 LoginResponse         { accessToken, refreshToken, role, fullName, email }
 ```
 
 ---
 
-## 🔑 Auth Service (core/services/auth.ts)
+## 🔑 Booking Model (core/models/booking.ts)
 
 ```typescript
-login(request)          → POST /auth/login
-register(request)       → POST /auth/register
-googleLogin(request)    → POST /auth/google
-forgotPassword(request) → POST /auth/forget-password
-resetPassword(request)  → POST /auth/reset-password
-refreshToken(request)   → POST /auth/refresh-token
-changePassword(request) → POST /auth/change-password
-logout()                → POST /auth/logout
-
-// Helpers
-saveUser(), clearUser(), getToken(), getRefreshToken()
-getUserFromStorage(), isLoggedIn(), getRole()
+BookingDto {
+  id, startDate, numberOfPersons, totalPrice
+  status, paymentStatus, isCustom, rejectionReason, createdAt
+  touristId, touristName, touristAvatar
+  guideProfileId, guideName, guideAvatar
+  packageId, packageTitle
+}
+BookingFilterParams { status?, fromDate?, toDate?, page?, pageSize? }
 ```
 
 ---
 
-## 🔑 Environment (src/environments/)
+## 🔑 City Service (core/services/city.ts)
 
 ```typescript
-export const environment = {
-  production: false,
-  apiUrl: '',
-  googleClientId: ''
-};
+getCities(page, pageSize)     → GET /api/cities
+getCityById(id)               → GET /api/cities/{id}
+getTrendingCities()           → GET /api/cities/trending
+createCity(data)              → POST /api/cities
+updateCity(id, data)          → PUT /api/cities/{id}
+deleteCity(id)                → DELETE /api/cities/{id}
+// Image upload → POST /api/cities/upload-image (من الـ component مباشرة)
+```
+
+---
+
+## 🔑 API Service Pattern (core/services/api.ts)
+
+```typescript
+get<T>(endpoint, { params?: HttpParams })
+post<T>(endpoint, body)
+put<T>(endpoint, body)
+delete<T>(endpoint)
+// للـ params: new HttpParams().set('key', value)
 ```
 
 ---
@@ -333,49 +321,47 @@ export const environment = {
 | `Images` في Landmarks | `LandmarkService.cs` |
 | `CityName` في Landmarks | `LandmarkService.cs` |
 | `GET/DELETE /api/admin/users/{id}` | `AdminController.cs` |
-| Reset Password link يروح على Frontend مش Backend | `AuthController.cs` |
-| Email Confirmation link يروح على Frontend مش Backend | `AuthController.cs` |
+| Reset Password link → Frontend | `AuthController.cs` |
+| Email Confirmation link → Frontend | `AuthController.cs` |
+| `IRepository` — أضفنا `FindWithNestedIncludeAsync` | `IRepository.cs` |
+| `GenericRepository` — أضفنا `FindWithNestedIncludeAsync` | `GenericRepository.cs` |
+| `BookingService` — Include Tourist + GuideProfile.User + Package | `BookingService.cs` |
+| `BookingFilterParams.Status` — string بدل enum | `BookingFilterParams.cs` |
+| Booking status filter — in-memory بعد fetch | `BookingService.cs` |
+| `CitiesController` — أضفنا `POST /api/cities/upload-image` | `CitiesController.cs` |
 
 ---
 
 ## ⚠️ Backend — التعديلات المطلوبة وقت Production
 
-### 1. `appsettings.json` — لازم يتضاف:
+### 1. `appsettings.json`
 ```json
-"Frontend": {
-  "BaseUrl": "http://localhost:4200"
-}
-```
-**وقت Production على Vercel — غيّره لـ:**
-```json
-"Frontend": {
-  "BaseUrl": "https://your-app.vercel.app"
-}
+"Frontend": { "BaseUrl": "https://your-app.vercel.app" }
 ```
 
-### 2. `AuthController.cs` — بيستخدم `Frontend:BaseUrl` في:
-- `POST /auth/register` — لينك تأكيد الـ Email
-- `POST /auth/forget-password` — لينك Reset Password
-
-### 3. CORS في `Program.cs` — لازم تضيف Vercel URL:
+### 2. CORS في `Program.cs`
 ```csharp
-// دلوقتي بيقبل localhost:4200 بس
-// وقت Production أضف:
 WithOrigins("http://localhost:4200", "https://your-app.vercel.app")
 ```
 
-### 4. Google Console — لازم تضيف Vercel URL:
-- **Authorized JavaScript origins:** أضف `https://your-app.vercel.app`
-- **Authorized redirect URIs:** أضف `https://your-app.vercel.app`
+### 3. Google Console
+- Authorized JavaScript origins: أضف Vercel URL
+- Authorized redirect URIs: أضف Vercel URL
 
 ---
 
-## 📌 ما يحتاجه الشات الجديد من الـ Backend
+## 📌 الخطوات الجاية
 
-لو فتحت شات جديد وعايز تكمل الصفحات، ابعت الملفات دي:
-
-**قاعدة ثابتة:**
-دايما ابعت الـ DTO + Service + Controller للصفحة اللي هتشتغل عليها قبل ما تبدأ.
+| # | الصفحة |
+|---|--------|
+| 1 | Admin Landmarks |
+| 2 | My Profile (Tourist/Guide) |
+| 3 | Guide Dashboard |
+| 4 | My Bookings |
+| 5 | Package/City/Landmark Details |
+| 6 | Chat + Notifications |
+| 7 | Payment |
+| 8 | Footer |
 
 ---
 
