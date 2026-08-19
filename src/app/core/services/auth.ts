@@ -47,6 +47,12 @@ export class AuthService {
     );
   }
 
+  confirmEmail(userId: string, token: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/confirm-email`, {
+      params: { userId, token }
+    });
+  }
+
   forgotPassword(request: ForgetPasswordRequest): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/forget-password`, request);
   }

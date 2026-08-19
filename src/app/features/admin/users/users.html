@@ -1,0 +1,180 @@
+<div class="users-page">
+
+  <!-- Header -->
+  <div class="page-header mb-4">
+    <div>
+      <h1 class="page-title">Users</h1>
+      <p class="page-subtitle">Manage all registered users</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar mb-4">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" [(ngModel)]="search" (keyup.enter)="onSearch()"
+             placeholder="Search by name or email…" class="search-input" />
+    </div>
+
+    <select [(ngModel)]="roleFilter" (change)="onFilterChange()" class="filter-select">
+      <option value="">All Roles</option>
+      <option value="Tourist">Tourist</option>
+      <option value="Guide">Guide</option>
+      <option value="Admin">Admin</option>
+    </select>
+
+    <select [(ngModel)]="bannedFilter" (change)="onFilterChange()" class="filter-select">
+      <option value="">All Status</option>
+      <option value="false">Active</option>
+      <option value="true">Banned</option>
+    </select>
+
+    <button class="btn-clear" (click)="clearFilters()">
+      <i class="fas fa-times me-1"></i> Clear
+    </button>
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="loading-state">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p>Loading users…</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error) {
+    <div class="alert alert-danger">
+      <i class="fas fa-exclamation-circle me-2"></i>
+      Failed to load users.
+      <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadUsers()">Retry</button>
+    </div>
+  }
+
+  <!-- Table -->
+  @if (!loading && !error) {
+    <div class="table-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users; track user.id) {
+              <tr [class.row-banned]="user.isBanned">
+                <td>
+                  <div class="user-cell">
+                    @if (user.avatarUrl) {
+                      <img [src]="user.avatarUrl" [alt]="user.fullName" class="user-avatar" />
+                    } @else {
+                      <div class="user-initials">{{ getInitials(user.fullName) }}</div>
+                    }
+                    <span class="user-name">{{ user.fullName }}</span>
+                  </div>
+                </td>
+                <td class="text-muted">{{ user.email }}</td>
+                <td>
+                  <span class="role-badge" [ngClass]="getRoleBadgeClass(user.role)">
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td>
+                  @if (user.isBanned) {
+                    <span class="status-badge status-banned">
+                      <i class="fas fa-ban me-1"></i> Banned
+                    </span>
+                  } @else {
+                    <span class="status-badge status-active">
+                      <i class="fas fa-check-circle me-1"></i> Active
+                    </span>
+                  }
+                </td>
+                <td class="text-muted">{{ formatDate(user.createdAt) }}</td>
+                <td>
+                  <div class="action-btns">
+                    <button class="btn-action btn-ban" (click)="openBanModal(user)"
+                            [title]="user.isBanned ? 'Unban User' : 'Ban User'">
+                      <i class="fas" [ngClass]="user.isBanned ? 'fa-unlock' : 'fa-ban'"></i>
+                    </button>
+                    <button class="btn-action btn-delete" (click)="openDeleteModal(user)"
+                            title="Delete User">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="6" class="empty-state">
+                  <i class="fas fa-users"></i>
+                  <p>No users found</p>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table Footer -->
+      <div class="table-footer">
+        <span class="table-count">{{ users.length }} user(s) shown</span>
+      </div>
+    </div>
+  }
+
+</div>
+
+<!-- ── Confirm Modal ── -->
+@if (selectedUser && modalAction) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      @if (actionSuccess) {
+        <div class="modal-success">
+          <i class="fas fa-check-circle"></i>
+          <p>{{ actionSuccess }}</p>
+        </div>
+      } @else {
+        <div class="modal-icon" [ngClass]="modalAction === 'delete' ? 'icon-danger' : 'icon-warning'">
+          <i class="fas" [ngClass]="modalAction === 'delete' ? 'fa-trash' : (selectedUser.isBanned ? 'fa-unlock' : 'fa-ban')"></i>
+        </div>
+
+        <h3 class="modal-title">
+          {{ modalAction === 'delete' ? 'Delete User' : (selectedUser.isBanned ? 'Unban User' : 'Ban User') }}
+        </h3>
+
+        <p class="modal-body">
+          @if (modalAction === 'delete') {
+            Are you sure you want to delete <strong>{{ selectedUser.fullName }}</strong>? This action cannot be undone.
+          } @else if (selectedUser.isBanned) {
+            Are you sure you want to <strong>unban</strong> {{ selectedUser.fullName }}?
+          } @else {
+            Are you sure you want to <strong>ban</strong> {{ selectedUser.fullName }}? They will lose access to the platform.
+          }
+        </p>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+          <button class="btn-confirm"
+                  [ngClass]="modalAction === 'delete' ? 'btn-danger' : 'btn-warning'"
+                  [disabled]="actionLoading"
+                  (click)="confirmAction()">
+            @if (actionLoading) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            {{ modalAction === 'delete' ? 'Delete' : (selectedUser.isBanned ? 'Unban' : 'Ban') }}
+          </button>
+        </div>
+      }
+
+    </div>
+  </div>
+}

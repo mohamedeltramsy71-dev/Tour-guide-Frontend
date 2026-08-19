@@ -1,0 +1,258 @@
+<div class="guides-page">
+
+  <!-- Header -->
+  <div class="page-header mb-4">
+    <div>
+      <h1 class="page-title">Guides Management</h1>
+      <p class="page-subtitle">Review, approve, and manage tour guides</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-bar mb-4">
+    <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
+      <i class="fas fa-user-clock me-2"></i>
+      Pending Approval
+      @if (pendingGuides.length > 0) {
+        <span class="tab-count">{{ pendingGuides.length }}</span>
+      }
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'all'" (click)="setTab('all')">
+      <i class="fas fa-compass me-2"></i>
+      All Guides
+      <span class="tab-count tab-count-neutral">{{ allGuides.length }}</span>
+    </button>
+  </div>
+
+  <!-- ══ PENDING TAB ══ -->
+  @if (activeTab === 'pending') {
+    @if (loadingPending) {
+      <div class="loading-state">
+        <div class="spinner-border" style="color:#C85C3A"></div>
+        <p>Loading pending guides…</p>
+      </div>
+    } @else if (errorPending) {
+      <div class="alert alert-danger">
+        Failed to load pending guides.
+        <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadPending()">Retry</button>
+      </div>
+    } @else if (pendingGuides.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-check-circle"></i></div>
+        <h3>All clear!</h3>
+        <p>No pending guide requests at the moment.</p>
+      </div>
+    } @else {
+      <div class="guides-grid">
+        @for (guide of pendingGuides; track guide.userId) {
+          <div class="guide-card pending-card">
+            <div class="guide-card-header">
+              @if (guide.avatarUrl) {
+                <img [src]="guide.avatarUrl" [alt]="guide.fullName" class="guide-avatar" />
+              } @else {
+                <div class="guide-initials">{{ getInitials(guide.fullName) }}</div>
+              }
+              <span class="status-badge badge-pending">
+                <i class="fas fa-clock me-1"></i> Pending
+              </span>
+            </div>
+
+            <div class="guide-card-body">
+              <h3 class="guide-name">{{ guide.fullName }}</h3>
+
+              <div class="guide-meta">
+                <span><i class="fas fa-star text-warning me-1"></i>{{ guide.averageRating | number:'1.1-1' }}</span>
+                <span><i class="fas fa-briefcase me-1"></i>{{ guide.experienceYears }}y exp</span>
+                <span><i class="fas fa-users me-1"></i>{{ guide.totalReviews }} reviews</span>
+              </div>
+
+              @if (guide.languages?.length) {
+                <div class="guide-tags">
+                  @for (lang of guide.languages; track lang) {
+                    <span class="tag tag-lang">{{ lang }}</span>
+                  }
+                </div>
+              }
+
+              @if (guide.coveredCities?.length) {
+                <div class="guide-tags">
+                  @for (city of guide.coveredCities; track city) {
+                    <span class="tag tag-city"><i class="fas fa-map-marker-alt me-1"></i>{{ city }}</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="guide-card-actions">
+              <button class="btn-approve" (click)="openModal(guide, 'approve')">
+                <i class="fas fa-check me-1"></i> Approve
+              </button>
+              <button class="btn-reject" (click)="openModal(guide, 'reject')">
+                <i class="fas fa-times me-1"></i> Reject
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+
+  <!-- ══ ALL GUIDES TAB ══ -->
+  @if (activeTab === 'all') {
+    @if (loadingAll) {
+      <div class="loading-state">
+        <div class="spinner-border" style="color:#C85C3A"></div>
+        <p>Loading guides…</p>
+      </div>
+    } @else if (errorAll) {
+      <div class="alert alert-danger">
+        Failed to load guides.
+        <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadAll()">Retry</button>
+      </div>
+    } @else if (allGuides.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-compass"></i></div>
+        <h3>No guides yet</h3>
+        <p>No approved guides found.</p>
+      </div>
+    } @else {
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Guide</th>
+                <th>Rating</th>
+                <th>Experience</th>
+                <th>Languages</th>
+                <th>Cities</th>
+                <th>Available</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (guide of allGuides; track guide.userId) {
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      @if (guide.avatarUrl) {
+                        <img [src]="guide.avatarUrl" [alt]="guide.fullName" class="user-avatar" />
+                      } @else {
+                        <div class="user-initials">{{ getInitials(guide.fullName) }}</div>
+                      }
+                      <span class="user-name">{{ guide.fullName }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="rating-pill">
+                      <i class="fas fa-star"></i> {{ guide.averageRating | number:'1.1-1' }}
+                      <span class="text-muted">({{ guide.totalReviews }})</span>
+                    </span>
+                  </td>
+                  <td>{{ guide.experienceYears }} yrs</td>
+                  <td>
+                    <div class="tags-cell">
+                      @for (lang of guide.languages?.slice(0,2); track lang) {
+                        <span class="tag tag-sm">{{ lang }}</span>
+                      }
+                      @if ((guide.languages?.length ?? 0) > 2) {
+                        <span class="tag tag-sm tag-more">+{{ (guide.languages?.length ?? 0) - 2 }}</span>
+                      }
+                    </div>
+                  </td>
+                  <td>
+                    <div class="tags-cell">
+                      @for (city of guide.coveredCities?.slice(0,2); track city) {
+                        <span class="tag tag-sm tag-city-sm">{{ city }}</span>
+                      }
+                      @if ((guide.coveredCities?.length ?? 0) > 2) {
+                        <span class="tag tag-sm tag-more">+{{ (guide.coveredCities?.length ?? 0) - 2 }}</span>
+                      }
+                    </div>
+                  </td>
+                  <td>
+                    @if (guide.isAvailable) {
+                      <span class="status-badge badge-active"><i class="fas fa-circle me-1" style="font-size:0.5rem"></i>Available</span>
+                    } @else {
+                      <span class="status-badge badge-off"><i class="fas fa-circle me-1" style="font-size:0.5rem"></i>Unavailable</span>
+                    }
+                  </td>
+                  <td>
+                    <button class="btn-action btn-suspend" (click)="openModal(guide, 'suspend')"
+                            title="Toggle Suspend">
+                      <i class="fas fa-ban"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span class="table-count">{{ allGuides.length }} guide(s)</span>
+        </div>
+      </div>
+    }
+  }
+
+</div>
+
+<!-- ══ MODAL ══ -->
+@if (selectedGuide && modalAction) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      @if (actionSuccess) {
+        <div class="modal-success">
+          <i class="fas fa-check-circle"></i>
+          <p>{{ actionSuccess }}</p>
+        </div>
+      } @else {
+
+        <div class="modal-icon"
+             [ngClass]="{'icon-success': modalAction==='approve', 'icon-danger': modalAction==='reject', 'icon-warning': modalAction==='suspend'}">
+          <i class="fas"
+             [ngClass]="{'fa-check': modalAction==='approve', 'fa-times': modalAction==='reject', 'fa-ban': modalAction==='suspend'}"></i>
+        </div>
+
+        <h3 class="modal-title">
+          {{ modalAction === 'approve' ? 'Approve Guide' : modalAction === 'reject' ? 'Reject Guide' : 'Toggle Suspend' }}
+        </h3>
+
+        <p class="modal-body">
+          @if (modalAction === 'approve') {
+            Approve <strong>{{ selectedGuide.fullName }}</strong>? They will receive an email notification.
+          } @else if (modalAction === 'reject') {
+            Reject <strong>{{ selectedGuide.fullName }}</strong>? Please provide a reason.
+          } @else {
+            Toggle suspend status for <strong>{{ selectedGuide.fullName }}</strong>?
+          }
+        </p>
+
+        @if (modalAction === 'reject') {
+          <textarea [(ngModel)]="rejectReason"
+                    placeholder="Enter rejection reason…"
+                    class="reject-textarea" rows="3"></textarea>
+        }
+
+        @if (actionError) {
+          <p class="action-error">{{ actionError }}</p>
+        }
+
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+          <button class="btn-confirm"
+                  [ngClass]="{'btn-success': modalAction==='approve', 'btn-danger': modalAction==='reject', 'btn-warning': modalAction==='suspend'}"
+                  [disabled]="actionLoading"
+                  (click)="confirmAction()">
+            @if (actionLoading) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            {{ modalAction === 'approve' ? 'Approve' : modalAction === 'reject' ? 'Reject' : 'Suspend' }}
+          </button>
+        </div>
+      }
+
+    </div>
+  </div>
+}

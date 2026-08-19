@@ -12,7 +12,6 @@ import {
   UserGrowthDto,
   UserDto,
   PaginatedUsersRequest,
-  PaginatedResult,
   RejectGuideRequest,
 } from '../models/admin';
 import { Guide } from '../models/guide';
@@ -55,14 +54,14 @@ export class AdminService {
 
   // ─── Users ─────────────────────────────────────────────────────────────────
 
-  getAllUsers(request: PaginatedUsersRequest = {}): Observable<PaginatedResult<UserDto>> {
+  getAllUsers(request: PaginatedUsersRequest = {}): Observable<UserDto[]> {
     let params = new HttpParams()
       .set('page', request.page ?? 1)
       .set('pageSize', request.pageSize ?? 10);
-    if (request.search)                params = params.set('search', request.search);
-    if (request.role)                  params = params.set('role', request.role);
+    if (request.search)                 params = params.set('search', request.search);
+    if (request.role)                   params = params.set('role', request.role);
     if (request.isBanned !== undefined) params = params.set('isBanned', request.isBanned);
-    return this.api.get<PaginatedResult<UserDto>>('admin/users', { params });
+    return this.api.get<UserDto[]>('admin/users', { params });
   }
 
   getUserById(id: string): Observable<UserDto> {

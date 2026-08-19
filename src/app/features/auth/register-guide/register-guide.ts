@@ -59,7 +59,7 @@ export class RegisterGuide {
     }).subscribe({
       next: () => {
         this.isLoading = false;
-        this.successMessage = 'Account created! Please check your email to confirm your account.';
+        this.successMessage = 'Account created! Please check your email to confirm your account. After confirmation, our team will review your application.';
         setTimeout(() => this.router.navigate(['/auth/login']), 3000);
       },
       error: (err) => {

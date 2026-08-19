@@ -8,7 +8,6 @@ import { AuthService } from '../services/auth';
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-// فقط الـ auth endpoints اللي مش محتاجة token
 const PUBLIC_ENDPOINTS = [
   '/auth/login',
   '/auth/register',
@@ -26,7 +25,6 @@ export const jwtInterceptor: HttpInterceptorFn = (
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // نشوف لو الـ request لـ endpoint عام بالظبط (مش partial match)
   const isPublic = PUBLIC_ENDPOINTS.some(endpoint => req.url.includes(endpoint));
   const token = authService.getToken();
 

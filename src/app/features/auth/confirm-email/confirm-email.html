@@ -1,0 +1,37 @@
+<div class="confirm-page">
+  <div class="confirm-card">
+
+    <img src="images/logo.png" alt="Rihla" class="confirm-logo" />
+
+    @if (state === 'loading') {
+      <div class="confirm-icon icon-loading">
+        <div class="spinner-border" style="color:#C85C3A; width:2rem; height:2rem;"></div>
+      </div>
+      <h2 class="confirm-title">Confirming your email…</h2>
+      <p class="confirm-sub">Please wait a moment.</p>
+    }
+
+    @if (state === 'success') {
+      <div class="confirm-icon icon-success">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2 class="confirm-title">Email Confirmed!</h2>
+      <p class="confirm-sub">{{ message }}</p>
+      <a routerLink="/auth/login" class="confirm-btn">
+        Go to Login <i class="fas fa-arrow-right ms-2"></i>
+      </a>
+    }
+
+    @if (state === 'error') {
+      <div class="confirm-icon icon-error">
+        <i class="fas fa-times-circle"></i>
+      </div>
+      <h2 class="confirm-title">Confirmation Failed</h2>
+      <p class="confirm-sub">{{ message }}</p>
+      <a routerLink="/auth/login" class="confirm-btn confirm-btn-outline">
+        Back to Login
+      </a>
+    }
+
+  </div>
+</div>

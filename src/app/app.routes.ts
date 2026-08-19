@@ -54,6 +54,10 @@ export const routes: Routes = [
     path: 'auth/reset-password',
     loadComponent: () => import('./features/auth/reset-password/reset-password').then(m => m.ResetPassword),
   },
+  {
+    path: 'auth/confirm-email',
+    loadComponent: () => import('./features/auth/confirm-email/confirm-email').then(m => m.ConfirmEmail),
+  },
 
   // ─── Admin ────────────────────────────────────────────────
   {
@@ -62,11 +66,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/admin/admin-layout/admin-layout').then(m => m.AdminLayoutComponent),
     children: [
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-      },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
         loadComponent: () =>
