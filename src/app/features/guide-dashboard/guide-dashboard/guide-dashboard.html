@@ -1,0 +1,231 @@
+<div class="dashboard-wrap">
+
+  <!-- ─── Loading ─────────────────────────────────────────── -->
+  @if (isLoading) {
+    <div class="loading-state">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p>Loading your dashboard...</p>
+    </div>
+  }
+
+  @if (!isLoading) {
+
+    <!-- ─── Welcome Banner ───────────────────────────────── -->
+    <div class="welcome-banner">
+      <div class="welcome-left">
+        <div class="welcome-avatar">
+          @if (profile?.avatarUrl) {
+            <img [src]="profile!.avatarUrl" alt="avatar" />
+          } @else {
+            <span>{{ initials }}</span>
+          }
+        </div>
+        <div>
+          <h1 class="welcome-title">Welcome back, {{ profile?.fullName ?? 'Guide' }}!</h1>
+          <p class="welcome-sub">
+            <i class="fas fa-star text-warning me-1"></i>
+            {{ profile?.averageRating | number:'1.1-1' }} rating
+            &nbsp;·&nbsp;
+            <i class="fas fa-comment-dots me-1"></i>
+            {{ profile?.totalReviews }} reviews
+            &nbsp;·&nbsp;
+            <i class="fas fa-briefcase me-1"></i>
+            {{ profile?.experienceYears }} years experience
+          </p>
+        </div>
+      </div>
+      <div class="welcome-actions">
+        <a routerLink="/guide/bookings" class="btn-primary-outline">
+          <i class="fas fa-calendar-check me-2"></i>View Bookings
+        </a>
+        <a routerLink="/guide/packages" class="btn-primary-solid">
+          <i class="fas fa-plus me-2"></i>New Package
+        </a>
+      </div>
+    </div>
+
+    <!-- ─── Stats Cards ──────────────────────────────────── -->
+    <div class="stats-grid">
+
+      <div class="stat-card stat-total">
+        <div class="stat-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ stats.total }}</span>
+          <span class="stat-label">Total Bookings</span>
+        </div>
+      </div>
+
+      <div class="stat-card stat-pending">
+        <div class="stat-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ stats.pending }}</span>
+          <span class="stat-label">Pending</span>
+        </div>
+      </div>
+
+      <div class="stat-card stat-confirmed">
+        <div class="stat-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ stats.confirmed }}</span>
+          <span class="stat-label">Confirmed</span>
+        </div>
+      </div>
+
+      <div class="stat-card stat-completed">
+        <div class="stat-icon">
+          <i class="fas fa-flag-checkered"></i>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ stats.completed }}</span>
+          <span class="stat-label">Completed</span>
+        </div>
+      </div>
+
+      <div class="stat-card stat-rating">
+        <div class="stat-icon">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ profile?.averageRating | number:'1.1-1' }}</span>
+          <span class="stat-label">Avg Rating</span>
+        </div>
+      </div>
+
+      <div class="stat-card stat-reviews">
+        <div class="stat-icon">
+          <i class="fas fa-comments"></i>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ profile?.totalReviews }}</span>
+          <span class="stat-label">Total Reviews</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── Bottom Grid ──────────────────────────────────── -->
+    <div class="bottom-grid">
+
+      <!-- Recent Bookings -->
+      <div class="dash-card recent-bookings">
+        <div class="dash-card-header">
+          <h2 class="dash-card-title">
+            <i class="fas fa-calendar-check me-2"></i>Recent Bookings
+          </h2>
+          <a routerLink="/guide/bookings" class="view-all">View all</a>
+        </div>
+
+        @if (bookings.length === 0) {
+          <div class="empty-state">
+            <i class="fas fa-calendar-xmark"></i>
+            <p>No bookings yet</p>
+          </div>
+        } @else {
+          <div class="table-wrap">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Tourist</th>
+                  <th>Package</th>
+                  <th>Date</th>
+                  <th>Persons</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (b of bookings; track b.id) {
+                  <tr>
+                    <td>
+                      <div class="tourist-cell">
+                        <div class="tourist-avatar">
+                          @if (b.touristAvatar) {
+                            <img [src]="b.touristAvatar" [alt]="b.touristName" />
+                          } @else {
+                            {{ b.touristName[0] }}
+                          }
+                        </div>
+                        <span>{{ b.touristName }}</span>
+                      </div>
+                    </td>
+                    <td class="text-muted">{{ b.packageTitle ?? 'Custom Trip' }}</td>
+                    <td>{{ b.startDate | date:'MMM d, y' }}</td>
+                    <td class="text-center">{{ b.numberOfPersons }}</td>
+                    <td class="fw-600">EGP {{ b.totalPrice | number }}</td>
+                    <td>
+                      <span class="status-badge" [ngClass]="getStatusClass(b.status)">
+                        {{ b.status }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+
+      <!-- Profile Summary -->
+      <div class="dash-card profile-summary">
+        <div class="dash-card-header">
+          <h2 class="dash-card-title">
+            <i class="fas fa-user me-2"></i>Profile Summary
+          </h2>
+          <a routerLink="/guide/profile" class="view-all">Edit</a>
+        </div>
+
+        <div class="profile-summary-body">
+
+          <div class="summary-row">
+            <span class="summary-label"><i class="fas fa-map-marker-alt"></i> Cities</span>
+            <div class="city-tags">
+              @for (city of profile?.coveredCities ?? []; track city) {
+                <span class="city-tag">{{ city }}</span>
+              }
+              @if (!profile?.coveredCities?.length) {
+                <span class="text-muted">No cities added</span>
+              }
+            </div>
+          </div>
+
+          <div class="summary-row">
+            <span class="summary-label"><i class="fas fa-language"></i> Languages</span>
+            <div class="city-tags">
+              @for (lang of profile?.languages ?? []; track lang) {
+                <span class="city-tag lang-tag">{{ lang }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="summary-row">
+            <span class="summary-label"><i class="fas fa-circle-check"></i> Status</span>
+            @if (profile?.isApproved) {
+              <span class="status-badge badge-completed">Approved</span>
+            } @else {
+              <span class="status-badge badge-pending">Pending Approval</span>
+            }
+          </div>
+
+          <div class="summary-row">
+            <span class="summary-label"><i class="fas fa-toggle-on"></i> Availability</span>
+            @if (profile?.isAvailable) {
+              <span class="status-badge badge-confirmed">Available</span>
+            } @else {
+              <span class="status-badge badge-cancelled">Unavailable</span>
+            }
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  }
+
+</div>

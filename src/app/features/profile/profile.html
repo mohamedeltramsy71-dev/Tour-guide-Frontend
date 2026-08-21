@@ -1,0 +1,185 @@
+<div class="profile-page">
+  <div class="container py-5">
+
+    <!-- Back Button -->
+    <button class="btn-back mb-4" (click)="goBack()">
+      <i class="fa fa-arrow-left me-2"></i> Back
+    </button>
+
+    <!-- Header Card -->
+    <div class="profile-header-card mb-4">
+      <div class="avatar-section">
+
+        <div class="avatar-wrapper">
+          <ng-container *ngIf="avatarPreview(); else initials">
+            <img [src]="avatarPreview()" alt="avatar" class="avatar-img" />
+          </ng-container>
+          <ng-template #initials>
+            <div class="avatar-initials">{{ getInitials() }}</div>
+          </ng-template>
+
+          <label class="avatar-overlay" [class.loading]="avatarLoading()">
+            <input type="file" accept="image/*" hidden (change)="onAvatarChange($event)" />
+            <ng-container *ngIf="!avatarLoading(); else spinner">
+              <i class="fa fa-camera"></i>
+            </ng-container>
+            <ng-template #spinner>
+              <span class="spinner-border spinner-border-sm text-white"></span>
+            </ng-template>
+          </label>
+        </div>
+
+        <div class="user-info">
+          <h2 class="user-name">{{ user()?.fullName }}</h2>
+          <p class="user-email">{{ user()?.email }}</p>
+          <span class="role-badge role-{{ user()?.role?.toLowerCase() }}">
+            {{ user()?.role }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="profile-tabs mb-4">
+      <button class="tab-btn" [class.active]="activeTab() === 'info'" (click)="setTab('info')">
+        <i class="fa fa-user me-2"></i> Personal Info
+      </button>
+      <button class="tab-btn" [class.active]="activeTab() === 'password'" (click)="setTab('password')">
+        <i class="fa fa-lock me-2"></i> Change Password
+      </button>
+    </div>
+
+    <!-- Alerts -->
+    @if (successMsg()) {
+      <div class="alert alert-success d-flex align-items-center gap-2 mb-4">
+        <i class="fa fa-check-circle"></i> {{ successMsg() }}
+      </div>
+    }
+    @if (errorMsg()) {
+      <div class="alert alert-danger d-flex align-items-center gap-2 mb-4">
+        <i class="fa fa-exclamation-circle"></i> {{ errorMsg() }}
+      </div>
+    }
+
+    <!-- Tab: Info -->
+    @if (activeTab() === 'info') {
+      <div class="profile-card">
+        <h5 class="card-title mb-4">Edit Personal Info</h5>
+        <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
+          <div class="row g-4">
+
+            <div class="col-md-6">
+              <label class="form-label">Full Name <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="fullName"
+                [class.is-invalid]="profileForm.get('fullName')?.invalid && profileForm.get('fullName')?.touched"
+              />
+              @if (profileForm.get('fullName')?.hasError('required') && profileForm.get('fullName')?.touched) {
+                <div class="invalid-feedback">Full name is required</div>
+              }
+              @if (profileForm.get('fullName')?.hasError('minlength') && profileForm.get('fullName')?.touched) {
+                <div class="invalid-feedback">Name must be at least 3 characters</div>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Phone Number</label>
+              <input
+                type="tel"
+                class="form-control"
+                formControlName="phone"
+                placeholder="+20..."
+              />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Bio</label>
+              <textarea
+                class="form-control"
+                formControlName="bio"
+                rows="4"
+                placeholder="Write something about yourself..."
+              ></textarea>
+            </div>
+
+          </div>
+
+          <div class="mt-4 d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary px-5" [disabled]="profileForm.invalid || loading()">
+              @if (loading()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Tab: Password -->
+    @if (activeTab() === 'password') {
+      <div class="profile-card">
+        <h5 class="card-title mb-4">Change Password</h5>
+        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+          <div class="row g-4">
+
+            <div class="col-12">
+              <label class="form-label">Current Password <span class="text-danger">*</span></label>
+              <input
+                type="password"
+                class="form-control"
+                formControlName="currentPassword"
+                [class.is-invalid]="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched"
+              />
+              @if (passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.hasError('required')) {
+                <div class="invalid-feedback">This field is required</div>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">New Password <span class="text-danger">*</span></label>
+              <input
+                type="password"
+                class="form-control"
+                formControlName="newPassword"
+                [class.is-invalid]="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched"
+              />
+              @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('required')) {
+                <div class="invalid-feedback">This field is required</div>
+              }
+              @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')) {
+                <div class="invalid-feedback">At least 6 characters</div>
+              }
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Confirm Password <span class="text-danger">*</span></label>
+              <input
+                type="password"
+                class="form-control"
+                formControlName="confirmPassword"
+                [class.is-invalid]="passwordForm.get('confirmPassword')?.touched && passwordForm.hasError('mismatch')"
+              />
+              @if (passwordForm.get('confirmPassword')?.touched && passwordForm.hasError('mismatch')) {
+                <div class="invalid-feedback">Passwords do not match</div>
+              }
+            </div>
+
+          </div>
+
+          <div class="mt-4 d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary px-5" [disabled]="passwordForm.invalid || loading()">
+              @if (loading()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              Change Password
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+
+  </div>
+</div>

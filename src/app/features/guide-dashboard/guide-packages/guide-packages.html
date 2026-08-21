@@ -1,0 +1,327 @@
+<!-- Loading -->
+<div class="loading-state" *ngIf="loading">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p>Loading your packages...</p>
+</div>
+
+<div class="packages-wrap" *ngIf="!loading">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title"><i class="fas fa-box-open"></i> My Packages</h1>
+      <p class="page-sub">Create and manage your tour packages.</p>
+    </div>
+    <button class="btn-create" (click)="openCreate()">
+      <i class="fas fa-plus"></i> New Package
+    </button>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alert-success" *ngIf="successMsg">
+    <i class="fas fa-check-circle"></i> {{ successMsg }}
+  </div>
+  <div class="alert-error" *ngIf="errorMsg && !modal">
+    <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
+  </div>
+
+  <!-- Empty -->
+  <div class="empty-state" *ngIf="packages.length === 0">
+    <i class="fas fa-box-open"></i>
+    <p>No packages yet</p>
+    <span>Create your first tour package to start receiving bookings.</span>
+    <button class="btn-create" (click)="openCreate()">
+      <i class="fas fa-plus"></i> Create Package
+    </button>
+  </div>
+
+  <!-- Package Cards Grid -->
+  <div class="pkg-grid" *ngIf="packages.length > 0">
+    <div class="pkg-card" *ngFor="let pkg of packages" [class.pkg-inactive]="!pkg.isActive">
+
+      <!-- Cover Image -->
+      <div class="pkg-cover">
+        <img *ngIf="pkg.images.length > 0" [src]="pkg.images[0]" [alt]="pkg.title" />
+        <div class="pkg-cover-placeholder" *ngIf="pkg.images.length === 0">
+          <span>{{ getInitials(pkg.title) }}</span>
+        </div>
+        <span class="pkg-status-badge" [class.badge-active]="pkg.isActive" [class.badge-inactive]="!pkg.isActive">
+          {{ pkg.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+
+      <!-- Body -->
+      <div class="pkg-body">
+        <div class="pkg-title">{{ pkg.title }}</div>
+        <div class="pkg-city"><i class="fas fa-map-marker-alt"></i> {{ pkg.cityNameEn }}</div>
+
+        <div class="pkg-meta">
+          <span class="pkg-meta-item">
+            <i class="fas fa-dollar-sign"></i> {{ pkg.price | number:'1.0-0' }} EGP
+          </span>
+          <span class="pkg-meta-item">
+            <i class="fas fa-clock"></i> {{ pkg.durationDays }} day{{ pkg.durationDays > 1 ? 's' : '' }}
+          </span>
+          <span class="pkg-meta-item">
+            <i class="fas fa-users"></i> Max {{ pkg.maxPersons }}
+          </span>
+          <span class="pkg-meta-item">
+            <i class="fas fa-star"></i> {{ pkg.averageRating | number:'1.1-1' }}
+          </span>
+        </div>
+
+        <div class="pkg-counts">
+          <span class="count-chip"><i class="fas fa-image"></i> {{ pkg.images.length }} images</span>
+          <span class="count-chip"><i class="fas fa-map-pin"></i> {{ pkg.landmarks.length }} landmarks</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="pkg-actions">
+        <button class="act-btn act-toggle"
+          (click)="toggleActive(pkg)"
+          [disabled]="togglingId === pkg.id"
+          [title]="pkg.isActive ? 'Deactivate' : 'Activate'">
+          <i class="fas" [class.fa-toggle-on]="pkg.isActive" [class.fa-toggle-off]="!pkg.isActive"></i>
+        </button>
+        <button class="act-btn act-images" (click)="openImages(pkg)" title="Manage Images">
+          <i class="fas fa-images"></i>
+        </button>
+        <button class="act-btn act-landmarks" (click)="openLandmarks(pkg)" title="Manage Landmarks">
+          <i class="fas fa-map-pin"></i>
+        </button>
+        <button class="act-btn act-edit" (click)="openEdit(pkg)" title="Edit">
+          <i class="fas fa-pen"></i>
+        </button>
+        <button class="act-btn act-delete" (click)="openDelete(pkg)" title="Delete">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- MODAL OVERLAY -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="modal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <!-- ── CREATE ──────────────────────────────────────────── -->
+    <ng-container *ngIf="modal === 'create'">
+      <div class="modal-header">
+        <h3><i class="fas fa-plus"></i> New Package</h3>
+        <button class="modal-close" (click)="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert-error" *ngIf="errorMsg">
+          <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
+        </div>
+
+        <div class="form-group">
+          <label>Title *</label>
+          <input class="field-input" type="text" [(ngModel)]="createForm.title" placeholder="e.g. Luxor 3-Day Tour" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="field-textarea" [(ngModel)]="createForm.description" rows="3" placeholder="Describe the tour..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price (EGP) *</label>
+            <input class="field-input" type="number" [(ngModel)]="createForm.price" min="0" />
+          </div>
+          <div class="form-group">
+            <label>Duration (days) *</label>
+            <input class="field-input" type="number" [(ngModel)]="createForm.durationDays" min="1" />
+          </div>
+          <div class="form-group">
+            <label>Max Persons *</label>
+            <input class="field-input" type="number" [(ngModel)]="createForm.maxPersons" min="1" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>City *</label>
+          <select class="field-select" [(ngModel)]="createForm.cityId">
+            <option [value]="0" disabled>Select a city</option>
+            <option *ngFor="let city of cities" [value]="city.id">{{ city.nameEn }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()" [disabled]="saving">Cancel</button>
+        <button class="btn-save" (click)="submitCreate()" [disabled]="saving || !createForm.title || !createForm.cityId">
+          <span *ngIf="!saving"><i class="fas fa-check"></i> Create</span>
+          <span *ngIf="saving"><span class="spinner-border spinner-border-sm me-2"></span> Creating...</span>
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- ── EDIT ───────────────────────────────────────────── -->
+    <ng-container *ngIf="modal === 'edit' && selectedPkg">
+      <div class="modal-header">
+        <h3><i class="fas fa-pen"></i> Edit Package</h3>
+        <button class="modal-close" (click)="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert-error" *ngIf="errorMsg">
+          <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
+        </div>
+
+        <div class="form-group">
+          <label>Title *</label>
+          <input class="field-input" type="text" [(ngModel)]="editForm.title" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="field-textarea" [(ngModel)]="editForm.description" rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price (EGP) *</label>
+            <input class="field-input" type="number" [(ngModel)]="editForm.price" min="0" />
+          </div>
+          <div class="form-group">
+            <label>Duration (days) *</label>
+            <input class="field-input" type="number" [(ngModel)]="editForm.durationDays" min="1" />
+          </div>
+          <div class="form-group">
+            <label>Max Persons *</label>
+            <input class="field-input" type="number" [(ngModel)]="editForm.maxPersons" min="1" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()" [disabled]="saving">Cancel</button>
+        <button class="btn-save" (click)="submitEdit()" [disabled]="saving || !editForm.title">
+          <span *ngIf="!saving"><i class="fas fa-check"></i> Save Changes</span>
+          <span *ngIf="saving"><span class="spinner-border spinner-border-sm me-2"></span> Saving...</span>
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- ── DELETE ─────────────────────────────────────────── -->
+    <ng-container *ngIf="modal === 'delete' && selectedPkg">
+      <div class="modal-header modal-header-danger">
+        <h3><i class="fas fa-trash"></i> Delete Package</h3>
+        <button class="modal-close" (click)="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="delete-msg">
+          Are you sure you want to delete <strong>{{ selectedPkg.title }}</strong>?
+          This action cannot be undone.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()" [disabled]="saving">Cancel</button>
+        <button class="btn-danger" (click)="confirmDelete()" [disabled]="saving">
+          <span *ngIf="!saving"><i class="fas fa-trash"></i> Delete</span>
+          <span *ngIf="saving"><span class="spinner-border spinner-border-sm me-2"></span> Deleting...</span>
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- ── IMAGES ─────────────────────────────────────────── -->
+    <ng-container *ngIf="modal === 'images' && selectedPkg">
+      <div class="modal-header">
+        <h3><i class="fas fa-images"></i> Package Images</h3>
+        <button class="modal-close" (click)="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert-success" *ngIf="successMsg">
+          <i class="fas fa-check-circle"></i> {{ successMsg }}
+        </div>
+        <div class="alert-error" *ngIf="errorMsg">
+          <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
+        </div>
+
+        <!-- Current Images -->
+        <div class="images-grid" *ngIf="selectedPkg.images.length > 0">
+          <div class="img-item" *ngFor="let url of selectedPkg.images">
+            <img [src]="url" alt="Package image" />
+          </div>
+        </div>
+        <p class="bio-empty" *ngIf="selectedPkg.images.length === 0">No images uploaded yet.</p>
+
+        <!-- Upload -->
+        <div class="upload-zone">
+          <label class="upload-label">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span *ngIf="!selectedFile">Click to select image</span>
+            <span *ngIf="selectedFile">{{ selectedFile.name }}</span>
+            <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+          </label>
+          <img *ngIf="previewUrl" [src]="previewUrl" class="upload-preview" alt="Preview" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Close</button>
+        <button class="btn-save" (click)="uploadImage()" [disabled]="!selectedFile || uploadingId !== null">
+          <span *ngIf="uploadingId === null"><i class="fas fa-upload"></i> Upload</span>
+          <span *ngIf="uploadingId !== null"><span class="spinner-border spinner-border-sm me-2"></span> Uploading...</span>
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- ── LANDMARKS ──────────────────────────────────────── -->
+    <ng-container *ngIf="modal === 'landmarks' && selectedPkg">
+      <div class="modal-header">
+        <h3><i class="fas fa-map-pin"></i> Package Landmarks</h3>
+        <button class="modal-close" (click)="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert-success" *ngIf="successMsg">
+          <i class="fas fa-check-circle"></i> {{ successMsg }}
+        </div>
+        <div class="alert-error" *ngIf="errorMsg">
+          <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
+        </div>
+
+        <!-- Current Landmarks -->
+        <div class="lm-section-label">Current Landmarks ({{ selectedPkg.landmarks.length }})</div>
+        <div class="lm-list" *ngIf="selectedPkg.landmarks.length > 0">
+          <div class="lm-row" *ngFor="let lm of selectedPkg.landmarks">
+            <div class="lm-info">
+              <span class="lm-day">Day {{ lm.dayNumber }}</span>
+              <span class="lm-name">{{ lm.nameEn }}</span>
+            </div>
+            <button class="lm-remove" (click)="removeLandmark(lm.landmarkId)" title="Remove">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <p class="bio-empty" *ngIf="selectedPkg.landmarks.length === 0">No landmarks added yet.</p>
+
+        <!-- Add Landmark -->
+        <div class="lm-section-label" style="margin-top:20px">Add Landmark</div>
+        <div class="form-row">
+          <div class="form-group form-group-flex">
+            <label>Landmark</label>
+            <select class="field-select" [(ngModel)]="landmarkForm.landmarkId">
+              <option [value]="0" disabled>Select landmark</option>
+              <option *ngFor="let lm of availableLandmarks()" [value]="lm.id">{{ lm.nameEn }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Day #</label>
+            <input class="field-input" type="number" [(ngModel)]="landmarkForm.dayNumber" min="1" />
+          </div>
+          <div class="form-group">
+            <label>Order</label>
+            <input class="field-input" type="number" [(ngModel)]="landmarkForm.order" min="1" />
+          </div>
+        </div>
+        <button class="btn-add-lm" (click)="addLandmark()" [disabled]="saving || !landmarkForm.landmarkId">
+          <span *ngIf="!saving"><i class="fas fa-plus"></i> Add</span>
+          <span *ngIf="saving"><span class="spinner-border spinner-border-sm me-2"></span></span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Done</button>
+      </div>
+    </ng-container>
+
+  </div>
+</div>

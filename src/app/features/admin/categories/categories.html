@@ -1,0 +1,92 @@
+<div class="categories-page">
+
+  <div class="page-header mb-4">
+    <div>
+      <h1 class="page-title">Categories</h1>
+      <p class="page-subtitle">Manage landmark categories</p>
+    </div>
+  </div>
+
+  <!-- Add Form -->
+  <div class="add-card mb-4">
+    <h3 class="add-title">Add New Category</h3>
+    <div class="add-row">
+      <input type="text" [(ngModel)]="newName" (keyup.enter)="addCategory()"
+             placeholder="e.g. Historical, Beach, Museum…"
+             class="add-input" />
+      <button class="btn-add" [disabled]="addLoading" (click)="addCategory()">
+        @if (addLoading) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        <i class="fas fa-plus me-2"></i> Add
+      </button>
+    </div>
+    @if (addError) {
+      <p class="add-error">{{ addError }}</p>
+    }
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="loading-state">
+      <div class="spinner-border" style="color:#C85C3A"></div>
+      <p>Loading categories…</p>
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger">
+      Failed to load categories.
+      <button class="btn btn-sm btn-outline-danger ms-2" (click)="load()">Retry</button>
+    </div>
+  }
+
+  <!-- Categories Grid -->
+  @if (!loading && !error) {
+    @if (categories.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-tags"></i></div>
+        <h3>No categories yet</h3>
+        <p>Add your first category above.</p>
+      </div>
+    } @else {
+      <div class="categories-grid">
+        @for (cat of categories; track cat.id) {
+          <div class="category-card">
+            <div class="cat-icon"><i class="fas fa-tag"></i></div>
+            <span class="cat-name">{{ cat.name }}</span>
+            <button class="cat-delete" (click)="openDelete(cat)" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        }
+      </div>
+    }
+  }
+
+</div>
+
+<!-- Delete Modal -->
+@if (deleteTarget) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      @if (deleteSuccess) {
+        <div class="modal-success">
+          <i class="fas fa-check-circle"></i>
+          <p>{{ deleteSuccess }}</p>
+        </div>
+      } @else {
+        <div class="modal-icon"><i class="fas fa-trash"></i></div>
+        <h3 class="modal-title">Delete Category</h3>
+        <p class="modal-body">
+          Are you sure you want to delete <strong>{{ deleteTarget.name }}</strong>?
+        </p>
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+          <button class="btn-confirm btn-danger" [disabled]="deleteLoading" (click)="confirmDelete()">
+            @if (deleteLoading) { <span class="spinner-border spinner-border-sm me-2"></span> }
+            Delete
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+}

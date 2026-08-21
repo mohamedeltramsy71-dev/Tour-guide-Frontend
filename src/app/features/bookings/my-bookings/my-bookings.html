@@ -1,0 +1,167 @@
+<div class="bookings-page">
+  <div class="container py-5">
+
+    <!-- Header -->
+    <div class="page-header mb-4">
+      <h2 class="page-title">
+        <i class="fas fa-calendar-check me-2"></i> My Bookings
+      </h2>
+      <p class="page-subtitle">Track and manage all your trip bookings</p>
+    </div>
+
+    <!-- Alerts -->
+    @if (successMsg()) {
+      <div class="alert alert-success d-flex align-items-center gap-2 mb-4">
+        <i class="fas fa-check-circle"></i> {{ successMsg() }}
+      </div>
+    }
+    @if (errorMsg()) {
+      <div class="alert alert-danger d-flex align-items-center gap-2 mb-4">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMsg() }}
+      </div>
+    }
+
+    <!-- Tabs -->
+    <div class="bookings-tabs mb-4">
+      @for (tab of tabs; track tab) {
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === tab"
+          (click)="setTab(tab)">
+          {{ tab }}
+          @if (getCount(tab) > 0) {
+            <span class="tab-count">{{ getCount(tab) }}</span>
+          }
+        </button>
+      }
+    </div>
+
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="text-center py-5">
+        <div class="spinner-border" style="color: var(--primary)"></div>
+        <p class="mt-3 text-muted">Loading your bookings...</p>
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!loading() && filteredBookings.length === 0) {
+      <div class="empty-state">
+        <i class="fas fa-calendar-xmark"></i>
+        <h5>No bookings found</h5>
+        <p>You don't have any {{ activeTab() === 'All' ? '' : activeTab().toLowerCase() }} bookings yet.</p>
+        <a routerLink="/packages" class="btn btn-primary px-4">
+          Explore Packages
+        </a>
+      </div>
+    }
+
+    <!-- Bookings Grid -->
+    @if (!loading() && filteredBookings.length > 0) {
+      <div class="bookings-grid">
+        @for (booking of filteredBookings; track booking.id) {
+          <div class="booking-card">
+
+            <!-- Card Header -->
+            <div class="booking-card-header">
+              <div class="booking-id">#{{ booking.id }}</div>
+              <div class="badges">
+                <span class="status-badge {{ getStatusClass(booking.status) }}">
+                  {{ booking.status }}
+                </span>
+                <span class="status-badge {{ getPaymentClass(booking.paymentStatus) }}">
+                  {{ booking.paymentStatus }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Guide Info -->
+            <div class="guide-info">
+              <div class="guide-avatar">
+                @if (booking.guideAvatar) {
+                  <img [src]="booking.guideAvatar" alt="guide" />
+                } @else {
+                  <i class="fas fa-user"></i>
+                }
+              </div>
+              <div>
+                <div class="guide-name">{{ booking.guideName }}</div>
+                <div class="guide-label">Tour Guide</div>
+              </div>
+            </div>
+
+            <!-- Package -->
+            @if (booking.packageTitle) {
+              <div class="booking-package">
+                <i class="fas fa-box me-2"></i>
+                {{ booking.packageTitle }}
+              </div>
+            } @else {
+              <div class="booking-package custom">
+                <i class="fas fa-route me-2"></i>
+                Custom Trip
+              </div>
+            }
+
+            <!-- Details -->
+            <div class="booking-details">
+              <div class="detail-item">
+                <i class="fas fa-calendar"></i>
+                <span>{{ booking.startDate | date:'MMM d, y' }}</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-users"></i>
+                <span>{{ booking.numberOfPersons }} person{{ booking.numberOfPersons > 1 ? 's' : '' }}</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-dollar-sign"></i>
+                <span>${{ booking.totalPrice | number:'1.0-0' }}</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-clock"></i>
+                <span>{{ booking.createdAt | date:'MMM d, y' }}</span>
+              </div>
+            </div>
+
+            <!-- Rejection Reason -->
+            @if (booking.rejectionReason) {
+              <div class="rejection-reason">
+                <i class="fas fa-circle-info me-1"></i>
+                <strong>Reason:</strong> {{ booking.rejectionReason }}
+              </div>
+            }
+
+            <!-- Actions -->
+            <div class="booking-actions">
+              @if (booking.status === 'Pending') {
+                <button
+                  class="btn btn-cancel"
+                  (click)="cancelBooking(booking.id)"
+                  [disabled]="cancellingId() === booking.id">
+                  @if (cancellingId() === booking.id) {
+                    <span class="spinner-border spinner-border-sm me-1"></span>
+                  } @else {
+                    <i class="fas fa-xmark me-1"></i>
+                  }
+                  Cancel
+                </button>
+              }
+              @if (booking.status === 'Confirmed' && booking.paymentStatus === 'Unpaid') {
+                <button class="btn btn-pay" disabled>
+                  <i class="fas fa-credit-card me-1"></i> Pay Now
+                </button>
+              }
+              @if (booking.status === 'Completed') {
+                <button class="btn btn-review" disabled>
+                  <i class="fas fa-star me-1"></i> Leave Review
+                </button>
+              }
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+</div>

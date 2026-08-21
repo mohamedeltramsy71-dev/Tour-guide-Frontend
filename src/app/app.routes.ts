@@ -59,6 +59,22 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/confirm-email/confirm-email').then(m => m.ConfirmEmail),
   },
 
+  // ─── Shared Protected (All Roles) ─────────────────────────
+  {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/profile/profile').then(m => m.ProfileComponent),
+  },
+
+  // ─── Tourist ──────────────────────────────────────────────
+  {
+    path: 'bookings',
+    canActivate: [authGuard, roleGuard(['Tourist'])],
+    loadComponent: () =>
+      import('./features/bookings/my-bookings/my-bookings').then(m => m.MyBookingsComponent),
+  },
+
   // ─── Admin ────────────────────────────────────────────────
   {
     path: 'admin',
@@ -101,6 +117,47 @@ export const routes: Routes = [
         path: 'reviews',
         loadComponent: () =>
           import('./features/admin/reviews/reviews').then(m => m.AdminReviewsComponent),
+      },
+      {
+        path: 'categories',
+        loadComponent: () =>
+          import('./features/admin/categories/categories').then(m => m.AdminCategoriesComponent),
+      },
+    ],
+  },
+
+  // ─── Guide Dashboard ──────────────────────────────────────
+  {
+    path: 'guide',
+    canActivate: [authGuard, roleGuard(['Guide'])],
+    loadComponent: () =>
+      import('./features/guide-dashboard/guide-layout/guide-layout').then(m => m.GuideLayoutComponent),
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/guide-dashboard/guide-dashboard/guide-dashboard').then(m => m.GuideDashboard),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/guide-dashboard/guide-profile/guide-profile').then(m => m.GuideProfile),
+      },
+      {
+        path: 'packages',
+        loadComponent: () =>
+          import('./features/guide-dashboard/guide-packages/guide-packages').then(m => m.GuidePackages),
+      },
+      {
+        path: 'bookings',
+        loadComponent: () =>
+          import('./features/guide-dashboard/incoming-bookings/incoming-bookings').then(m => m.IncomingBookingsComponent),
+      },
+      {
+        path: 'reviews',
+        loadComponent: () =>
+          import('./features/guide-dashboard/guide-reviews/guide-reviews').then(m => m.GuideReviews),
       },
     ],
   },

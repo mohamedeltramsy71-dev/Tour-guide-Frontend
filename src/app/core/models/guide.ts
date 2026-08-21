@@ -10,3 +10,26 @@ export interface Guide {
   totalReviews: number;
   isAvailable: boolean;
 }
+
+export interface GuideProfile {
+  id: number;
+  userId: string;
+  fullName: string;
+  email: string;
+  avatarUrl?: string;
+  bio?: string;
+  languages: string[];
+  experienceYears: number;
+  averageRating: number;
+  totalReviews: number;
+  isApproved: boolean;
+  isAvailable: boolean;
+  coveredCities: string[];
+}
+
+export interface UpdateGuideRequest {
+  bio?: string;
+  languages: string[];
+  experienceYears: number;
+  coveredCityIds: number[];
+}

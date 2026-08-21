@@ -1,0 +1,250 @@
+<!-- Loading -->
+<div class="loading-state" *ngIf="loading">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p>Loading your profile...</p>
+</div>
+
+<div class="profile-wrap" *ngIf="!loading && profile">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1 class="page-title"><i class="fas fa-user-circle"></i> My Guide Profile</h1>
+      <p class="page-sub">Manage your public profile — tourists see this when browsing guides.</p>
+    </div>
+    <div class="page-header-actions" *ngIf="!editMode">
+      <button class="btn-edit" (click)="enterEditMode()">
+        <i class="fas fa-pen"></i> Edit Profile
+      </button>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alert-success" *ngIf="successMsg">
+    <i class="fas fa-check-circle"></i> {{ successMsg }}
+  </div>
+  <div class="alert-error" *ngIf="errorMsg">
+    <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
+  </div>
+
+  <!-- ── VIEW MODE ─────────────────────────────────────────── -->
+  <ng-container *ngIf="!editMode">
+
+    <!-- Hero Card -->
+    <div class="hero-card">
+      <div class="hero-bg"></div>
+      <div class="hero-body">
+        <div class="hero-avatar">
+          <img *ngIf="profile.avatarUrl" [src]="profile.avatarUrl" [alt]="profile.fullName" />
+          <span *ngIf="!profile.avatarUrl">{{ getInitials(profile.fullName) }}</span>
+        </div>
+        <div class="hero-info">
+          <div class="hero-name">{{ profile.fullName }}</div>
+          <div class="hero-email">{{ profile.email }}</div>
+          <div class="hero-meta">
+            <span class="meta-chip">
+              <i class="fas fa-clock"></i> {{ profile.experienceYears }} yrs experience
+            </span>
+            <span class="meta-chip">
+              <i class="fas fa-star"></i> {{ profile.averageRating | number:'1.1-1' }}
+              <span class="meta-chip-sub">({{ profile.totalReviews }} reviews)</span>
+            </span>
+          </div>
+        </div>
+        <div class="hero-badges">
+          <span class="status-pill" [class.pill-approved]="profile.isApproved" [class.pill-pending]="!profile.isApproved">
+            <i class="fas" [class.fa-check-circle]="profile.isApproved" [class.fa-clock]="!profile.isApproved"></i>
+            {{ getStatusLabel() }}
+          </span>
+          <span class="status-pill" [class.pill-available]="profile.isAvailable" [class.pill-busy]="!profile.isAvailable">
+            <i class="fas" [class.fa-circle-check]="profile.isAvailable" [class.fa-circle-pause]="!profile.isAvailable"></i>
+            {{ getAvailabilityLabel() }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail Grid -->
+    <div class="detail-grid">
+
+      <!-- Bio -->
+      <div class="detail-card detail-full">
+        <div class="detail-card-header">
+          <i class="fas fa-align-left"></i> About Me
+        </div>
+        <div class="detail-card-body">
+          <p class="bio-text" *ngIf="profile.bio">{{ profile.bio }}</p>
+          <p class="bio-empty" *ngIf="!profile.bio">No bio added yet. Click "Edit Profile" to add one.</p>
+        </div>
+      </div>
+
+      <!-- Languages -->
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="fas fa-language"></i> Languages
+        </div>
+        <div class="detail-card-body">
+          <div class="tag-list" *ngIf="profile.languages.length > 0">
+            <span class="tag tag-lang" *ngFor="let lang of profile.languages">
+              <i class="fas fa-comment-dots"></i> {{ lang }}
+            </span>
+          </div>
+          <p class="bio-empty" *ngIf="profile.languages.length === 0">No languages added yet.</p>
+        </div>
+      </div>
+
+      <!-- Cities -->
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="fas fa-map-marker-alt"></i> Covered Cities
+        </div>
+        <div class="detail-card-body">
+          <div class="tag-list" *ngIf="profile.coveredCities.length > 0">
+            <span class="tag tag-city" *ngFor="let city of profile.coveredCities">
+              <i class="fas fa-city"></i> {{ city }}
+            </span>
+          </div>
+          <p class="bio-empty" *ngIf="profile.coveredCities.length === 0">No cities added yet.</p>
+        </div>
+      </div>
+
+      <!-- Rating Breakdown -->
+      <div class="detail-card detail-full">
+        <div class="detail-card-header">
+          <i class="fas fa-star"></i> Rating Overview
+        </div>
+        <div class="detail-card-body rating-row">
+          <div class="rating-big">
+            <span class="rating-number">{{ profile.averageRating | number:'1.1-1' }}</span>
+            <div class="stars-row">
+              <i class="fas fa-star" *ngFor="let filled of getStars(profile.averageRating)"
+                 [class.star-filled]="filled" [class.star-empty]="!filled"></i>
+            </div>
+            <span class="rating-count">{{ profile.totalReviews }} total reviews</span>
+          </div>
+          <div class="rating-note">
+            <i class="fas fa-info-circle"></i>
+            Rating is automatically recalculated after each tourist review.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <!-- ── EDIT MODE ─────────────────────────────────────────── -->
+  <ng-container *ngIf="editMode">
+    <div class="edit-wrap">
+
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <i class="fas fa-align-left"></i> About Me
+        </div>
+        <div class="edit-card-body">
+          <label class="field-label">Bio</label>
+          <textarea
+            class="field-textarea"
+            [(ngModel)]="form.bio"
+            placeholder="Tell tourists about yourself, your expertise, and what makes your tours special..."
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="edit-grid">
+
+        <!-- Languages -->
+        <div class="edit-card">
+          <div class="edit-card-header">
+            <i class="fas fa-language"></i> Languages
+          </div>
+          <div class="edit-card-body">
+            <div class="tag-list tag-list-edit" *ngIf="form.languages.length > 0">
+              <span class="tag tag-lang tag-removable" *ngFor="let lang of form.languages">
+                {{ lang }}
+                <button class="tag-remove" (click)="removeLanguage(lang)" type="button">
+                  <i class="fas fa-times"></i>
+                </button>
+              </span>
+            </div>
+            <p class="bio-empty" *ngIf="form.languages.length === 0">No languages added yet.</p>
+            <div class="field-row">
+              <input
+                class="field-input"
+                type="text"
+                [(ngModel)]="newLanguage"
+                (keydown)="onLanguageKeydown($event)"
+                placeholder="e.g. English, Arabic..."
+              />
+              <button class="btn-add-tag" (click)="addLanguage()" type="button">
+                <i class="fas fa-plus"></i> Add
+              </button>
+            </div>
+            <p class="field-hint">Press Enter or click Add.</p>
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="edit-card">
+          <div class="edit-card-header">
+            <i class="fas fa-clock"></i> Experience
+          </div>
+          <div class="edit-card-body">
+            <label class="field-label">Years of Experience</label>
+            <input
+              class="field-input field-input-sm"
+              type="number"
+              [(ngModel)]="form.experienceYears"
+              min="0"
+              max="50"
+              placeholder="e.g. 5"
+            />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Cities -->
+      <div class="edit-card">
+        <div class="edit-card-header">
+          <i class="fas fa-map-marker-alt"></i> Covered Cities
+          <span class="selected-count">{{ form.coveredCityIds.length }} selected</span>
+        </div>
+        <div class="edit-card-body">
+          <div class="city-grid">
+            <label
+              class="city-checkbox"
+              *ngFor="let city of cities"
+              [class.city-checkbox-active]="isCitySelected(city.id)"
+            >
+              <input
+                type="checkbox"
+                [checked]="isCitySelected(city.id)"
+                (change)="toggleCity(city.id)"
+              />
+              <span class="city-checkbox-label">
+                <i class="fas fa-city"></i> {{ city.nameEn }}
+              </span>
+            </label>
+          </div>
+          <p class="bio-empty" *ngIf="cities.length === 0">Loading cities...</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="edit-actions">
+        <button class="btn-cancel" (click)="cancelEdit()" [disabled]="saving">
+          Cancel
+        </button>
+        <button class="btn-save" (click)="saveProfile()" [disabled]="saving">
+          <span *ngIf="!saving"><i class="fas fa-check"></i> Save Changes</span>
+          <span *ngIf="saving">
+            <span class="spinner-border spinner-border-sm me-2"></span> Saving...
+          </span>
+        </button>
+      </div>
+
+    </div>
+  </ng-container>
+
+</div>

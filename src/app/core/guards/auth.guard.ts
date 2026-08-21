@@ -18,9 +18,6 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  console.log('Role from storage:', auth.getRole());        // ← أضف ده
-  console.log('Allowed roles:', allowedRoles);              // ← وده
-
   if (!auth.isLoggedIn()) {
     router.navigate(['/auth/login']);
     return false;
@@ -31,6 +28,7 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => () => {
   router.navigate(['/']);
   return false;
 };
+
 // للـ Routes دي Guests بس (Login, Register)
 export const guestGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
@@ -40,7 +38,7 @@ export const guestGuard: CanActivateFn = () => {
 
   const role = auth.getRole();
   if (role === 'Admin') router.navigate(['/admin']);
-  else if (role === 'Guide') router.navigate(['/guide-dashboard']);
+  else if (role === 'Guide') router.navigate(['/guide']);
   else router.navigate(['/']);
 
   return false;

@@ -30,10 +30,10 @@ interface LandmarkForm {
   cityId: number | null;
 }
 
-const CATEGORIES = [
-  'Historical', 'Religious', 'Natural', 'Museum',
-  'Beach', 'Archaeological', 'Cultural', 'Entertainment'
-];
+interface CategoryDto {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-admin-landmarks',
@@ -44,15 +44,14 @@ const CATEGORIES = [
 })
 export class AdminLandmarksComponent implements OnInit {
   landmarks: LandmarkDto[] = [];
-  cities: City[] = [];
+  cities: City[]           = [];
+  categories: CategoryDto[] = [];
   loading = true;
   error   = false;
 
-  categories = CATEGORIES;
-
   // Filters
-  searchTerm = '';
-  filterCity = '';
+  searchTerm     = '';
+  filterCity     = '';
   filterCategory = '';
 
   // Modal
@@ -64,8 +63,8 @@ export class AdminLandmarksComponent implements OnInit {
   formSuccess = '';
 
   // Image upload
-  imageFile: File | null = null;
-  imageLoading = false;
+  imageFile: File | null    = null;
+  imageLoading              = false;
   imagePreview: string | null = null;
 
   constructor(
@@ -76,6 +75,7 @@ export class AdminLandmarksComponent implements OnInit {
   ngOnInit(): void {
     this.loadLandmarks();
     this.loadCities();
+    this.loadCategories();
   }
 
   emptyForm(): LandmarkForm {
@@ -100,6 +100,13 @@ export class AdminLandmarksComponent implements OnInit {
   loadCities(): void {
     this.cityService.getCities().subscribe({
       next: (data) => this.cities = data,
+      error: () => {},
+    });
+  }
+
+  loadCategories(): void {
+    this.api.get<CategoryDto[]>('categories').subscribe({
+      next: (data) => this.categories = data,
       error: () => {},
     });
   }
@@ -159,14 +166,13 @@ export class AdminLandmarksComponent implements OnInit {
       this.formError = 'Please fill all required fields.'; return;
     }
     this.formLoading = true; this.formError = '';
-
     const body = { ...this.form };
 
     if (this.modalMode === 'add') {
       this.api.post<LandmarkDto>('landmarks', body).subscribe({
         next: (created) => {
           if (this.imageFile) this.uploadImage(created.id);
-          else { this.formSuccess = 'Landmark created!'; this.loadLandmarks(); setTimeout(() => this.closeModal(), 1200); this.formLoading = false; }
+          else { this.formSuccess = 'Landmark created!'; this.formLoading = false; this.loadLandmarks(); setTimeout(() => this.closeModal(), 1200); }
         },
         error: (err) => { this.formLoading = false; this.formError = err?.error?.message || 'Failed to create.'; },
       });
@@ -174,7 +180,7 @@ export class AdminLandmarksComponent implements OnInit {
       this.api.put<LandmarkDto>(`landmarks/${this.selectedLandmark.id}`, body).subscribe({
         next: () => {
           if (this.imageFile) this.uploadImage(this.selectedLandmark!.id);
-          else { this.formSuccess = 'Landmark updated!'; this.loadLandmarks(); setTimeout(() => this.closeModal(), 1200); this.formLoading = false; }
+          else { this.formSuccess = 'Landmark updated!'; this.formLoading = false; this.loadLandmarks(); setTimeout(() => this.closeModal(), 1200); }
         },
         error: (err) => { this.formLoading = false; this.formError = err?.error?.message || 'Failed to update.'; },
       });

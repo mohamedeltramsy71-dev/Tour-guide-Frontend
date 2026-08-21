@@ -1,0 +1,221 @@
+.bookings-page {
+  background: var(--light-bg);
+  min-height: 100vh;
+}
+
+// ── Header ───────────────────────────────
+.page-header {
+  .page-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .page-subtitle {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+  }
+}
+
+// ── Tabs ─────────────────────────────────
+.bookings-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: white;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-gray);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover { border-color: var(--primary); color: var(--primary); }
+
+  &.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+
+    .tab-count { background: rgba(255,255,255,0.3); }
+  }
+}
+
+.tab-count {
+  background: rgba(0,0,0,0.08);
+  border-radius: 10px;
+  padding: 1px 7px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+// ── Grid ─────────────────────────────────
+.bookings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+// ── Card ─────────────────────────────────
+.booking-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: box-shadow 0.2s;
+
+  &:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+}
+
+.booking-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .booking-id {
+    font-weight: 700;
+    color: var(--text-gray);
+    font-size: 0.85rem;
+  }
+
+  .badges { display: flex; gap: 6px; }
+}
+
+// ── Guide Info ───────────────────────────
+.guide-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .guide-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(200,92,58,0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    overflow: hidden;
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  .guide-name { font-weight: 600; color: var(--dark); font-size: 0.95rem; }
+  .guide-label { font-size: 0.8rem; color: var(--text-gray); }
+}
+
+// ── Package ──────────────────────────────
+.booking-package {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--dark);
+  background: var(--light-bg);
+  padding: 8px 12px;
+  border-radius: 8px;
+
+  &.custom { color: var(--primary); }
+}
+
+// ── Details ──────────────────────────────
+.booking-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-gray);
+
+  i { color: var(--primary); width: 14px; text-align: center; }
+  span { font-weight: 500; color: var(--dark); }
+}
+
+// ── Rejection ────────────────────────────
+.rejection-reason {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: #856404;
+}
+
+// ── Badges ───────────────────────────────
+.status-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  &.badge-pending   { background: #fff3e0; color: #e65100; }
+  &.badge-confirmed { background: #e3f2fd; color: #1565c0; }
+  &.badge-completed { background: #e8f5e9; color: #2e7d32; }
+  &.badge-rejected  { background: #fce4ec; color: #c62828; }
+  &.badge-cancelled { background: #f5f5f5; color: #616161; }
+  &.badge-paid      { background: #e8f5e9; color: #2e7d32; }
+  &.badge-unpaid    { background: #fff3e0; color: #e65100; }
+}
+
+// ── Actions ──────────────────────────────
+.booking-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:not(:disabled):hover { opacity: 0.85; }
+
+  &.btn-cancel  { background: #fce4ec; color: #c62828; }
+  &.btn-pay     { background: var(--primary); color: white; }
+  &.btn-review  { background: var(--gold); color: white; }
+}
+
+// ── Empty State ──────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-gray);
+
+  i { font-size: 3.5rem; color: #ddd; margin-bottom: 16px; display: block; }
+  h5 { color: var(--dark); font-weight: 600; margin-bottom: 8px; }
+  p { margin-bottom: 24px; }
+}
+
+.btn-primary {
+  background: var(--primary);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  padding: 10px 24px;
+
+  &:hover { opacity: 0.9; }
+}

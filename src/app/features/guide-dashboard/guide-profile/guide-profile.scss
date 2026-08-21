@@ -1,0 +1,581 @@
+$primary:   #C85C3A;
+$dark:      #1A2340;
+$gold:      #D4A853;
+$light-bg:  #F4F6FA;
+$text-gray: #6B7280;
+
+// ─── Loading ───────────────────────────────────────────────
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 16px;
+  color: $text-gray;
+}
+
+// ─── Wrap ──────────────────────────────────────────────────
+.profile-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// ─── Page Header ───────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $dark;
+  margin: 0 0 6px;
+
+  i { color: $primary; margin-right: 10px; }
+}
+
+.page-sub {
+  font-size: 0.875rem;
+  color: $text-gray;
+  margin: 0;
+}
+
+.btn-edit {
+  padding: 10px 20px;
+  background: $primary;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+
+  &:hover { background: darken($primary, 8%); }
+}
+
+// ─── Alerts ────────────────────────────────────────────────
+.alert-success, .alert-error {
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  i { font-size: 1rem; }
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.alert-error {
+  background: rgba(239, 68, 68, 0.08);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+// ─── Hero Card ─────────────────────────────────────────────
+.hero-card {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #E8ECF0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  position: relative;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  height: 100px;
+  background: linear-gradient(135deg, $dark 0%, #243057 100%);
+}
+
+.hero-body {
+  position: relative;
+  padding: 24px 28px 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-top: 64px;
+  background: #fff;
+  margin-top: 60px;
+}
+
+.hero-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary, darken($primary, 10%));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  overflow: hidden;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  position: absolute;
+  top: -40px;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.hero-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.hero-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $dark;
+  margin-bottom: 2px;
+}
+
+.hero-email {
+  font-size: 0.85rem;
+  color: $text-gray;
+  margin-bottom: 12px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: $light-bg;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $dark;
+  border: 1px solid #E8ECF0;
+
+  i { color: $primary; }
+}
+
+.meta-chip-sub {
+  color: $text-gray;
+  font-weight: 400;
+}
+
+.hero-badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-self: flex-start;
+}
+
+// ─── Status Pills ──────────────────────────────────────────
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.pill-approved  { background: rgba(16,185,129,0.1);  color: #059669; }
+.pill-pending   { background: rgba(212,168,83,0.12); color: #B8860B; }
+.pill-available { background: rgba(59,130,246,0.1);  color: #2563EB; }
+.pill-busy      { background: rgba(107,114,128,0.1); color: #6B7280; }
+
+// ─── Detail Grid ───────────────────────────────────────────
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.detail-full { grid-column: 1 / -1; }
+
+// ─── Detail Card ───────────────────────────────────────────
+.detail-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #E8ECF0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.detail-card-header {
+  padding: 16px 20px 14px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: $dark;
+  border-bottom: 1px solid #F0F2F5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  i { color: $primary; }
+}
+
+.detail-card-body {
+  padding: 20px;
+}
+
+.bio-text {
+  font-size: 0.9rem;
+  color: $dark;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.bio-empty {
+  font-size: 0.875rem;
+  color: #C4C9D4;
+  margin: 0;
+  font-style: italic;
+}
+
+// ─── Tags ──────────────────────────────────────────────────
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  i { font-size: 0.7rem; }
+}
+
+.tag-lang {
+  background: rgba(200,92,58,0.08);
+  color: $primary;
+}
+
+.tag-city {
+  background: rgba(26,35,64,0.06);
+  color: $dark;
+}
+
+// ─── Rating ────────────────────────────────────────────────
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.rating-big {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.rating-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: $dark;
+  line-height: 1;
+}
+
+.stars-row {
+  display: flex;
+  gap: 4px;
+}
+
+.star-filled { color: $gold; }
+.star-empty  { color: #E0E3EA; }
+
+.rating-count {
+  font-size: 0.8rem;
+  color: $text-gray;
+}
+
+.rating-note {
+  font-size: 0.85rem;
+  color: $text-gray;
+  background: $light-bg;
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 360px;
+  line-height: 1.6;
+
+  i { color: $primary; margin-top: 2px; flex-shrink: 0; }
+}
+
+// ─── Edit Wrap ─────────────────────────────────────────────
+.edit-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.edit-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #E8ECF0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.edit-card-header {
+  padding: 16px 20px 14px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: $dark;
+  border-bottom: 1px solid #F0F2F5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  i { color: $primary; }
+}
+
+.selected-count {
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: $primary;
+  background: rgba(200,92,58,0.08);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.edit-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// ─── Fields ────────────────────────────────────────────────
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $text-gray;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.field-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #E8ECF0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: $dark;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+
+  &:focus { border-color: $primary; }
+  &::placeholder { color: #C4C9D4; }
+}
+
+.field-row {
+  display: flex;
+  gap: 10px;
+}
+
+.field-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1.5px solid #E8ECF0;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  color: $dark;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+
+  &:focus { border-color: $primary; }
+  &::placeholder { color: #C4C9D4; }
+}
+
+.field-input-sm {
+  max-width: 160px;
+}
+
+.field-hint {
+  font-size: 0.78rem;
+  color: #C4C9D4;
+  margin: 0;
+}
+
+.btn-add-tag {
+  padding: 10px 16px;
+  background: $primary;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: background 0.2s;
+
+  &:hover { background: darken($primary, 8%); }
+}
+
+// ─── Tag Removable ─────────────────────────────────────────
+.tag-list-edit { margin-bottom: 4px; }
+
+.tag-removable {
+  padding-right: 6px;
+}
+
+.tag-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.6;
+  padding: 0 0 0 4px;
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 1; }
+}
+
+// ─── City Grid ─────────────────────────────────────────────
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.city-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1.5px solid #E8ECF0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+
+  input[type="checkbox"] { display: none; }
+
+  &:hover {
+    border-color: rgba($primary, 0.4);
+    background: rgba($primary, 0.03);
+  }
+
+  &.city-checkbox-active {
+    border-color: $primary;
+    background: rgba($primary, 0.06);
+
+    .city-checkbox-label { color: $primary; font-weight: 600; }
+  }
+}
+
+.city-checkbox-label {
+  font-size: 0.85rem;
+  color: $dark;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+
+  i { font-size: 0.75rem; color: $text-gray; }
+}
+
+.city-checkbox-active .city-checkbox-label i { color: $primary; }
+
+// ─── Edit Actions ──────────────────────────────────────────
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.btn-cancel {
+  padding: 11px 24px;
+  background: #fff;
+  color: $text-gray;
+  border: 1.5px solid #E8ECF0;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    border-color: #C4C9D4;
+    color: $dark;
+  }
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.btn-save {
+  padding: 11px 28px;
+  background: $primary;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+
+  &:hover:not(:disabled) { background: darken($primary, 8%); }
+  &:disabled { opacity: 0.7; cursor: not-allowed; }
+}

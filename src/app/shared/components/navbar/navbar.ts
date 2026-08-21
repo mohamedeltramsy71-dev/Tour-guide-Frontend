@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth';
+import { LoginResponse } from '../../../core/models/auth';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -9,20 +11,28 @@ import { AuthService } from '../../../core/services/auth';
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
-export class Navbar {
+export class Navbar implements OnInit, OnDestroy {
+  currentUser = signal<LoginResponse | null>(null);
+  private sub!: Subscription;
 
   constructor(public authService: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    this.sub = this.authService.currentUser$.subscribe(user => {
+      this.currentUser.set(user);
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
 
-  get user() {
-    return this.authService.getUserFromStorage();
-  }
-
   get role(): string {
-    return this.authService.getRole();
+    return this.currentUser()?.role ?? '';
   }
 
   onLogout() {

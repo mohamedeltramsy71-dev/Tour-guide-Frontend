@@ -1,0 +1,178 @@
+<div class="incoming-bookings">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Incoming Bookings</h2>
+      <p class="page-subtitle">Manage your tour requests</p>
+    </div>
+    <button class="btn-refresh" (click)="load()">
+      <i class="fas fa-sync-alt"></i> Refresh
+    </button>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-msg" *ngIf="successMsg">{{ successMsg }}</div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button
+      *ngFor="let f of filters"
+      class="filter-tab"
+      [class.active]="activeFilter === f"
+      (click)="setFilter(f)">
+      {{ f }}
+      <span class="tab-count">{{ countByStatus(f) }}</span>
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="state-box" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading bookings...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="state-box error-box" *ngIf="!loading && error">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+    <button class="btn-retry" (click)="load()">Try Again</button>
+  </div>
+
+  <!-- Empty -->
+  <div class="state-box empty-box" *ngIf="!loading && !error && filtered.length === 0">
+    <i class="fas fa-calendar-times"></i>
+    <p>No {{ activeFilter === 'All' ? '' : activeFilter.toLowerCase() + ' ' }}bookings found.</p>
+  </div>
+
+  <!-- Bookings Grid -->
+  <div class="bookings-grid" *ngIf="!loading && !error && filtered.length > 0">
+    <div class="booking-card" *ngFor="let b of filtered">
+
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="tourist-info">
+          <img
+            [src]="b.touristAvatar || 'https://ui-avatars.com/api/?name=' + b.touristName + '&background=C85C3A&color=fff'"
+            [alt]="b.touristName"
+            class="tourist-avatar" />
+          <div>
+            <p class="tourist-name">{{ b.touristName }}</p>
+            <p class="booking-date">{{ b.createdAt | date:'MMM d, y' }}</p>
+          </div>
+        </div>
+        <div class="badges">
+          <span class="status-badge" [ngClass]="statusClass(b.status)">{{ b.status }}</span>
+          <span class="status-badge" [ngClass]="paymentClass(b.paymentStatus)">{{ b.paymentStatus }}</span>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body">
+        <div class="detail-row" *ngIf="b.packageTitle">
+          <i class="fas fa-box"></i>
+          <span>{{ b.packageTitle }}</span>
+        </div>
+        <div class="detail-row" *ngIf="b.isCustom">
+          <i class="fas fa-route"></i>
+          <span>Custom Trip</span>
+        </div>
+        <div class="detail-row">
+          <i class="fas fa-calendar"></i>
+          <span>{{ b.startDate | date:'MMM d, y' }}</span>
+        </div>
+        <div class="detail-row">
+          <i class="fas fa-users"></i>
+          <span>{{ b.numberOfPersons }} {{ b.numberOfPersons === 1 ? 'person' : 'persons' }}</span>
+        </div>
+        <div class="detail-row">
+          <i class="fas fa-dollar-sign"></i>
+          <span class="price">{{ b.totalPrice | number:'1.0-0' }} EGP</span>
+        </div>
+        <div class="detail-row rejection" *ngIf="b.rejectionReason">
+          <i class="fas fa-ban"></i>
+          <span>{{ b.rejectionReason }}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card-actions">
+        <ng-container *ngIf="b.status === 'Pending'">
+          <button class="btn-accept" (click)="accept(b)">
+            <i class="fas fa-check"></i> Accept
+          </button>
+          <button class="btn-reject" (click)="openRejectModal(b)" data-bs-toggle="modal" data-bs-target="#rejectModal">
+            <i class="fas fa-times"></i> Reject
+          </button>
+        </ng-container>
+        <ng-container *ngIf="b.status === 'Confirmed'">
+          <button class="btn-complete" (click)="openCompleteConfirm(b)" data-bs-toggle="modal" data-bs-target="#completeModal">
+            <i class="fas fa-flag-checkered"></i> Mark Complete
+          </button>
+        </ng-container>
+        <ng-container *ngIf="b.status === 'Completed'">
+          <span class="done-label"><i class="fas fa-check-circle"></i> Trip Completed</span>
+        </ng-container>
+        <ng-container *ngIf="b.status === 'Rejected' || b.status === 'Cancelled'">
+          <span class="closed-label"><i class="fas fa-lock"></i> Closed</span>
+        </ng-container>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== Reject Modal ========== -->
+<div class="modal fade" id="rejectModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rihla-modal">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-times-circle me-2"></i>Reject Booking</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeRejectModal()"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedBooking">
+        <p class="modal-tourist">Tourist: <strong>{{ selectedBooking.touristName }}</strong></p>
+        <p class="modal-package" *ngIf="selectedBooking.packageTitle">Package: <strong>{{ selectedBooking.packageTitle }}</strong></p>
+        <label class="form-label mt-2">Reason for rejection <span class="text-danger">*</span></label>
+        <textarea
+          class="form-control"
+          rows="3"
+          [(ngModel)]="rejectReason"
+          placeholder="Explain why you're rejecting this booking...">
+        </textarea>
+        <div class="error-msg mt-2" *ngIf="rejectError">{{ rejectError }}</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" data-bs-dismiss="modal" (click)="closeRejectModal()">Cancel</button>
+        <button class="btn-reject-modal" (click)="submitReject()" [disabled]="rejectLoading">
+          <span *ngIf="rejectLoading" class="spinner-border spinner-border-sm me-1"></span>
+          Reject Booking
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Complete Confirm Modal ========== -->
+<div class="modal fade" id="completeModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rihla-modal">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-flag-checkered me-2"></i>Complete Trip</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="cancelComplete()"></button>
+      </div>
+      <div class="modal-body" *ngIf="completeTarget">
+        <p>Mark the trip for <strong>{{ completeTarget.touristName }}</strong> as completed?</p>
+        <p class="text-muted small">This will notify the tourist and allow them to leave a review.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" data-bs-dismiss="modal" (click)="cancelComplete()">Cancel</button>
+        <button class="btn-complete-modal" (click)="confirmComplete()" data-bs-dismiss="modal" [disabled]="completeLoading">
+          <span *ngIf="completeLoading" class="spinner-border spinner-border-sm me-1"></span>
+          Yes, Complete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

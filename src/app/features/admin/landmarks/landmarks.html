@@ -28,8 +28,8 @@
 
     <select [(ngModel)]="filterCategory" (change)="onFilterChange()" class="filter-select">
       <option value="">All Categories</option>
-      @for (cat of categories; track cat) {
-        <option [value]="cat">{{ cat }}</option>
+      @for (cat of categories; track cat.id) {
+        <option [value]="cat.name">{{ cat.name }}</option>
       }
     </select>
 
@@ -172,8 +172,8 @@
             <label>Category <span class="required">*</span></label>
             <select [(ngModel)]="form.category" class="form-ctrl">
               <option value="">Select category</option>
-              @for (cat of categories; track cat) {
-                <option [value]="cat">{{ cat }}</option>
+              @for (cat of categories; track cat.id) {
+                <option [value]="cat.name">{{ cat.name }}</option>
               }
             </select>
           </div>

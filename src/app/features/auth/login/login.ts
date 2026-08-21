@@ -97,7 +97,7 @@ export class Login implements OnInit {
 
   private navigateByRole(role: string) {
     if (role === 'Admin') this.router.navigate(['/admin']);
-    else if (role === 'Guide') this.router.navigate(['/guide-dashboard']);
+    else if (role === 'Guide') this.router.navigate(['/guide']);
     else this.router.navigate(['/']);
   }
 }

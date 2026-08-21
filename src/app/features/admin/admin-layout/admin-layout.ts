@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, signal, OnInit, OnDestroy } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-layout',
@@ -10,8 +11,12 @@ import { AuthService } from '../../../core/services/auth';
   templateUrl: './admin-layout.html',
   styleUrls: ['./admin-layout.scss'],
 })
-export class AdminLayoutComponent {
+export class AdminLayoutComponent implements OnInit, OnDestroy {
   sidebarCollapsed = signal(false);
+  avatarUrl = signal<string>('');
+  fullName = signal<string>('Admin');
+
+  private sub!: Subscription;
 
   navItems = [
     { label: 'Dashboard',  icon: 'fas fa-chart-pie',     route: '/admin/dashboard' },
@@ -20,13 +25,21 @@ export class AdminLayoutComponent {
     { label: 'Cities',     icon: 'fas fa-city',           route: '/admin/cities' },
     { label: 'Landmarks',  icon: 'fas fa-landmark',       route: '/admin/landmarks' },
     { label: 'Bookings',   icon: 'fas fa-calendar-check', route: '/admin/bookings' },
+    { label: 'Categories', icon: 'fas fa-tags',           route: '/admin/categories' },
     { label: 'Reviews',    icon: 'fas fa-star',           route: '/admin/reviews' },
   ];
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
-  get fullName(): string {
-    return this.auth.getUserFromStorage()?.fullName ?? 'Admin';
+  ngOnInit() {
+    this.sub = this.auth.currentUser$.subscribe(user => {
+      this.fullName.set(user?.fullName ?? 'Admin');
+      this.avatarUrl.set(user?.avatarUrl ?? '');
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   toggleSidebar(): void {
@@ -34,6 +47,9 @@ export class AdminLayoutComponent {
   }
 
   logout(): void {
-    this.auth.logout().subscribe();
+    this.auth.logout().subscribe({
+      next: () => this.router.navigate(['/auth/login']),
+      error: () => this.router.navigate(['/auth/login']),
+    });
   }
 }

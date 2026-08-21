@@ -1,0 +1,109 @@
+<div class="admin-shell" [class.collapsed]="collapsed">
+
+    <!-- ─── Sidebar ─────────────────────────────────────── -->
+    <aside class="admin-sidebar">
+
+        <!-- Header -->
+        <div class="sidebar-header">
+            <button class="sidebar-toggle" (click)="toggleSidebar()" title="Toggle sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="sidebar-brand-wrap">
+                <img src="/images/logo.png" alt="Rihla" class="sidebar-logo" />
+                <span class="sidebar-brand">Rihla</span>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="sidebar-nav">
+            <ul>
+                @for (item of navItems; track item.route) {
+                <li>
+                    <a class="sidebar-link" [routerLink]="item.route" routerLinkActive="active" [title]="item.label">
+                        <i class="fas {{ item.icon }}"></i>
+                        <span class="link-label">{{ item.label }}</span>
+                    </a>
+                </li>
+                }
+            </ul>
+        </nav>
+
+        <!-- Footer -->
+        <div class="sidebar-footer">
+            <a class="sidebar-link" (click)="logout()" title="Logout">
+                <i class="fas fa-right-from-bracket"></i>
+                <span class="link-label">Logout</span>
+            </a>
+        </div>
+
+    </aside>
+    <!-- ─── End Sidebar ───────────────────────────────────── -->
+
+    <!-- ─── Main ─────────────────────────────────────────── -->
+    <div class="admin-main">
+
+        <!-- Topbar -->
+        <header class="admin-topbar">
+            <div class="topbar-title">
+                <span class="guide-badge">
+                    <i class="fas fa-compass"></i> Guide Panel
+                </span>
+            </div>
+
+            <div class="ms-auto d-flex align-items-center gap-3">
+
+                <!-- Notifications bell -->
+                <a routerLink="/guide/notifications" class="topbar-icon-btn" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                </a>
+
+                <!-- Chat icon -->
+                <a routerLink="/guide/chat" class="topbar-icon-btn" title="Chat">
+                    <i class="fas fa-comments"></i>
+                </a>
+
+                <!-- Profile dropdown -->
+                <div class="dropdown">
+                    <button class="admin-profile-btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <div class="admin-avatar">
+                            @if (avatarUrl) {
+                            <img [src]="avatarUrl" alt="avatar" class="w-100 h-100 rounded-circle object-fit-cover" />
+                            } @else {
+                            {{ initials }}
+                            }
+                        </div>
+                        <div class="admin-info">
+                            <span class="admin-name">{{ currentUser?.fullName ?? 'Guide' }}</span>
+                            <span class="admin-role">Tour Guide</span>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" routerLink="/profile">
+                                <i class="fas fa-user-pen me-2"></i> My Profile
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <button class="dropdown-item text-danger" (click)="logout()">
+                                <i class="fas fa-right-from-bracket me-2"></i> Logout
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="admin-content">
+            <router-outlet />
+        </main>
+
+    </div>
+    <!-- ─── End Main ──────────────────────────────────────── -->
+
+</div>

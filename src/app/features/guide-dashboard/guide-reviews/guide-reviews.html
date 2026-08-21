@@ -1,0 +1,97 @@
+<div class="guide-reviews">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">My Reviews</h2>
+      <p class="page-subtitle">What tourists say about your tours</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="state-box" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading reviews...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="state-box" *ngIf="!loading && error">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Content -->
+  <ng-container *ngIf="!loading && !error">
+
+    <!-- Rating Summary -->
+    <div class="rating-summary">
+      <div class="rating-score">
+        <span class="score-number">{{ averageRating | number:'1.1-1' }}</span>
+        <div class="score-stars">
+          <i *ngFor="let s of stars(5)"
+             class="fas fa-star"
+             [class.filled]="s <= averageRating"
+             [class.half]="s > averageRating && s < averageRating + 1"></i>
+        </div>
+        <span class="score-label">{{ ratingLabel(averageRating) }}</span>
+        <span class="score-total">{{ totalReviews }} {{ totalReviews === 1 ? 'review' : 'reviews' }}</span>
+      </div>
+
+      <div class="rating-bars">
+        <div class="bar-row" *ngFor="let s of [5,4,3,2,1]">
+          <span class="bar-label">{{ s }} <i class="fas fa-star"></i></span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="ratingPercent(s)"></div>
+          </div>
+          <span class="bar-pct">{{ ratingPercent(s) }}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <div class="state-box empty-box" *ngIf="reviews.length === 0">
+      <i class="fas fa-star"></i>
+      <p>No reviews yet</p>
+      <span>Complete trips to start receiving tourist reviews.</span>
+    </div>
+
+    <!-- Reviews List -->
+    <div class="reviews-list" *ngIf="reviews.length > 0">
+      <div class="review-card" *ngFor="let r of reviews">
+
+        <div class="review-header">
+          <div class="tourist-info">
+            <img
+              [src]="r.touristAvatar || 'https://ui-avatars.com/api/?name=' + r.touristName + '&background=C85C3A&color=fff'"
+              [alt]="r.touristName"
+              class="tourist-avatar" />
+            <div>
+              <p class="tourist-name">{{ r.touristName }}</p>
+              <p class="review-date">{{ r.createdAt | date:'MMM d, y' }}</p>
+            </div>
+          </div>
+
+          <div class="review-stars">
+            <i *ngFor="let s of stars(5)"
+               class="fas fa-star"
+               [class.filled]="s <= r.rating"></i>
+            <span class="review-rating">{{ r.rating }}.0</span>
+          </div>
+        </div>
+
+        <p class="review-comment" *ngIf="r.comment">{{ r.comment }}</p>
+        <p class="review-no-comment" *ngIf="!r.comment">No comment provided.</p>
+
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="load-more" *ngIf="hasMore && reviews.length > 0">
+      <button class="btn-load-more" (click)="loadMore(0)" [disabled]="loadingMore">
+        <span *ngIf="loadingMore" class="spinner-border spinner-border-sm me-1"></span>
+        {{ loadingMore ? 'Loading...' : 'Load More' }}
+      </button>
+    </div>
+
+  </ng-container>
+</div>

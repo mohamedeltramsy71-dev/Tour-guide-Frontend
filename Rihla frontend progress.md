@@ -9,6 +9,8 @@
 - **Styling:** Bootstrap 5 + SCSS + FontAwesome
 - **API:** https://tourguidee.runasp.net/api
 - **Local:** http://localhost:4200
+- **Language:** English only (no Arabic text in UI)
+- **File naming:** without `.component` (e.g. `profile.ts` not `profile.component.ts`)
 
 ---
 
@@ -18,89 +20,81 @@
 rihla/
 ├── public/
 │   └── images/
-│       ├── logo.png
-│       ├── hero.jpg
-│       ├── step1.jpg
-│       ├── step2.jpg
-│       ├── step3.jpg
-│       ├── auth/
-│       │   └── auth.png
-│       ├── admin/
-│       │   ├── sidebar.png
-│       │   └── background.svg
-│       └── cities/
-│           ├── slide1.jpg
-│           ├── slide2.jpg
-│           ├── slide3.jpg
-│           ├── slide4.jpg
-│           └── slide5.jpg
+│       ├── logo.png, hero.jpg, step1-3.jpg
+│       ├── auth/auth.png
+│       ├── admin/sidebar.png, background.svg
+│       └── cities/slide1-5.jpg
 ├── src/
 │   ├── app/
 │   │   ├── core/
-│   │   │   ├── interceptors/
-│   │   │   │   └── jwt.interceptor.ts    ✅
-│   │   │   ├── guards/
-│   │   │   │   └── auth.guard.ts         ✅
+│   │   │   ├── interceptors/jwt.interceptor.ts             ✅
+│   │   │   ├── guards/auth.guard.ts                        ✅
 │   │   │   ├── models/
-│   │   │   │   ├── city.ts               ✅
-│   │   │   │   ├── landmark.ts           ✅
-│   │   │   │   ├── package.ts            ✅
-│   │   │   │   ├── guide.ts              ✅
-│   │   │   │   ├── auth.ts               ✅
-│   │   │   │   ├── admin.ts              ✅
-│   │   │   │   └── booking.ts            ✅
+│   │   │   │   ├── city.ts                                 ✅
+│   │   │   │   ├── landmark.ts                             ✅
+│   │   │   │   ├── package.ts                              ✅ (+ Create/Update/AddLandmark requests)
+│   │   │   │   ├── guide.ts                                ✅ (+ UpdateGuideRequest)
+│   │   │   │   ├── auth.ts                                 ✅ (+ avatarUrl?)
+│   │   │   │   ├── admin.ts                                ✅
+│   │   │   │   ├── booking.ts                              ✅ (+ Create/Reject requests, FilterParams)
+│   │   │   │   ├── review.ts                               ✅
+│   │   │   │   └── user.model.ts                           ✅
 │   │   │   └── services/
-│   │   │       ├── api.ts                ✅
-│   │   │       ├── city.ts               ✅
-│   │   │       ├── landmark.ts           ✅
-│   │   │       ├── package.ts            ✅
-│   │   │       ├── guide.ts              ✅
-│   │   │       ├── auth.ts               ✅
-│   │   │       └── admin.service.ts      ✅
-│   │   ├── shared/
-│   │   │   └── components/
-│   │   │       └── navbar/               ✅
+│   │   │       ├── api.ts                                  ✅ (+ putForm)
+│   │   │       ├── auth.ts                                 ✅ (+ updateAvatarInStorage)
+│   │   │       ├── city.ts                                 ✅
+│   │   │       ├── landmark.ts                             ✅
+│   │   │       ├── package.ts                              ✅ (+ CRUD + toggle + images + landmarks)
+│   │   │       ├── guide.ts                                ✅
+│   │   │       ├── admin.service.ts                        ✅
+│   │   │       ├── booking.service.ts                      ✅ (Tourist + Guide + Admin)
+│   │   │       ├── review.service.ts                       ✅
+│   │   │       └── user.ts                                 ✅
+│   │   ├── shared/components/navbar/                       ✅
 │   │   ├── features/
-│   │   │   ├── home/                     ✅
-│   │   │   ├── cities/                   ✅
-│   │   │   ├── landmarks/                ✅
-│   │   │   ├── packages/                 ✅
-│   │   │   ├── guides/                   ✅
+│   │   │   ├── home/                                       ✅
+│   │   │   ├── cities/                                     ✅
+│   │   │   ├── landmarks/                                  ✅
+│   │   │   ├── packages/                                   ✅
+│   │   │   ├── guides/                                     ✅
 │   │   │   ├── auth/
-│   │   │   │   ├── login/                ✅
-│   │   │   │   ├── register-select/      ✅
-│   │   │   │   ├── register-tourist/     ✅
-│   │   │   │   ├── register-guide/       ✅
-│   │   │   │   ├── forgot-password/      ✅
-│   │   │   │   ├── reset-password/       ✅
-│   │   │   │   └── confirm-email/        ✅
-│   │   │   ├── profile/                  ⬜
-│   │   │   ├── bookings/                 ⬜
-│   │   │   ├── payment/                  ⬜
-│   │   │   ├── chat/                     ⬜
-│   │   │   ├── reviews/                  ⬜
-│   │   │   ├── notifications/            ⬜
-│   │   │   ├── guide-dashboard/          ⬜
+│   │   │   │   ├── login/                                  ✅
+│   │   │   │   ├── register-select/                        ✅
+│   │   │   │   ├── register-tourist/                       ✅
+│   │   │   │   ├── register-guide/                         ✅
+│   │   │   │   ├── forgot-password/                        ✅
+│   │   │   │   ├── reset-password/                         ✅
+│   │   │   │   └── confirm-email/                          ✅
+│   │   │   ├── profile/                                    ✅
+│   │   │   ├── bookings/my-bookings/                       ✅
+│   │   │   ├── payment/                                    ⬜
+│   │   │   ├── chat/                                       ⬜
+│   │   │   ├── reviews/                                    ⬜
+│   │   │   ├── notifications/                              ⬜
+│   │   │   ├── guide-dashboard/
+│   │   │   │   ├── guide-layout/                           ✅
+│   │   │   │   ├── guide-dashboard/                        ✅
+│   │   │   │   ├── guide-profile/                          ✅
+│   │   │   │   ├── guide-packages/                         ✅
+│   │   │   │   ├── incoming-bookings/                      ✅
+│   │   │   │   └── guide-reviews/                          ✅
 │   │   │   └── admin/
-│   │   │       ├── admin-layout/         ✅
-│   │   │       ├── dashboard/            ✅
-│   │   │       ├── users/                ✅
-│   │   │       ├── guides/               ✅
-│   │   │       ├── reviews/              ✅
-│   │   │       ├── bookings/             ✅
-│   │   │       ├── cities/               ✅
-│   │   │       └── landmarks/            ⬜
-│   │   ├── app.routes.ts                 ✅
-│   │   ├── app.config.ts                 ✅
-│   │   ├── app.ts                        ✅
-│   │   └── app.html                      ✅
-│   ├── environments/
-│   │   ├── environment.ts                ✅
-│   │   └── environment.development.ts    ✅
-│   ├── index.html                        ✅
-│   ├── styles.scss                       ✅
-│   └── main.ts                           ✅
-└── angular.json                          ✅
+│   │   │       ├── admin-layout/                           ✅
+│   │   │       ├── dashboard/                              ✅
+│   │   │       ├── users/                                  ✅
+│   │   │       ├── guides/                                 ✅
+│   │   │       ├── reviews/                                ✅
+│   │   │       ├── bookings/                               ✅
+│   │   │       ├── cities/                                 ✅
+│   │   │       ├── landmarks/                              ✅
+│   │   │       └── categories/                             ✅
+│   │   ├── app.routes.ts                                   ✅
+│   │   ├── app.config.ts                                   ✅
+│   │   ├── app.ts                                          ✅ (Navbar hidden for Admin + Guide roles)
+│   │   └── app.html                                        ✅
+│   ├── environments/                                       ✅
+│   ├── index.html, styles.scss, main.ts                    ✅
+└── angular.json                                            ✅
 ```
 
 ---
@@ -110,43 +104,34 @@ rihla/
 ### Colors
 ```scss
 :root {
-  --primary: #C85C3A;   // أزرار، active links
-  --dark: #1A2340;      // headings، footer
-  --gold: #D4A853;      // accents
-  --light-bg: #FAF8F5;  // خلفية الصفحات
-  --text-gray: #6B7280; // subtitles
+  --primary: #C85C3A;
+  --dark: #1A2340;
+  --gold: #D4A853;
+  --light-bg: #FAF8F5;
+  --text-gray: #6B7280;
 }
 ```
 
-### Auth Pages Layout Pattern
-- **Login / Register Tourist / Register Guide:** نصف الشاشة صورة (auth.png) على الشمال + form على اليمين (480px)
-- **Register Select / Forgot Password / Reset Password / Confirm Email:** صورة كاملة (full screen) + overlay + content في المنتصف
-- الـ Navbar مش بتظهر في أي صفحة auth
-
-### Admin Layout
-- Sidebar ثابت على الشمال (260px) مع sidebar.png كـ background
-- Collapsible لـ 72px
-- Top Navbar فيها Search + Bell + Profile dropdown
-- الـ Public Navbar مش بتظهر في أي صفحة /admin
+### Layout Patterns
+- **Auth pages (Login/Register):** half screen image + form (480px)
+- **Auth pages (Select/Forgot/Reset/Confirm):** full screen + overlay + centered card
+- **Navbar:** hidden in `/auth/*`, `/admin/*`, `/guide/*`, and any Admin/Guide role
+- **Admin Layout:** Sidebar collapsible 260px ↔ 72px + Top Navbar
+- **Guide Layout:** Sidebar collapsible 260px ↔ 72px + Top Navbar
+- **Tourist:** uses public Navbar with extra items when logged in
 
 ### Navbar — Auth State
-- **مش logged in** → Login + Sign Up buttons
-- **logged in كـ Tourist** → اسمه + dropdown (Profile, Bookings, Notifications, Logout)
-- **logged in كـ Guide** → Dashboard button + dropdown
-- **logged in كـ Admin** → Dashboard button + dropdown
-
-### Admin Pages Pattern
-- جدول + Add button في الـ Header
-- Modal للـ Add/Edit مع image upload عن طريق الـ Backend (Cloudinary)
-- Delete confirmation modal
-- Status badges ملونة
+- Guest → Login + Sign Up
+- Tourist → avatar dropdown (My Profile, My Bookings, Notifications, Logout)
+- Guide → Dashboard button + avatar dropdown (My Profile, Logout)
+- Admin → Dashboard button + avatar dropdown (My Profile, Logout)
 
 ---
 
 ## ✅ Progress Overview
 
-| # | الصفحة | الحالة | الـ Endpoints |
-|---|--------|--------|---------------|
+| # | Page | Status | Endpoints |
+|---|------|--------|-----------|
 | 01 | Navbar | ✅ Done | — |
 | 02 | Home Page | ✅ Done | trending, packages, cities |
 | 03 | Cities Page | ✅ Done | GET /api/cities |
@@ -160,216 +145,385 @@ rihla/
 | 11 | Auth — Forgot Password | ✅ Done | POST /api/auth/forget-password |
 | 12 | Auth — Reset Password | ✅ Done | POST /api/auth/reset-password |
 | 13 | Auth — Confirm Email | ✅ Done | GET /api/auth/confirm-email |
-| 14 | My Profile | ⬜ Not Started | GET/PUT /api/users/me |
-| 15 | City Details | ⬜ Not Started | GET /api/cities/{id} |
-| 16 | Landmark Details | ⬜ Not Started | GET /api/landmarks/{id} |
-| 17 | Package Details | ⬜ Not Started | GET /api/packages/{id} |
-| 18 | Guide Profile (Public) | ⬜ Not Started | GET /api/guides/{id} |
-| 19 | Custom Trip Builder | ⬜ Not Started | POST /api/custom-trips/calculate |
-| 20 | Book a Package | ⬜ Not Started | POST /api/bookings |
-| 21 | My Bookings | ⬜ Not Started | GET /api/bookings/my |
+| 14 | My Profile (All Roles) | ✅ Done | GET/PUT /api/users/me + avatar + change-password |
+| 15 | My Bookings (Tourist) | ✅ Done | GET /api/bookings/my + cancel |
+| 16 | City Details | ⬜ Not Started | GET /api/cities/{id} |
+| 17 | Landmark Details | ⬜ Not Started | GET /api/landmarks/{id} |
+| 18 | Package Details | ⬜ Not Started | GET /api/packages/{id} |
+| 19 | Guide Profile (Public) | ⬜ Not Started | GET /api/guides/{id} |
+| 20 | Custom Trip Builder | ⬜ Not Started | POST /api/custom-trips/calculate |
+| 21 | Book a Package | ⬜ Not Started | POST /api/bookings |
 | 22 | Payment | ⬜ Not Started | POST /api/payments/initiate |
 | 23 | Chat | ⬜ Not Started | SignalR + /api/chat |
 | 24 | Reviews (Tourist) | ⬜ Not Started | POST /api/reviews |
-| 25 | Notifications | ⬜ Not Started | GET /api/notifications |
-| 26 | Guide Dashboard | ⬜ Not Started | GET /api/bookings/guide |
-| 27 | Guide Packages | ⬜ Not Started | GET/POST /api/packages |
-| 28 | Admin Dashboard | ✅ Done | GET /api/admin/dashboard + reports |
-| 29 | Admin Users | ✅ Done | GET /api/admin/users + ban + delete |
-| 30 | Admin Guides | ✅ Done | GET /api/admin/guides/pending + approve/reject/suspend |
-| 31 | Admin Cities | ✅ Done | GET/POST/PUT/DELETE /api/cities + upload-image |
-| 32 | Admin Landmarks | ⬜ Not Started | GET/POST /api/landmarks |
-| 33 | Admin Bookings | ✅ Done | GET /api/bookings/admin |
-| 34 | Admin Reviews | ✅ Done | GET /api/admin/reviews + delete |
-| 35 | Footer Component | ⬜ Not Started | — |
-| 36 | Auth Guard | ✅ Done | — |
-| 37 | JWT Interceptor | ✅ Done | — |
+| 25 | Notifications | ⬜ Not Started | GET /api/notifications + SignalR |
+| 26 | Guide Dashboard | ✅ Done | GET /api/guides/me + GET /api/bookings/guide |
+| 27 | Guide — My Profile | ✅ Done | GET/PUT /api/guides/me + GET /api/cities |
+| 28 | Guide — My Packages | ✅ Done | GET/POST/PUT/DELETE /api/packages + toggle + images + landmarks |
+| 29 | Guide — Incoming Bookings | ✅ Done | GET /api/bookings/guide + accept/reject/complete |
+| 30 | Guide — My Reviews | ✅ Done | GET /api/reviews/guide/{guideId} |
+| 31 | Admin Dashboard | ✅ Done | GET /api/admin/dashboard + reports |
+| 32 | Admin Users | ✅ Done | GET /api/admin/users + ban + delete |
+| 33 | Admin Guides | ✅ Done | pending + approve/reject/suspend |
+| 34 | Admin Cities | ✅ Done | GET/POST/PUT/DELETE + upload-image |
+| 35 | Admin Landmarks | ✅ Done | GET/POST/PUT/DELETE + upload-image |
+| 36 | Admin Categories | ✅ Done | GET/POST/DELETE /api/categories |
+| 37 | Admin Bookings | ✅ Done | GET /api/bookings/admin |
+| 38 | Admin Reviews | ✅ Done | GET /api/admin/reviews + delete |
+| 39 | Footer Component | ⬜ Not Started | — |
+| 40 | Auth Guard | ✅ Done | — |
+| 41 | JWT Interceptor | ✅ Done | — |
 
 ---
 
 ## 📋 Detailed Steps Log
 
-### 01 — Setup ✅
-- [x] `ng new rihla --routing --style=scss`
-- [x] Bootstrap 5 + FontAwesome installed
-- [x] `angular.json` — styles + scripts configured
-- [x] `zone.js` added to `main.ts`
-- [x] `skipTests: true` في `angular.json`
-- [x] `environments/` — apiUrl + googleClientId configured
-- [x] `index.html` — Google Identity Services script added
+### Auth Infrastructure ✅
+- JWT Interceptor — auto token + refresh + logout on fail
+- PUBLIC_ENDPOINTS — auth only (not cities/landmarks/guides)
+- Guards: authGuard, roleGuard, guestGuard
+- Auth response unwrapping: `{ message, data: LoginResponse }`
 
-### 02 — Navbar ✅
-- [x] Auth state-aware: Guest / Tourist / Guide / Admin
-- [x] User dropdown: Profile, Bookings, Notifications, Logout
-- [x] Dashboard button للـ Guide/Admin
-- [x] مش بتظهر في auth أو admin pages
+### Auth Pages ✅
+- Login (Google OAuth — Tourists only) → redirect by role
+- Register Select → Tourist / Guide
+- Register Tourist + Guide
+- Forgot Password + Reset Password
+- Confirm Email (userId + token from URL)
 
-### 03 — Core Setup ✅
-- [x] `ApiService` — get/post/put/delete مع HttpParams support
-- [x] Models: City, Landmark, Package, Guide, Auth, Admin, Booking
-- [x] Services: CityService (مع admin methods), LandmarkService, PackageService, GuideService, AuthService, AdminService
+### My Profile ✅
+- GET /api/users/me → load user data
+- PUT /api/users/me → update fullName, phone, bio
+- PUT /api/users/me/avatar → upload avatar (putForm)
+- POST /api/auth/change-password → change password
+- Back button (Location.back())
+- Avatar updates reflected in Navbar + Admin/Guide Topbar via currentUser$ BehaviorSubject
+- updateAvatarInStorage() added to AuthService
+- avatarUrl? added to LoginResponse model
+- putForm<T>() added to ApiService
 
-### 04-08 — Public Pages ✅
-- [x] Home, Cities, Landmarks, Packages, Guides
+### My Bookings ✅
+- Path: `features/bookings/my-bookings/`
+- Route: `/bookings` (Tourist only — roleGuard)
+- GET /api/bookings/my → load all tourist bookings (pageSize: 100)
+- PUT /api/bookings/{id}/cancel → cancel Pending booking only
+- Filter tabs: All / Pending / Confirmed / Completed / Rejected / Cancelled (with count badges)
+- Booking cards: Guide avatar+name, Package title, Date, Persons, Price, Status+Payment badges
+- Actions: Cancel (Pending) | Pay Now placeholder (Confirmed+Unpaid) | Leave Review placeholder (Completed)
+- Empty state with link to /packages
 
-### 09 — Auth Infrastructure ✅
-- [x] JWT Interceptor — auto add token + auto refresh + logout on fail
-- [x] Guards: authGuard, roleGuard, guestGuard
-- [x] app.config.ts + app.routes.ts مع guards
+### Admin Layout ✅
+- Sidebar collapsible (260px ↔ 72px), Toggle always visible
+- Logout → `/auth/login`
+- Nav: Dashboard, Users, Guides, Cities, Landmarks, Bookings, Categories, Reviews
+- Reactive avatar + fullName via currentUser$ subscription
+- Topbar dropdown: My Profile → `/profile`
 
-### 10-16 — Auth Pages ✅
-- [x] Login (مع Google OAuth — Tourists only)
-- [x] Register Select → Tourist / Guide
-- [x] Register Tourist + Register Guide
-- [x] Forgot Password + Reset Password
-- [x] Confirm Email
+### Admin Dashboard ✅
+- KPI: Users, Guides, Bookings Today, Revenue Today, Pending Guides
+- Charts: Bookings (daily/monthly), Revenue (daily/monthly), User Growth
+- Top Cities + Top Landmarks + Guide Performance Table
 
-### 17 — Admin Layout ✅
-- [x] Sidebar + Top Navbar + Collapsible
-- [x] Nav items: Dashboard, Users, Guides, Cities, Landmarks, Bookings, Reviews
+### Admin Users ✅
+- Table + Search + Filter (Role/Status) + Ban/Unban + Delete
 
-### 18 — Admin Dashboard ✅
-- [x] KPI Cards + Charts (Bookings, Revenue, User Growth)
-- [x] Top Cities + Top Landmarks + Guide Performance Table
+### Admin Guides ✅
+- Pending tab → Approve / Reject (with reason textarea)
+- All Guides tab → Suspend toggle
 
-### 19 — Admin Users ✅
-- [x] Table + Search + Filter + Ban/Unban + Delete modal
+### Admin Reviews ✅
+- Table + Full comment + Guide name + Delete modal + Pagination
 
-### 20 — Admin Guides ✅
-- [x] Pending tab: Approve/Reject (مع reason)
-- [x] All Guides tab: Suspend toggle
+### Admin Bookings ✅
+- Table + Tourist/Guide info + Status/Payment badges
+- In-memory status filter
 
-### 21 — Admin Reviews ✅
-- [x] Table + Delete modal + Pagination
+### Admin Cities ✅
+- CRUD + Image upload (Cloudinary)
+- Backend fix: POST /api/cities/upload-image
 
-### 22 — Admin Bookings ✅
-- [x] Table مع Tourist/Guide avatars + Status/Payment badges
-- [x] Filter بالـ Status + Date range
-- [x] Endpoint: `GET /api/bookings/admin`
-- [x] ملاحظة: Status filter بيتعمل in-memory بعد الـ fetch (الـ Backend بيخزن كـ string)
+### Admin Landmarks ✅
+- CRUD + Image upload (Cloudinary)
+- Category from API (not hardcoded)
+- Landmark.Category changed from enum to string
+- Migration: `ChangeLandmarkCategoryToString`
 
-### 23 — Admin Cities ✅
-- [x] Table مع City thumbnails + Landmarks count
-- [x] Add/Edit modal مع image upload عن طريق Backend (Cloudinary)
-- [x] Delete confirmation modal
-- [x] Endpoints: GET/POST/PUT/DELETE /api/cities + POST /api/cities/upload-image
-- [x] Backend fix: أضفنا `POST /api/cities/upload-image` في `CitiesController.cs`
+### Admin Categories ✅
+- Add + Delete categories from DB
+- Landmarks fetches categories from GET /api/categories
+- Migration: `AddCategoriesTable`
+
+### Guide Layout ✅
+- Path: `features/guide-dashboard/guide-layout/`
+- Sidebar collapsible (260px ↔ 72px)
+- Nav links: Dashboard, My Profile, My Packages, Incoming Bookings, My Reviews
+- Top Navbar: avatar + fullName + Logout → `/auth/login`
+- Topbar dropdown: My Profile → `/profile` (shared profile), My Guide Profile → `/guide/profile`
+- router-outlet for child routes under `/guide`
+- Navbar (public) hidden inside guide layout
+
+### Guide Dashboard ✅
+- Path: `features/guide-dashboard/guide-dashboard/`
+- GET /api/guides/me → profile summary (name, rating, experience, cities, languages, availability)
+- GET /api/bookings/guide → bookings stats + recent bookings table
+- Sections: Welcome banner, 6 stat cards, Recent Bookings table, Profile Summary
+
+### Guide — My Profile ✅
+- Path: `features/guide-dashboard/guide-profile/`
+- Route: `/guide/profile`
+- GET /api/guides/me → load profile (view mode)
+- GET /api/cities → city list for edit mode
+- PUT /api/guides/me → save changes
+- View mode: Hero card (avatar, name, email, experience, rating, status pills) + detail cards (Bio, Languages, Cities, Rating Overview)
+- Edit mode: Bio textarea, Languages add/remove tags (Enter key support), Experience input, Cities checkbox grid
+- Alerts: success/error, 4s auto-dismiss on success
+
+### Guide — My Packages ✅
+- Path: `features/guide-dashboard/guide-packages/`
+- Route: `/guide/packages`
+- GET /api/packages → filtered by guideId (client-side)
+- POST /api/packages → create
+- PUT /api/packages/{id} → edit
+- DELETE /api/packages/{id} → soft delete
+- PUT /api/packages/{id}/toggle → activate/deactivate
+- POST /api/packages/{id}/images → upload image (Cloudinary)
+- POST /api/packages/{id}/landmarks → add landmark (dayNumber + order)
+- DELETE /api/packages/{id}/landmarks/{landmarkId} → remove landmark
+- 5 modals: Create / Edit / Delete / Images / Landmarks
+- Package cards grid: cover image, title, city, price, duration, maxPersons, rating, image/landmark counts
+- Action buttons per card: Toggle / Images / Landmarks / Edit / Delete
+- ⚠️ Image delete disabled — PackageDto returns images as string[] (no imageId); needs Backend fix
+
+### Guide — Incoming Bookings ✅
+- Path: `features/guide-dashboard/incoming-bookings/`
+- Route: `/guide/bookings`
+- GET /api/bookings/guide → load all guide bookings (pageSize: 100)
+- PUT /api/bookings/{id}/accept → Confirmed
+- PUT /api/bookings/{id}/reject → Rejected (with reason)
+- PUT /api/bookings/{id}/complete → Completed
+- Filter tabs: All / Pending / Confirmed / Rejected / Completed (with count badges)
+- Cards: tourist avatar+name, date, status/payment badges, package/trip details, price
+- Actions: Accept + Reject (Pending) | Mark Complete (Confirmed) | Labels for others
+- Reject modal: textarea + validation
+- Complete confirm modal
+- Toast notifications after each action
+
+### Guide — My Reviews ✅
+- Path: `features/guide-dashboard/guide-reviews/`
+- Route: `/guide/reviews`
+- GET /api/guides/me → get guideProfileId
+- GET /api/reviews/guide/{guideId} → paginated reviews
+- Summary card: avg rating (large stars) + total count
+- Rating breakdown bars (5★ → 1★ with percentages)
+- Review cards: tourist avatar + name + date + star rating + comment
+- Load More button, empty state, loading spinner
+
+### package.ts model — additions ✅
+- CreatePackageRequest: title, description?, price, durationDays, maxPersons, cityId
+- UpdatePackageRequest: title, description?, price, durationDays, maxPersons
+- AddLandmarkToPackageRequest: landmarkId, dayNumber, order
+
+### package.ts service — additions ✅
+- createPackage(request) — POST /api/packages
+- updatePackage(id, request) — PUT /api/packages/{id}
+- deletePackage(id) — DELETE /api/packages/{id}
+- togglePackage(id) — PUT /api/packages/{id}/toggle
+- uploadImage(packageId, file) — POST /api/packages/{id}/images
+- deleteImage(packageId, imageId) — DELETE /api/packages/{id}/images/{imageId}
+- addLandmark(packageId, req) — POST /api/packages/{id}/landmarks
+- removeLandmark(pkgId, lmId) — DELETE /api/packages/{id}/landmarks/{landmarkId}
 
 ---
 
-## 🔑 Auth Models (core/models/auth.ts)
+## 🔑 Models
 
-```typescript
-LoginRequest          { email, password }
-RegisterRequest       { fullName, email, password, role: 'Tourist'|'Guide' }
-ForgetPasswordRequest { email }
-ResetPasswordRequest  { email, token, newPassword }
-RefreshTokenRequest   { refreshToken }
-ChangePasswordRequest { currentPassword, newPassword }
-GoogleAuthRequest     { idToken }
-LoginResponse         { accessToken, refreshToken, role, fullName, email }
+### auth.ts
+```
+LoginResponse { accessToken, refreshToken, role, fullName, email, avatarUrl? }
+Backend wraps: { message, data: LoginResponse }
 ```
 
----
+### user.model.ts
+```
+UserDto { id, fullName, email, phone?, bio?, avatarUrl?, role, isBanned, isDeleted, createdAt }
+UpdateProfileRequest { fullName, phone?, bio? }
+ChangePasswordRequest { currentPassword, newPassword }
+AvatarResponse { avatarUrl }
+```
 
-## 🔑 Booking Model (core/models/booking.ts)
-
-```typescript
-BookingDto {
-  id, startDate, numberOfPersons, totalPrice
-  status, paymentStatus, isCustom, rejectionReason, createdAt
-  touristId, touristName, touristAvatar
-  guideProfileId, guideName, guideAvatar
-  packageId, packageTitle
-}
+### booking.ts
+```
+BookingDto { id, startDate, numberOfPersons, totalPrice, status, paymentStatus,
+             isCustom, rejectionReason, createdAt, touristId, touristName,
+             touristAvatar, guideProfileId, guideName, guideAvatar, packageId, packageTitle }
+CreateBookingRequest { packageId?, guideProfileId, startDate, numberOfPersons, durationDays }
+RejectBookingRequest { reason }
 BookingFilterParams { status?, fromDate?, toDate?, page?, pageSize? }
 ```
 
----
+### review.ts
+```
+ReviewDto { id, rating, comment, createdAt, touristId, touristName, touristAvatar?, guideProfileId, guideName }
+ReviewFilterParams { page?, pageSize? }
+PaginatedReviews { items: ReviewDto[], totalCount, page, pageSize, totalPages }
+```
 
-## 🔑 City Service (core/services/city.ts)
+### guide.ts
+```
+GuideProfileDto { userId, fullName, email, avatarUrl?, bio?,
+                  languages[], experienceYears, averageRating,
+                  totalReviews, isApproved, isAvailable, coveredCities[] }
+GuideListDto { userId, fullName, avatarUrl?, averageRating,
+               totalReviews, experienceYears, languages[], coveredCities[], isAvailable }
+UpdateGuideRequest { bio?, languages[], experienceYears, coveredCityIds[] }
+```
 
-```typescript
-getCities(page, pageSize)     → GET /api/cities
-getCityById(id)               → GET /api/cities/{id}
-getTrendingCities()           → GET /api/cities/trending
-createCity(data)              → POST /api/cities
-updateCity(id, data)          → PUT /api/cities/{id}
-deleteCity(id)                → DELETE /api/cities/{id}
-// Image upload → POST /api/cities/upload-image (من الـ component مباشرة)
+### package.ts
+```
+Package { id, title, description, price, durationDays, maxPersons, isActive,
+          averageRating, cityNameEn, guideId, guideName, images: string[], landmarks: PackageLandmark[] }
+PackageLandmark { landmarkId, nameEn, dayNumber, order }
+CreatePackageRequest { title, description?, price, durationDays, maxPersons, cityId }
+UpdatePackageRequest { title, description?, price, durationDays, maxPersons }
+AddLandmarkToPackageRequest { landmarkId, dayNumber, order }
+```
+
+### admin.ts
+```
+DashboardSummaryDto, BookingsReportDto, RevenueReportDto,
+TopCityDto, TopLandmarkDto, GuidePerformanceDto, UserGrowthDto,
+UserDto, PaginatedUsersRequest, RejectGuideRequest
 ```
 
 ---
 
-## 🔑 API Service Pattern (core/services/api.ts)
+## 🔑 Services
 
-```typescript
+### api.ts
+```
 get<T>(endpoint, { params?: HttpParams })
 post<T>(endpoint, body)
+postForm<T>(endpoint, FormData)    — POST image upload
 put<T>(endpoint, body)
+putForm<T>(endpoint, FormData)     — PUT image upload (avatar)
 delete<T>(endpoint)
-// للـ params: new HttpParams().set('key', value)
+```
+
+### booking.service.ts
+```
+Tourist:
+  createBooking(request)           POST /api/bookings
+  getMyBookings(filters?)          GET /api/bookings/my
+  cancelBooking(id)                PUT /api/bookings/{id}/cancel
+
+Guide:
+  getGuideBookings(filters?)       GET /api/bookings/guide
+  acceptBooking(id)                PUT /api/bookings/{id}/accept
+  rejectBooking(id, request)       PUT /api/bookings/{id}/reject
+  completeBooking(id)              PUT /api/bookings/{id}/complete
+
+Shared:
+  getBookingById(id)               GET /api/bookings/{id}
+
+Admin:
+  getAllBookings(filters?)          GET /api/bookings/admin
+```
+
+### review.service.ts
+```
+getGuideReviews(guideId, params?)  GET /api/reviews/guide/{guideId}
+deleteReview(id)                   DELETE /api/reviews/{id}
 ```
 
 ---
 
 ## 🔑 Backend Fixes Done
 
-| الـ Fix | الملف |
-|---------|-------|
-| `LandmarksCount` في Cities | `CityService.cs` |
-| `Images` في Landmarks | `LandmarkService.cs` |
-| `CityName` في Landmarks | `LandmarkService.cs` |
-| `GET/DELETE /api/admin/users/{id}` | `AdminController.cs` |
-| Reset Password link → Frontend | `AuthController.cs` |
-| Email Confirmation link → Frontend | `AuthController.cs` |
-| `IRepository` — أضفنا `FindWithNestedIncludeAsync` | `IRepository.cs` |
-| `GenericRepository` — أضفنا `FindWithNestedIncludeAsync` | `GenericRepository.cs` |
-| `BookingService` — Include Tourist + GuideProfile.User + Package | `BookingService.cs` |
-| `BookingFilterParams.Status` — string بدل enum | `BookingFilterParams.cs` |
-| Booking status filter — in-memory بعد fetch | `BookingService.cs` |
-| `CitiesController` — أضفنا `POST /api/cities/upload-image` | `CitiesController.cs` |
+| Fix | File |
+|-----|------|
+| Auth response wrapped { message, data } | AuthController.cs |
+| Reset/Confirm Email links → Frontend | AuthController.cs |
+| JWT Interceptor PUBLIC_ENDPOINTS fix | jwt.interceptor.ts |
+| IRepository + GenericRepository Include methods | Domain + Infrastructure |
+| ReviewService Include Tourist + GuideProfile | ReviewService.cs |
+| ReviewDto + GuideName | ReviewDto.cs |
+| BookingService Include Tourist + Guide + Package | BookingService.cs |
+| BookingFilterParams.Status — string not enum | BookingFilterParams.cs |
+| CitiesController POST /api/cities/upload-image | CitiesController.cs |
+| Landmark.Category — enum to string | Landmark.cs + LandmarkService.cs |
+| Migration: AddCategoriesTable | TourGuide.Infrastructure |
+| Migration: ChangeLandmarkCategoryToString | TourGuide.Infrastructure |
+| Bookings enum fix (string to int in DB) | SQL UPDATE |
 
 ---
 
-## ⚠️ Backend — التعديلات المطلوبة وقت Production
+## ⚠️ Pending Backend Fixes
 
-### 1. `appsettings.json`
+| Fix | File | Needed For |
+|-----|------|------------|
+| PackageDto.Images → List of PackageImageDto { Id, ImageUrl } instead of List of string | PackageDto.cs + PackageService.cs | Guide Packages — delete image |
+
+---
+
+## ⚠️ Production Checklist
+
 ```json
+// appsettings.json
 "Frontend": { "BaseUrl": "https://your-app.vercel.app" }
 ```
 
-### 2. CORS في `Program.cs`
 ```csharp
+// Program.cs CORS
 WithOrigins("http://localhost:4200", "https://your-app.vercel.app")
 ```
 
-### 3. Google Console
-- Authorized JavaScript origins: أضف Vercel URL
-- Authorized redirect URIs: أضف Vercel URL
+```
+// Google Console
+Authorized JavaScript origins: add Vercel URL
+Authorized redirect URIs: add Vercel URL
+```
 
 ---
 
-## 📌 الخطوات الجاية
+## 📌 Next Steps — Priority Order
 
-| # | الصفحة |
-|---|--------|
-| 1 | Admin Landmarks |
-| 2 | My Profile (Tourist/Guide) |
-| 3 | Guide Dashboard |
-| 4 | My Bookings |
-| 5 | Package/City/Landmark Details |
-| 6 | Chat + Notifications |
-| 7 | Payment |
-| 8 | Footer |
+| # | Page | Notes |
+|---|------|-------|
+| 1 | Package Details | GET /api/packages/{id} — needed before Book a Package |
+| 2 | Book a Package | POST /api/bookings — button on Package Details page |
+| 3 | Guide Profile (Public) | GET /api/guides/{id} — link from packages + guides listing |
+| 4 | City Details | GET /api/cities/{id} |
+| 5 | Landmark Details | GET /api/landmarks/{id} |
+| 6 | Reviews (Tourist) | POST/PUT/DELETE /api/reviews — activates Leave Review in My Bookings |
+| 7 | Notifications | GET /api/notifications + SignalR NotificationReceived |
+| 8 | Chat | SignalR Hub + /api/chat — Tourist and Guide per booking |
+| 9 | Payment | Paymob iFrame — POST /api/payments/initiate |
+| 10 | Custom Trip Builder | POST /api/custom-trips/calculate + available-guides |
+| 11 | Footer | Static component |
+
+### Details Pages — Backend files needed before starting:
+- PackagesController.cs (GET /{id} with landmarks + guide info)
+- PackageDto.cs (full details)
+- CitiesController.cs (GET /{id} with landmarks)
+- LandmarksController.cs (GET /{id} full details)
+- GuidesController.cs (GET /{id} public profile + reviews)
+
+### Details Pages — CLI commands to run first:
+```
+ng g component features/packages/package-detail --standalone
+ng g component features/cities/city-detail --standalone
+ng g component features/landmarks/landmark-detail --standalone
+ng g component features/guides/guide-detail --standalone
+```
 
 ---
 
 ## 📌 Legend
+
 | Icon | Meaning |
 |------|---------|
 | ⬜ | Not Started |
 | 🔄 | In Progress |
 | ✅ | Done |
-| ⚠️ | Has Issue |
+| ⚠️ | Has Issue / Pending Fix |
 | ⏳ | Pending |

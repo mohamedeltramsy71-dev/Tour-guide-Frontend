@@ -44,4 +44,5 @@ export interface LoginResponse {
   role: string;
   fullName: string;
   email: string;
+  avatarUrl?: string;
 }

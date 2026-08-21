@@ -25,3 +25,15 @@ export interface BookingFilterParams {
   page?: number;
   pageSize?: number;
 }
+
+export interface CreateBookingRequest {
+  packageId?: number;
+  guideProfileId: number;
+  startDate: string;
+  numberOfPersons: number;
+  durationDays: number;
+}
+
+export interface RejectBookingRequest {
+  reason: string;
+}

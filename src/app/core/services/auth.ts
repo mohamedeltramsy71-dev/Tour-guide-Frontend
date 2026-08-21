@@ -25,7 +25,7 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<LoginResponse | null>(this.getUserFromStorage());
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // ── Auth Calls ────────────────────────────────────────────
 
@@ -92,6 +92,13 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
+  }
+  updateAvatarInStorage(avatarUrl: string): void {
+    const user = this.getUserFromStorage();
+    if (!user) return;
+    const updated = { ...user, avatarUrl };
+    localStorage.setItem('user', JSON.stringify(updated));
+    this.currentUserSubject.next(updated);
   }
 
   getUserFromStorage(): LoginResponse | null {

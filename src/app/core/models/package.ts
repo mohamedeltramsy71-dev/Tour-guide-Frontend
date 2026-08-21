@@ -20,3 +20,26 @@ export interface Package {
   images: string[];
   landmarks: PackageLandmark[];
 }
+
+export interface CreatePackageRequest {
+  title: string;
+  description?: string;
+  price: number;
+  durationDays: number;
+  maxPersons: number;
+  cityId: number;
+}
+
+export interface UpdatePackageRequest {
+  title: string;
+  description?: string;
+  price: number;
+  durationDays: number;
+  maxPersons: number;
+}
+
+export interface AddLandmarkToPackageRequest {
+  landmarkId: number;
+  dayNumber: number;
+  order: number;
+}
