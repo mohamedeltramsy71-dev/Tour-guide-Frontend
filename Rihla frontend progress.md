@@ -37,7 +37,7 @@ rihla/
 │   │   │   │   ├── auth.ts                                 ✅ (+ avatarUrl?)
 │   │   │   │   ├── admin.ts                                ✅
 │   │   │   │   ├── booking.ts                              ✅ (+ Create/Reject requests, FilterParams)
-│   │   │   │   ├── review.ts                               ✅
+│   │   │   │   ├── review.ts                               ✅ (+ CreateReviewRequest, UpdateReviewRequest)
 │   │   │   │   └── user.model.ts                           ✅
 │   │   │   └── services/
 │   │   │       ├── api.ts                                  ✅ (+ putForm)
@@ -48,7 +48,7 @@ rihla/
 │   │   │       ├── guide.ts                                ✅
 │   │   │       ├── admin.service.ts                        ✅
 │   │   │       ├── booking.service.ts                      ✅ (Tourist + Guide + Admin)
-│   │   │       ├── review.service.ts                       ✅
+│   │   │       ├── review.service.ts                       ✅ (+ createReview, updateReview, deleteReview)
 │   │   │       └── user.ts                                 ✅
 │   │   ├── shared/components/navbar/                       ✅
 │   │   ├── features/
@@ -74,10 +74,10 @@ rihla/
 │   │   │   │   ├── reset-password/                         ✅
 │   │   │   │   └── confirm-email/                          ✅
 │   │   │   ├── profile/                                    ✅
-│   │   │   ├── bookings/my-bookings/                       ✅
+│   │   │   ├── bookings/my-bookings/                       ✅ (+ Leave Review / Edit Review modal)
+│   │   │   ├── leave-review/                               ✅ (modal component — used in my-bookings)
 │   │   │   ├── payment/                                    ⬜
 │   │   │   ├── chat/                                       ⬜
-│   │   │   ├── reviews/                                    ⬜
 │   │   │   ├── notifications/                              ⬜
 │   │   │   ├── guide-dashboard/
 │   │   │   │   ├── guide-layout/                           ✅
@@ -155,13 +155,13 @@ rihla/
 | 12 | Auth — Reset Password | ✅ Done | POST /api/auth/reset-password |
 | 13 | Auth — Confirm Email | ✅ Done | GET /api/auth/confirm-email |
 | 14 | My Profile (All Roles) | ✅ Done | GET/PUT /api/users/me + avatar + change-password |
-| 15 | My Bookings (Tourist) | ✅ Done | GET /api/bookings/my + cancel |
+| 15 | My Bookings (Tourist) | ✅ Done | GET /api/bookings/my + cancel + leave/edit review |
 | 16 | City Details | ✅ Done | GET /api/cities/{id} + GET /api/landmarks?cityId={id} |
 | 17 | Landmark Details | ✅ Done | GET /api/landmarks/{id} |
 | 18 | Package Details | ✅ Done | GET /api/packages/{id} + POST /api/bookings |
 | 19 | Guide Profile (Public) | ✅ Done | GET /api/guides/{id} + reviews + packages |
 | 20 | Book a Package | ✅ Done | POST /api/bookings (inline on Package Details) |
-| 21 | Reviews (Tourist) | ⬜ Not Started | POST/PUT/DELETE /api/reviews |
+| 21 | Reviews (Tourist) | ✅ Done | POST /api/reviews + PUT /api/reviews/{id} |
 | 22 | Notifications | ⬜ Not Started | GET /api/notifications + SignalR |
 | 23 | Chat | ⬜ Not Started | SignalR + /api/chat |
 | 24 | Payment | ⬜ Not Started | POST /api/payments/initiate |
@@ -218,8 +218,21 @@ rihla/
 - PUT /api/bookings/{id}/cancel → cancel Pending booking only
 - Filter tabs: All / Pending / Confirmed / Completed / Rejected / Cancelled (with count badges)
 - Booking cards: Guide avatar+name, Package title, Date, Persons, Price, Status+Payment badges
-- Actions: Cancel (Pending) | Pay Now placeholder (Confirmed+Unpaid) | Leave Review placeholder (Completed)
+- Actions: Cancel (Pending) | Pay Now placeholder (Confirmed+Unpaid) | Leave Review / Edit Review (Completed)
 - Empty state with link to /packages
+
+### Reviews (Tourist) ✅
+- Path: features/leave-review/ (modal component, no dedicated route)
+- Used inside: features/bookings/my-bookings/
+- POST /api/reviews → createReview({ bookingId, rating, comment })
+- PUT /api/reviews/{id} → updateReview({ rating, comment })
+- Triggered from My Bookings → Completed bookings only
+- Leave Review button → opens modal → star rating (1–5) + optional comment
+- Edit Review button → opens modal prefilled with existing review
+- Success state shown before closing modal
+- reviewedBookings Map tracks reviewed bookings in session
+- review.ts model: ReviewDto, CreateReviewRequest, UpdateReviewRequest
+- review.service.ts: createReview, updateReview, deleteReview, getGuideReviews
 
 ### City Details ✅
 - Path: features/cities/city-detail/
@@ -372,7 +385,9 @@ BookingFilterParams { status?, fromDate?, toDate?, page?, pageSize? }
 
 ### review.ts
 ```
-ReviewDto { id, rating, comment, createdAt, touristId, touristName, touristAvatar?, guideProfileId, guideName }
+ReviewDto { id, bookingId, rating, comment?, createdAt, touristName, touristAvatar?, guideName }
+CreateReviewRequest { bookingId, rating, comment? }
+UpdateReviewRequest { rating, comment? }
 ReviewFilterParams { page?, pageSize? }
 PaginatedReviews { items: ReviewDto[], totalCount, page, pageSize, totalPages }
 ```
@@ -442,6 +457,8 @@ Admin:
 ### review.service.ts
 ```
 getGuideReviews(guideId, page?, pageSize?)  GET /api/reviews/guide/{guideId}
+createReview(request)                       POST /api/reviews
+updateReview(id, request)                   PUT /api/reviews/{id}
 deleteReview(id)                            DELETE /api/reviews/{id}
 ```
 
@@ -508,22 +525,11 @@ Authorized redirect URIs: add Vercel URL
 
 | # | Page | Notes |
 |---|------|-------|
-| 1 | Reviews (Tourist) | POST/PUT/DELETE /api/reviews — activates Leave Review in My Bookings |
-| 2 | Notifications | GET /api/notifications + SignalR NotificationReceived |
-| 3 | Chat | SignalR Hub + /api/chat — Tourist and Guide per booking |
-| 4 | Payment | Paymob iFrame — POST /api/payments/initiate |
-| 5 | Custom Trip Builder | POST /api/custom-trips/calculate + available-guides |
-| 6 | Footer | Static component |
-
-### Reviews — Backend files needed:
-- ReviewsController.cs
-- ReviewDto.cs
-- CreateReviewRequest.cs / UpdateReviewRequest.cs
-
-### Reviews — CLI commands to run first:
-```bash
-ng g component features/reviews/leave-review --standalone
-```
+| 1 | Notifications | GET /api/notifications + SignalR NotificationReceived |
+| 2 | Chat | SignalR Hub + /api/chat — Tourist and Guide per booking |
+| 3 | Payment | Paymob iFrame — POST /api/payments/initiate |
+| 4 | Custom Trip Builder | POST /api/custom-trips/calculate + available-guides |
+| 5 | Footer | Static component |
 
 ---
 

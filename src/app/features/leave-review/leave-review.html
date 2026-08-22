@@ -1,0 +1,86 @@
+<div class="review-overlay" (click)="close()">
+  <div class="review-modal" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="review-header">
+      <h3 class="review-title">{{ isEdit ? 'Edit Review' : 'Leave a Review' }}</h3>
+      <button class="review-close" (click)="close()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Success State -->
+    @if (success) {
+      <div class="review-success">
+        <i class="fas fa-check-circle"></i>
+        <p>{{ success }}</p>
+      </div>
+    } @else {
+
+      <div class="review-body">
+
+        <!-- Guide context -->
+        @if (guideName) {
+          <p class="review-guide">
+            <i class="fas fa-compass me-2" style="color:#C85C3A"></i>
+            Rating your experience with <strong>{{ guideName }}</strong>
+          </p>
+        }
+
+        <!-- Stars -->
+        <div class="stars-section">
+          <div class="stars-row" (mouseleave)="clearHover()">
+            @for (star of stars; track star) {
+              <button class="star-btn"
+                      (mouseenter)="hoverStar(star)"
+                      (click)="setRating(star)">
+                <i class="fas fa-star" [ngClass]="starClass(star)"></i>
+              </button>
+            }
+          </div>
+          @if (rating() > 0) {
+            <span class="rating-label">{{ ratingLabel() }}</span>
+          }
+        </div>
+
+        <!-- Comment -->
+        <div class="comment-section">
+          <label class="comment-label">
+            Comment <span class="optional">(optional)</span>
+          </label>
+          <textarea
+            [(ngModel)]="comment"
+            rows="4"
+            placeholder="Share your experience…"
+            class="comment-input"
+            maxlength="500">
+          </textarea>
+          <span class="char-count">{{ comment.length }}/500</span>
+        </div>
+
+        <!-- Error -->
+        @if (error) {
+          <div class="review-error">
+            <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+          </div>
+        }
+
+      </div>
+
+      <!-- Footer -->
+      <div class="review-footer">
+        <button class="btn-cancel" (click)="close()">Cancel</button>
+        <button class="btn-submit"
+                [disabled]="loading || rating() === 0"
+                (click)="submit()">
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          {{ isEdit ? 'Update Review' : 'Submit Review' }}
+        </button>
+      </div>
+
+    }
+
+  </div>
+</div>
