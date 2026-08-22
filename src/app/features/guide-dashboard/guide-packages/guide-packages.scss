@@ -601,3 +601,31 @@ $text-gray: #6B7280;
   &:hover:not(:disabled) { background: darken($primary, 8%); }
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
+
+// ─── Image Delete Button ────────────────────────────────────
+.img-item {
+  position: relative;
+
+  .img-delete-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 26px;
+    height: 26px;
+    background: rgba(220, 38, 38, 0.85);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 0.7rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s;
+
+    &:disabled { opacity: 0.6 !important; cursor: not-allowed; }
+  }
+
+  &:hover .img-delete-btn { opacity: 1; }
+}

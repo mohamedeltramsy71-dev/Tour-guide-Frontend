@@ -23,9 +23,9 @@ export class App {
         const isGuideUser = role === 'Guide';
         const isAuthPage = url.startsWith('/auth');
         const isAdminPage = url.startsWith('/admin');
-        const isGuidePage = url.startsWith('/guide');
+        const isGuidePage = url.startsWith('/guide/') || url === '/guide';
 
-        this.showNavbar = !isAuthPage && !isAdminPage && !isAdminUser && !isGuidePage && !isGuideUser;
+        this.showNavbar = !isAuthPage && !isAdminPage && !isAdminUser && !isGuidePage;
       }
     });
   }

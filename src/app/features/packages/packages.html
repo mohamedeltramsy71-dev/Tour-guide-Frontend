@@ -1,4 +1,3 @@
-<!-- Page Header -->
 <!-- Hero Slider -->
 <section class="packages-slider position-relative">
   <div class="slider-wrapper">
@@ -43,31 +42,26 @@
   <div class="container">
     <div class="d-flex gap-3 align-items-center flex-wrap">
 
-      <!-- City -->
       <select class="form-select w-auto" [(ngModel)]="selectedCity" (ngModelChange)="onServerFilterChange()">
         <option value="">All Cities</option>
         <option *ngFor="let city of cities" [value]="city.id">{{ city.nameEn }}</option>
       </select>
 
-      <!-- Duration -->
       <select class="form-select w-auto" [(ngModel)]="selectedDuration" (ngModelChange)="onFilterChange()">
         <option value="">Any Duration</option>
         <option *ngFor="let d of durations" [value]="d.value">{{ d.label }}</option>
       </select>
 
-      <!-- Max Price -->
       <div class="d-flex align-items-center gap-2">
         <label class="text-muted small">Max Price:</label>
-        <input type="number" class="form-control w-auto" placeholder="EGP"
-          [(ngModel)]="maxPrice" (ngModelChange)="onServerFilterChange()" style="width: 120px !important;">
+        <input type="number" class="form-control" placeholder="EGP"
+          [(ngModel)]="maxPrice" (ngModelChange)="onServerFilterChange()" style="width: 120px;">
       </div>
 
-      <!-- Results -->
       <span class="text-muted small ms-auto">
         <span class="fw-bold" style="color: var(--dark);">{{ filteredPackages.length }}</span> packages found
       </span>
 
-      <!-- Clear -->
       <button class="btn btn-sm btn-outline-secondary" (click)="clearFilters()"
         *ngIf="searchQuery || selectedCity || selectedDuration || maxPrice">
         <i class="fas fa-times me-1"></i>Clear
@@ -100,30 +94,26 @@
 <section class="py-5" style="background-color: var(--light-bg);">
   <div class="container">
 
-    <!-- Loading -->
     <div class="text-center py-5" *ngIf="isLoading">
       <div class="spinner-border" style="color: var(--primary);" role="status"></div>
       <p class="text-muted mt-3">Loading packages...</p>
     </div>
 
-    <!-- Grid -->
     <div class="row g-4" *ngIf="!isLoading">
       <div class="col-md-4 col-lg-3" *ngFor="let pkg of filteredPackages">
         <div class="package-card card border-0 shadow-sm rounded-4 overflow-hidden h-100">
 
           <!-- Image -->
-          <div class="position-relative">
+          <div class="position-relative" style="cursor:pointer;" [routerLink]="['/packages', pkg.id]">
             <img [src]="pkg.images?.[0] || 'images/hero.jpg'"
               [alt]="pkg.title"
               class="card-img-top"
-              style="height: 220px; object-fit: cover;"
-              [routerLink]="['/packages', pkg.id]"
-              style="cursor:pointer;">
+              style="height: 220px; object-fit: cover;">
 
             <!-- Compare Toggle -->
             <button class="compare-btn position-absolute top-0 start-0 m-2"
               [class.active]="isInCompare(pkg)"
-              (click)="toggleCompare(pkg)"
+              (click)="$event.stopPropagation(); toggleCompare(pkg)"
               [disabled]="!isInCompare(pkg) && compareList.length >= 3">
               <i class="fas fa-balance-scale me-1"></i>
               {{ isInCompare(pkg) ? 'Added' : 'Compare' }}
@@ -137,7 +127,7 @@
           </div>
 
           <!-- Body -->
-          <div class="card-body" [routerLink]="['/packages', pkg.id]" style="cursor:pointer;">
+          <div class="card-body" style="cursor:pointer;" [routerLink]="['/packages', pkg.id]">
             <h6 class="fw-bold mb-1">{{ pkg.title }}</h6>
             <p class="text-muted small mb-3">{{ pkg.description | slice:0:80 }}...</p>
 
@@ -170,12 +160,15 @@
 
             <div class="d-flex justify-content-between align-items-center">
               <span class="fw-bold fs-5" style="color: var(--primary);">EGP {{ pkg.price | number }}</span>
-              <a [routerLink]="['/packages', pkg.id]" class="btn btn-sm text-white px-3"
-                style="background-color: var(--primary);">
+              <a [routerLink]="['/packages', pkg.id]"
+                class="btn btn-sm text-white px-3"
+                style="background-color: var(--primary);"
+                (click)="$event.stopPropagation()">
                 View Details
               </a>
             </div>
           </div>
+
         </div>
       </div>
 

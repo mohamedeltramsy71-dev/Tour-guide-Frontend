@@ -20,8 +20,28 @@ export const routes: Routes = [
     loadComponent: () => import('./features/packages/packages').then(m => m.Packages),
   },
   {
+    path: 'packages/:id',
+    loadComponent: () =>
+      import('./features/packages/package-detail/package-detail').then(m => m.PackageDetailComponent),
+  },
+  {
     path: 'guides',
     loadComponent: () => import('./features/guides/guides').then(m => m.Guides),
+  },
+  {
+    path: 'guides/:id',
+    loadComponent: () =>
+      import('./features/guides/guide-detail/guide-detail').then(m => m.GuideDetailComponent),
+  },
+  {
+    path: 'cities/:id',
+    loadComponent: () =>
+      import('./features/cities/city-detail/city-detail').then(m => m.CityDetailComponent),
+  },
+  {
+    path: 'landmarks/:id',
+    loadComponent: () =>
+      import('./features/landmarks/landmark-detail/landmark-detail').then(m => m.LandmarkDetailComponent),
   },
 
   // ─── Auth (Guests Only) ───────────────────────────────────

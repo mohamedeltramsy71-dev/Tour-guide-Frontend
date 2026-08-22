@@ -1,0 +1,82 @@
+<div class="city-detail-page">
+
+  @if (loading()) {
+    <div class="text-center py-5 mt-5">
+      <div class="spinner-border" style="color: var(--primary); width:3rem; height:3rem;"></div>
+    </div>
+  }
+
+  @if (!loading() && city()) {
+
+    <div class="city-hero" [style.backgroundImage]="'url(' + (city()!.imageUrl || 'images/hero.jpg') + ')'">
+      <div class="hero-overlay">
+        <div class="container">
+          <a routerLink="/cities" class="back-link">
+            <i class="fas fa-arrow-left me-2"></i> All Cities
+          </a>
+          <h1 class="hero-title">{{ city()!.nameEn }}</h1>
+          <p class="hero-subtitle">{{ city()!.landmarksCount }} landmarks to explore</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container py-5">
+
+      @if (city()!.description) {
+        <div class="detail-card mb-5">
+          <h4 class="section-title"><i class="fas fa-info-circle me-2"></i>About {{ city()!.nameEn }}</h4>
+          <p class="description-text">{{ city()!.description }}</p>
+        </div>
+      }
+
+      <div class="mb-4">
+        <h4 class="section-title-plain">
+          <i class="fas fa-landmark me-2"></i>
+          Landmarks in {{ city()!.nameEn }}
+          <span class="count-badge">{{ landmarks().length }}</span>
+        </h4>
+      </div>
+
+      @if (landmarks().length === 0) {
+        <div class="empty-state">
+          <i class="fas fa-landmark"></i>
+          <h5>No landmarks found</h5>
+          <p>This city has no landmarks yet.</p>
+        </div>
+      }
+
+      <div class="landmarks-grid">
+        @for (lm of landmarks(); track lm.id) {
+          <div class="landmark-card" [routerLink]="['/landmarks', lm.id]">
+
+            <div class="landmark-img">
+              @if ((lm.images?.length ?? 0) > 0) {
+                <img [src]="lm.images[0]" [alt]="lm.nameEn" />
+              } @else {
+                <div class="no-img"><i class="fas fa-image"></i></div>
+              }
+              <span class="category-badge">{{ lm.category }}</span>
+            </div>
+
+            <div class="landmark-info">
+              <h6 class="landmark-name">{{ lm.nameEn }}</h6>
+              @if (lm.description) {
+                <p class="landmark-desc">{{ lm.description | slice:0:80 }}...</p>
+              }
+              <div class="landmark-meta">
+                <span><i class="fas fa-star"></i> {{ lm.averageRating | number:'1.1-1' }}</span>
+                <span><i class="fas fa-ticket-alt"></i> ${{ lm.entryFee }}</span>
+                @if (lm.location) {
+                  <span><i class="fas fa-map-marker-alt"></i> {{ lm.location }}</span>
+                }
+              </div>
+            </div>
+
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+</div>

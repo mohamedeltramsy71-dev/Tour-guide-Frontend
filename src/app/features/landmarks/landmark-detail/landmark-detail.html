@@ -1,0 +1,127 @@
+<div class="landmark-detail-page">
+
+  @if (loading()) {
+    <div class="text-center py-5 mt-5">
+      <div class="spinner-border" style="color: var(--primary); width:3rem; height:3rem;"></div>
+    </div>
+  }
+
+  @if (!loading() && landmark()) {
+
+    <!-- Hero Image -->
+    <div class="hero-section">
+      <div class="hero-image">
+        @if ((landmark()!.images?.length ?? 0) > 0) {
+          <img [src]="landmark()!.images[activeImage()]" [alt]="landmark()!.nameEn" />
+        } @else {
+          <div class="no-image">
+            <i class="fas fa-image"></i>
+          </div>
+        }
+        <div class="hero-overlay">
+          <div class="container">
+            <a [routerLink]="['/cities', landmark()!.cityId]" class="back-link">
+              <i class="fas fa-arrow-left me-2"></i> Back to {{ landmark()!.cityNameEn }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      @if ((landmark()!.images?.length ?? 0) > 1) {
+        <div class="thumbnails">
+          @for (img of landmark()!.images; track $index) {
+            <div class="thumb" [class.active]="activeImage() === $index" (click)="setActiveImage($index)">
+              <img [src]="img" alt="thumbnail" />
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="container py-5">
+      <div class="row g-4">
+
+        <div class="col-lg-8">
+          <div class="detail-header mb-4">
+            <div>
+              <span class="category-pill">{{ landmark()!.category }}</span>
+              <h1 class="landmark-title mt-2">{{ landmark()!.nameEn }}</h1>
+              <div class="landmark-meta">
+                <span><i class="fas fa-city me-1"></i>{{ landmark()!.cityNameEn }}</span>
+                @if (landmark()!.location) {
+                  <span><i class="fas fa-map-marker-alt me-1"></i>{{ landmark()!.location }}</span>
+                }
+              </div>
+            </div>
+            <div class="rating-box">
+              <div class="stars">
+                @for (star of getStars(landmark()!.averageRating); track $index) {
+                  <i class="fas fa-star" [class.filled]="star"></i>
+                }
+              </div>
+              <span class="rating-value">{{ landmark()!.averageRating | number:'1.1-1' }}</span>
+            </div>
+          </div>
+
+          @if (landmark()!.description) {
+            <div class="detail-card mb-4">
+              <h5 class="section-title"><i class="fas fa-info-circle me-2"></i>About this Landmark</h5>
+              <p class="description-text">{{ landmark()!.description }}</p>
+            </div>
+          }
+        </div>
+
+        <div class="col-lg-4">
+          <div class="info-card sticky-top" style="top: 100px;">
+            <h5 class="info-title">Landmark Info</h5>
+            <div class="info-list">
+              <div class="info-item">
+                <i class="fas fa-ticket-alt"></i>
+                <div>
+                  <span class="info-label">Entry Fee</span>
+                  <span class="info-value">${{ landmark()!.entryFee }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-tag"></i>
+                <div>
+                  <span class="info-label">Category</span>
+                  <span class="info-value">{{ landmark()!.category }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-city"></i>
+                <div>
+                  <span class="info-label">City</span>
+                  <span class="info-value">{{ landmark()!.cityNameEn }}</span>
+                </div>
+              </div>
+              @if (landmark()!.location) {
+                <div class="info-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <div>
+                    <span class="info-label">Location</span>
+                    <span class="info-value">{{ landmark()!.location }}</span>
+                  </div>
+                </div>
+              }
+              <div class="info-item">
+                <i class="fas fa-star"></i>
+                <div>
+                  <span class="info-label">Rating</span>
+                  <span class="info-value">{{ landmark()!.averageRating | number:'1.1-1' }} / 5</span>
+                </div>
+              </div>
+            </div>
+
+            <a [routerLink]="['/cities', landmark()!.cityId]" class="btn btn-city w-100 mt-4">
+              <i class="fas fa-city me-2"></i> Explore {{ landmark()!.cityNameEn }}
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

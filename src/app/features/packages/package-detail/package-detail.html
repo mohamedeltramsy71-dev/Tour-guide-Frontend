@@ -1,0 +1,224 @@
+<div class="package-detail-page">
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="text-center py-5 mt-5">
+      <div class="spinner-border" style="color: var(--primary); width:3rem; height:3rem;"></div>
+    </div>
+  }
+
+  @if (!loading() && package()) {
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <!-- Main Image -->
+      <div class="hero-image">
+        @if (package()!.images.length > 0) {
+          <img [src]="package()!.images[activeImage()]" [alt]="package()!.title" />
+        } @else {
+          <div class="no-image">
+            <i class="fas fa-image"></i>
+            <span>No images available</span>
+          </div>
+        }
+        <!-- Image Counter -->
+        @if (package()!.images.length > 1) {
+          <div class="image-counter">
+            {{ activeImage() + 1 }} / {{ package()!.images.length }}
+          </div>
+        }
+      </div>
+
+      <!-- Thumbnails -->
+      @if (package()!.images.length > 1) {
+        <div class="thumbnails">
+          @for (img of package()!.images; track $index) {
+            <div class="thumb" [class.active]="activeImage() === $index" (click)="setActiveImage($index)">
+              <img [src]="img" alt="thumbnail" />
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="container py-5">
+      <div class="row g-4">
+
+        <!-- Left: Details -->
+        <div class="col-lg-8">
+
+          <!-- Title + Rating -->
+          <div class="detail-header mb-4">
+            <div>
+              <h1 class="package-title">{{ package()!.title }}</h1>
+              <div class="package-meta">
+                <span><i class="fas fa-city me-1"></i> {{ package()!.cityNameEn }}</span>
+                <span><i class="fas fa-clock me-1"></i> {{ package()!.durationDays }} days</span>
+                <span><i class="fas fa-users me-1"></i> Max {{ package()!.maxPersons }} persons</span>
+              </div>
+            </div>
+            <div class="rating-box">
+              <div class="stars">
+                @for (star of getStars(package()!.averageRating); track $index) {
+                  <i class="fas fa-star" [class.filled]="star"></i>
+                }
+              </div>
+              <span class="rating-value">{{ package()!.averageRating | number:'1.1-1' }}</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          @if (package()!.description) {
+            <div class="detail-card mb-4">
+              <h5 class="section-title"><i class="fas fa-info-circle me-2"></i>About this Package</h5>
+              <p class="description-text">{{ package()!.description }}</p>
+            </div>
+          }
+
+          <!-- Itinerary -->
+          @if (package()!.landmarks.length > 0) {
+            <div class="detail-card mb-4">
+              <h5 class="section-title"><i class="fas fa-map-marked-alt me-2"></i>Itinerary</h5>
+              <div class="itinerary">
+                @for (day of getDayRange(); track day) {
+                  <div class="day-block">
+                    <div class="day-label">Day {{ day }}</div>
+                    <div class="day-landmarks">
+                      @for (lm of getLandmarksByDay(day); track lm.landmarkId) {
+                        <div class="landmark-item">
+                          <span class="landmark-order">{{ lm.order }}</span>
+                          <span class="landmark-name">{{ lm.nameEn }}</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Guide Info -->
+          <div class="detail-card">
+            <h5 class="section-title"><i class="fas fa-compass me-2"></i>Your Guide</h5>
+            <div class="guide-info">
+              <div class="guide-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div>
+                <div class="guide-name">{{ package()!.guideName }}</div>
+                <a [routerLink]="['/guides', package()!.guideId]" class="guide-link">
+                  View Guide Profile <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Booking Card -->
+        <div class="col-lg-4">
+          <div class="booking-card sticky-top" style="top: 100px;">
+
+            <!-- Price -->
+            <div class="price-section">
+              <span class="price-label">Price per person</span>
+              <span class="price-value">${{ package()!.price | number:'1.0-0' }}</span>
+            </div>
+
+            <!-- Alerts -->
+            @if (successMsg()) {
+              <div class="alert alert-success d-flex align-items-center gap-2 mt-3">
+                <i class="fas fa-check-circle"></i> {{ successMsg() }}
+              </div>
+            }
+            @if (errorMsg()) {
+              <div class="alert alert-danger d-flex align-items-center gap-2 mt-3">
+                <i class="fas fa-exclamation-circle"></i> {{ errorMsg() }}
+              </div>
+            }
+
+            <!-- Booking Form -->
+            @if (showBookingForm() && isTourist) {
+              <form [formGroup]="bookingForm" (ngSubmit)="onBook()" class="booking-form mt-3">
+                <div class="mb-3">
+                  <label class="form-label">Start Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    formControlName="startDate"
+                    [min]="today"
+                    [class.is-invalid]="bookingForm.get('startDate')?.invalid && bookingForm.get('startDate')?.touched"
+                  />
+                  @if (bookingForm.get('startDate')?.touched && bookingForm.get('startDate')?.hasError('required')) {
+                    <div class="invalid-feedback">Start date is required</div>
+                  }
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Number of Persons</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="numberOfPersons"
+                    [min]="1"
+                    [max]="package()!.maxPersons"
+                    [class.is-invalid]="bookingForm.get('numberOfPersons')?.invalid && bookingForm.get('numberOfPersons')?.touched"
+                  />
+                  @if (bookingForm.get('numberOfPersons')?.touched && bookingForm.get('numberOfPersons')?.hasError('max')) {
+                    <div class="invalid-feedback">Max {{ package()!.maxPersons }} persons allowed</div>
+                  }
+                </div>
+                <div class="estimated-price mb-3">
+                  <span>Estimated Total</span>
+                  <strong>${{ (package()!.price * (bookingForm.get('numberOfPersons')?.value || 1)) | number:'1.0-0' }}</strong>
+                </div>
+                <button type="submit" class="btn btn-book w-100" [disabled]="bookingForm.invalid || bookingLoading()">
+                  @if (bookingLoading()) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                  }
+                  Confirm Booking
+                </button>
+                <button type="button" class="btn btn-cancel-form w-100 mt-2" (click)="toggleBookingForm()">
+                  Cancel
+                </button>
+              </form>
+            }
+
+            @if (!showBookingForm()) {
+              <button class="btn btn-book w-100 mt-3" (click)="toggleBookingForm()">
+                @if (!isLoggedIn) {
+                  <i class="fas fa-sign-in-alt me-2"></i> Login to Book
+                } @else if (!isTourist) {
+                  <i class="fas fa-lock me-2"></i> Tourists Only
+                } @else {
+                  <i class="fas fa-calendar-check me-2"></i> Book Now
+                }
+              </button>
+            }
+
+            <!-- Quick Info -->
+            <div class="quick-info mt-4">
+              <div class="quick-item">
+                <i class="fas fa-clock"></i>
+                <span>{{ package()!.durationDays }} days trip</span>
+              </div>
+              <div class="quick-item">
+                <i class="fas fa-users"></i>
+                <span>Up to {{ package()!.maxPersons }} persons</span>
+              </div>
+              <div class="quick-item">
+                <i class="fas fa-city"></i>
+                <span>{{ package()!.cityNameEn }}</span>
+              </div>
+              <div class="quick-item">
+                <i class="fas fa-map-pin"></i>
+                <span>{{ package()!.landmarks.length }} landmarks</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

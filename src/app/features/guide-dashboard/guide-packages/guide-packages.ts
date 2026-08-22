@@ -7,6 +7,7 @@ import { CityService } from '../../../core/services/city';
 import { LandmarkService } from '../../../core/services/landmark';
 import {
   Package,
+  PackageImageDto,
   CreatePackageRequest,
   UpdatePackageRequest,
   AddLandmarkToPackageRequest,
@@ -33,26 +34,21 @@ export class GuidePackages implements OnInit {
   saving = false;
   togglingId: number | null = null;
   uploadingId: number | null = null;
+  deletingImageId: number | null = null;
 
   modal: ModalMode = null;
   selectedPkg: Package | null = null;
 
-  // Alert
   successMsg = '';
   errorMsg = '';
 
-  // Create / Edit form
   createForm: CreatePackageRequest = this.emptyCreate();
   editForm: UpdatePackageRequest = this.emptyEdit();
-
-  // Landmarks form
   landmarkForm: AddLandmarkToPackageRequest = { landmarkId: 0, dayNumber: 1, order: 1 };
 
-  // Image upload
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
-  // Guide info
   guideId = '';
 
   constructor(
@@ -252,16 +248,28 @@ export class GuidePackages implements OnInit {
     });
   }
 
-  deleteImage(imageUrl: string): void {
+  deleteImage(img: PackageImageDto): void {
     if (!this.selectedPkg) return;
-    // Extract imageId from URL index in images array
-    const idx = this.selectedPkg.images.indexOf(imageUrl);
-    if (idx === -1) return;
-    // We don't have imageId directly — need to get it; for now use index+1 as fallback
-    // Backend: DELETE /api/packages/{id}/images/{imageId}
-    // Since PackageDto only returns URLs, we'll use position index as imageId placeholder
-    // TODO: Update PackageDto to return { id, url } objects for proper deletion
-    this.errorMsg = 'Image deletion requires imageId — update PackageDto to include image IDs.';
+    this.deletingImageId = img.id;
+    this.packageService.deleteImage(this.selectedPkg.id, img.id).subscribe({
+      next: () => {
+        if (this.selectedPkg) {
+          this.selectedPkg = {
+            ...this.selectedPkg,
+            images: this.selectedPkg.images.filter((i: PackageImageDto) => i.id !== img.id),
+          };
+          this.packages = this.packages.map((p: Package) =>
+            p.id === this.selectedPkg!.id ? this.selectedPkg! : p
+          );
+        }
+        this.deletingImageId = null;
+        this.showSuccess('Image deleted.');
+      },
+      error: () => {
+        this.errorMsg = 'Failed to delete image.';
+        this.deletingImageId = null;
+      },
+    });
   }
 
   // ── Landmarks ─────────────────────────────────────────────
@@ -306,10 +314,6 @@ export class GuidePackages implements OnInit {
   // ── Helpers ───────────────────────────────────────────────
   getInitials(title: string): string {
     return title.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2);
-  }
-
-  getLandmarkName(landmarkId: number): string {
-    return this.landmarks.find((l: Landmark) => l.id === landmarkId)?.nameEn ?? '';
   }
 
   isLandmarkAlreadyAdded(landmarkId: number): boolean {

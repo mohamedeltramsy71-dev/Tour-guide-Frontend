@@ -41,7 +41,7 @@
 
       <!-- Cover Image -->
       <div class="pkg-cover">
-        <img *ngIf="pkg.images.length > 0" [src]="pkg.images[0]" [alt]="pkg.title" />
+        <img *ngIf="pkg.images.length > 0" [src]="pkg.images[0].imageUrl" [alt]="pkg.title" />
         <div class="pkg-cover-placeholder" *ngIf="pkg.images.length === 0">
           <span>{{ getInitials(pkg.title) }}</span>
         </div>
@@ -54,22 +54,12 @@
       <div class="pkg-body">
         <div class="pkg-title">{{ pkg.title }}</div>
         <div class="pkg-city"><i class="fas fa-map-marker-alt"></i> {{ pkg.cityNameEn }}</div>
-
         <div class="pkg-meta">
-          <span class="pkg-meta-item">
-            <i class="fas fa-dollar-sign"></i> {{ pkg.price | number:'1.0-0' }} EGP
-          </span>
-          <span class="pkg-meta-item">
-            <i class="fas fa-clock"></i> {{ pkg.durationDays }} day{{ pkg.durationDays > 1 ? 's' : '' }}
-          </span>
-          <span class="pkg-meta-item">
-            <i class="fas fa-users"></i> Max {{ pkg.maxPersons }}
-          </span>
-          <span class="pkg-meta-item">
-            <i class="fas fa-star"></i> {{ pkg.averageRating | number:'1.1-1' }}
-          </span>
+          <span class="pkg-meta-item"><i class="fas fa-dollar-sign"></i> {{ pkg.price | number:'1.0-0' }} EGP</span>
+          <span class="pkg-meta-item"><i class="fas fa-clock"></i> {{ pkg.durationDays }} day{{ pkg.durationDays > 1 ? 's' : '' }}</span>
+          <span class="pkg-meta-item"><i class="fas fa-users"></i> Max {{ pkg.maxPersons }}</span>
+          <span class="pkg-meta-item"><i class="fas fa-star"></i> {{ pkg.averageRating | number:'1.1-1' }}</span>
         </div>
-
         <div class="pkg-counts">
           <span class="count-chip"><i class="fas fa-image"></i> {{ pkg.images.length }} images</span>
           <span class="count-chip"><i class="fas fa-map-pin"></i> {{ pkg.landmarks.length }} landmarks</span>
@@ -78,9 +68,7 @@
 
       <!-- Actions -->
       <div class="pkg-actions">
-        <button class="act-btn act-toggle"
-          (click)="toggleActive(pkg)"
-          [disabled]="togglingId === pkg.id"
+        <button class="act-btn act-toggle" (click)="toggleActive(pkg)" [disabled]="togglingId === pkg.id"
           [title]="pkg.isActive ? 'Deactivate' : 'Activate'">
           <i class="fas" [class.fa-toggle-on]="pkg.isActive" [class.fa-toggle-off]="!pkg.isActive"></i>
         </button>
@@ -119,7 +107,6 @@
         <div class="alert-error" *ngIf="errorMsg">
           <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
         </div>
-
         <div class="form-group">
           <label>Title *</label>
           <input class="field-input" type="text" [(ngModel)]="createForm.title" placeholder="e.g. Luxor 3-Day Tour" />
@@ -169,7 +156,6 @@
         <div class="alert-error" *ngIf="errorMsg">
           <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
         </div>
-
         <div class="form-group">
           <label>Title *</label>
           <input class="field-input" type="text" [(ngModel)]="editForm.title" />
@@ -239,8 +225,14 @@
 
         <!-- Current Images -->
         <div class="images-grid" *ngIf="selectedPkg.images.length > 0">
-          <div class="img-item" *ngFor="let url of selectedPkg.images">
-            <img [src]="url" alt="Package image" />
+          <div class="img-item" *ngFor="let img of selectedPkg.images">
+            <img [src]="img.imageUrl" alt="Package image" />
+            <button class="img-delete-btn"
+              (click)="deleteImage(img)"
+              [disabled]="deletingImageId === img.id"
+              title="Delete image">
+              <i class="fas" [class.fa-times]="deletingImageId !== img.id" [class.fa-spinner]="deletingImageId === img.id" [class.fa-spin]="deletingImageId === img.id"></i>
+            </button>
           </div>
         </div>
         <p class="bio-empty" *ngIf="selectedPkg.images.length === 0">No images uploaded yet.</p>
@@ -279,7 +271,6 @@
           <i class="fas fa-exclamation-circle"></i> {{ errorMsg }}
         </div>
 
-        <!-- Current Landmarks -->
         <div class="lm-section-label">Current Landmarks ({{ selectedPkg.landmarks.length }})</div>
         <div class="lm-list" *ngIf="selectedPkg.landmarks.length > 0">
           <div class="lm-row" *ngFor="let lm of selectedPkg.landmarks">
@@ -294,7 +285,6 @@
         </div>
         <p class="bio-empty" *ngIf="selectedPkg.landmarks.length === 0">No landmarks added yet.</p>
 
-        <!-- Add Landmark -->
         <div class="lm-section-label" style="margin-top:20px">Add Landmark</div>
         <div class="form-row">
           <div class="form-group form-group-flex">

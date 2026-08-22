@@ -1,0 +1,267 @@
+<!-- Loading -->
+@if (loading()) {
+  <div class="gd-loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+}
+
+<!-- Error -->
+@if (error() && !loading()) {
+  <div class="gd-error">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ error() }}</p>
+    <a routerLink="/guides" class="btn btn-outline-primary">Back to Guides</a>
+  </div>
+}
+
+<!-- Content -->
+@if (guide() && !loading()) {
+  <div class="gd-page">
+
+    <!-- ── Hero Banner ───────────────────────────── -->
+    <div class="gd-hero">
+      <div class="gd-hero__overlay"></div>
+      <div class="container gd-hero__content">
+        <a routerLink="/guides" class="gd-back-btn">
+          <i class="fas fa-arrow-left"></i> All Guides
+        </a>
+
+        <div class="gd-hero__card">
+          <!-- Avatar -->
+          <div class="gd-avatar-wrap">
+            @if (guide()!.avatarUrl) {
+              <img [src]="guide()!.avatarUrl" [alt]="guide()!.fullName" class="gd-avatar" />
+            } @else {
+              <div class="gd-avatar gd-avatar--initials">
+                {{ getInitials(guide()!.fullName) }}
+              </div>
+            }
+            <span class="gd-availability-dot" [class.gd-availability-dot--on]="guide()!.isAvailable"></span>
+          </div>
+
+          <!-- Identity -->
+          <div class="gd-hero__info">
+            <h1 class="gd-hero__name">{{ guide()!.fullName }}</h1>
+
+            <div class="gd-hero__meta">
+              <span class="gd-meta-chip">
+                <i class="fas fa-star"></i>
+                {{ guide()!.averageRating | number:'1.1-1' }}
+                <span class="gd-meta-chip__sub">({{ guide()!.totalReviews }} reviews)</span>
+              </span>
+              <span class="gd-meta-chip">
+                <i class="fas fa-briefcase"></i>
+                {{ guide()!.experienceYears }} yrs experience
+              </span>
+              <span class="gd-availability-badge" [class.gd-availability-badge--on]="guide()!.isAvailable">
+                <span class="dot"></span>
+                {{ guide()!.isAvailable ? 'Available' : 'Unavailable' }}
+              </span>
+            </div>
+
+            <!-- Stars -->
+            <div class="gd-stars">
+              @for (s of stars(guide()!.averageRating); track s) {
+                <i class="fas fa-star" [class.filled]="s <= guide()!.averageRating"></i>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Body ──────────────────────────────────── -->
+    <div class="container gd-body">
+      <div class="row g-4">
+
+        <!-- Left Column -->
+        <div class="col-lg-4">
+
+          <!-- Bio -->
+          @if (guide()!.bio) {
+            <div class="gd-card">
+              <div class="gd-card__header">
+                <i class="fas fa-user"></i> About
+              </div>
+              <p class="gd-card__text">{{ guide()!.bio }}</p>
+            </div>
+          }
+
+          <!-- Languages -->
+          @if (guide()!.languages?.length) {
+            <div class="gd-card">
+              <div class="gd-card__header">
+                <i class="fas fa-language"></i> Languages
+              </div>
+              <div class="gd-tags">
+                @for (lang of guide()!.languages; track lang) {
+                  <span class="gd-tag gd-tag--lang">{{ lang }}</span>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Cities -->
+          @if (guide()!.coveredCities?.length) {
+            <div class="gd-card">
+              <div class="gd-card__header">
+                <i class="fas fa-map-marker-alt"></i> Covered Cities
+              </div>
+              <div class="gd-tags">
+                @for (city of guide()!.coveredCities; track city) {
+                  <span class="gd-tag gd-tag--city">{{ city }}</span>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Rating Breakdown -->
+          @if (reviews().length) {
+            <div class="gd-card">
+              <div class="gd-card__header">
+                <i class="fas fa-chart-bar"></i> Rating Breakdown
+              </div>
+              <div class="gd-rating-bars">
+                @for (star of [5,4,3,2,1]; track star) {
+                  <div class="gd-rating-row">
+                    <span class="gd-rating-label">{{ star }} <i class="fas fa-star"></i></span>
+                    <div class="gd-rating-track">
+                      <div class="gd-rating-fill" [style.width]="ratingBarWidth(star)"></div>
+                    </div>
+                    <span class="gd-rating-count">{{ ratingCount(star) }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-8">
+
+          <!-- Tabs -->
+          <div class="gd-tabs">
+            <button class="gd-tab-btn" [class.active]="activeTab() === 'packages'" (click)="setTab('packages')">
+              <i class="fas fa-box-open"></i> Packages
+              <span class="gd-tab-badge">{{ packages().length }}</span>
+            </button>
+            <button class="gd-tab-btn" [class.active]="activeTab() === 'reviews'" (click)="setTab('reviews')">
+              <i class="fas fa-star"></i> Reviews
+              <span class="gd-tab-badge">{{ guide()!.totalReviews }}</span>
+            </button>
+          </div>
+
+          <!-- ── Packages Tab ── -->
+          @if (activeTab() === 'packages') {
+            @if (packagesLoading()) {
+              <div class="gd-tab-loading">
+                <div class="spinner-border spinner-border-sm text-primary"></div>
+              </div>
+            } @else if (packages().length === 0) {
+              <div class="gd-empty">
+                <i class="fas fa-box-open"></i>
+                <p>No packages available from this guide yet.</p>
+              </div>
+            } @else {
+              <div class="gd-packages-grid">
+                @for (pkg of packages(); track pkg.id) {
+                  <a [routerLink]="['/packages', pkg.id]" class="gd-pkg-card">
+                    <div class="gd-pkg-img-wrap">
+                      @if (pkg.images?.length) {
+                        <img [src]="pkg.images[0]" [alt]="pkg.title" class="gd-pkg-img" />
+                      } @else {
+                        <div class="gd-pkg-img gd-pkg-img--placeholder">
+                          <i class="fas fa-image"></i>
+                        </div>
+                      }
+                      @if (!pkg.isActive) {
+                        <span class="gd-pkg-inactive-badge">Inactive</span>
+                      }
+                    </div>
+                    <div class="gd-pkg-body">
+                      <div class="gd-pkg-city">
+                        <i class="fas fa-map-marker-alt"></i> {{ pkg.cityNameEn }}
+                      </div>
+                      <h3 class="gd-pkg-title">{{ pkg.title }}</h3>
+                      <div class="gd-pkg-meta">
+                        <span><i class="fas fa-clock"></i> {{ pkg.durationDays }} days</span>
+                        <span><i class="fas fa-users"></i> Max {{ pkg.maxPersons }}</span>
+                        <span class="gd-pkg-rating">
+                          <i class="fas fa-star"></i> {{ pkg.averageRating | number:'1.1-1' }}
+                        </span>
+                      </div>
+                      <div class="gd-pkg-footer">
+                        <span class="gd-pkg-price">${{ pkg.price | number:'1.0-0' }}</span>
+                        <span class="gd-pkg-cta">View Details <i class="fas fa-arrow-right"></i></span>
+                      </div>
+                    </div>
+                  </a>
+                }
+              </div>
+            }
+          }
+
+          <!-- ── Reviews Tab ── -->
+          @if (activeTab() === 'reviews') {
+            @if (reviewsLoading() && reviews().length === 0) {
+              <div class="gd-tab-loading">
+                <div class="spinner-border spinner-border-sm text-primary"></div>
+              </div>
+            } @else if (reviews().length === 0) {
+              <div class="gd-empty">
+                <i class="fas fa-comment-slash"></i>
+                <p>No reviews yet for this guide.</p>
+              </div>
+            } @else {
+              <div class="gd-reviews-list">
+                @for (review of reviews(); track review.id) {
+                  <div class="gd-review-card">
+                    <div class="gd-review-top">
+                      <div class="gd-review-avatar-wrap">
+                        @if (review.touristAvatar) {
+                          <img [src]="review.touristAvatar" [alt]="review.touristName" class="gd-review-avatar" />
+                        } @else {
+                          <div class="gd-review-avatar gd-review-avatar--initials">
+                            {{ getInitials(review.touristName) }}
+                          </div>
+                        }
+                      </div>
+                      <div class="gd-review-meta">
+                        <span class="gd-review-name">{{ review.touristName }}</span>
+                        <span class="gd-review-date">{{ review.createdAt | date:'mediumDate' }}</span>
+                      </div>
+                      <div class="gd-review-stars">
+                        @for (s of stars(review.rating); track s) {
+                          <i class="fas fa-star" [class.filled]="s <= review.rating"></i>
+                        }
+                      </div>
+                    </div>
+                    @if (review.comment) {
+                      <p class="gd-review-comment">{{ review.comment }}</p>
+                    }
+                  </div>
+                }
+
+                @if (hasMoreReviews) {
+                  <div class="gd-load-more">
+                    <button class="btn gd-load-more-btn" (click)="loadMoreReviews()" [disabled]="reviewsLoading()">
+                      @if (reviewsLoading()) {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                      }
+                      Load More Reviews
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          }
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+}

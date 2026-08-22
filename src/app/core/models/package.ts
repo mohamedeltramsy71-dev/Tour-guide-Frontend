@@ -1,3 +1,8 @@
+export interface PackageImageDto {
+  id: number;
+  imageUrl: string;
+}
+
 export interface PackageLandmark {
   landmarkId: number;
   nameEn: string;
@@ -17,7 +22,8 @@ export interface Package {
   cityNameEn: string;
   guideId: string;
   guideName: string;
-  images: string[];
+  guideProfileId: number;
+  images: PackageImageDto[];
   landmarks: PackageLandmark[];
 }
 
