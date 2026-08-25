@@ -1,0 +1,127 @@
+<div class="chat-page">
+
+  <!-- Conversations Sidebar -->
+  <aside class="conversations-panel">
+
+    <!-- Header -->
+    <div class="panel-header">
+      <button class="back-btn" (click)="goBack()">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <h5 class="mb-0 fw-bold">Messages</h5>
+    </div>
+
+    <!-- Loading -->
+    <div class="text-center py-4" *ngIf="loadingConversations">
+      <div class="spinner-border spinner-border-sm" style="color:var(--primary)"></div>
+    </div>
+
+    <!-- Empty -->
+    <div class="empty-conversations" *ngIf="!loadingConversations && conversations.length === 0">
+      <i class="fa-regular fa-comments fa-2x mb-2"></i>
+      <p>No conversations yet</p>
+    </div>
+
+    <!-- List -->
+    <div class="conversation-list" *ngIf="!loadingConversations">
+      <div
+        *ngFor="let conv of conversations"
+        class="conversation-item"
+        [class.active]="activeConversation?.bookingId === conv.bookingId"
+        (click)="selectConversation(conv)">
+
+        <!-- Avatar -->
+        <div class="conv-avatar">
+          <img *ngIf="conv.otherUserAvatar" [src]="conv.otherUserAvatar" [alt]="conv.otherUserName" />
+          <span *ngIf="!conv.otherUserAvatar">{{ getInitials(conv.otherUserName) }}</span>
+          <span class="online-dot" *ngIf="isOnline(conv.otherUserId)"></span>
+        </div>
+
+        <!-- Info -->
+        <div class="conv-info">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="conv-name">{{ conv.otherUserName }}</span>
+            <small class="conv-time">{{ formatTime(conv.lastMessageAt) }}</small>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="conv-last">{{ conv.lastMessage }}</span>
+            <span class="unread-badge" *ngIf="conv.unreadCount > 0">{{ conv.unreadCount }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Messages Panel -->
+  <main class="messages-panel">
+
+    <!-- No conversation selected -->
+    <div class="no-conversation" *ngIf="!activeConversation">
+      <i class="fa-regular fa-comments fa-3x mb-3"></i>
+      <p>Select a conversation to start chatting</p>
+    </div>
+
+    <!-- Active conversation -->
+    <ng-container *ngIf="activeConversation">
+
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <div class="chat-avatar">
+          <img *ngIf="activeConversation.otherUserAvatar"
+               [src]="activeConversation.otherUserAvatar"
+               [alt]="activeConversation.otherUserName" />
+          <span *ngIf="!activeConversation.otherUserAvatar">
+            {{ getInitials(activeConversation.otherUserName) }}
+          </span>
+        </div>
+        <div>
+          <div class="fw-semibold">{{ activeConversation.otherUserName }}</div>
+          <small [class]="isOnline(activeConversation.otherUserId) ? 'text-success' : 'text-muted'">
+            {{ isOnline(activeConversation.otherUserId) ? 'Online' : 'Offline' }}
+          </small>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="messages-body">
+
+        <!-- Loading -->
+        <div class="text-center py-3" *ngIf="loadingMessages">
+          <div class="spinner-border spinner-border-sm" style="color:var(--primary)"></div>
+        </div>
+
+        <ng-container *ngIf="!loadingMessages">
+          <div *ngFor="let msg of messages">
+            <div class="message-row" [class.mine]="isMine(msg)">
+              <div class="message-bubble" [class.mine]="isMine(msg)">
+                <p class="mb-1">{{ msg.content }}</p>
+                <small class="msg-time">{{ formatTime(msg.createdAt) }}</small>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <div #messagesEnd></div>
+      </div>
+
+      <!-- Input -->
+      <div class="chat-input-area">
+        <textarea
+          class="chat-input"
+          [(ngModel)]="messageText"
+          (keydown)="onKeyDown($event)"
+          placeholder="Type a message..."
+          rows="1">
+        </textarea>
+        <button class="send-btn" (click)="sendMessage()" [disabled]="!messageText.trim()">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+
+    </ng-container>
+
+  </main>
+
+</div>

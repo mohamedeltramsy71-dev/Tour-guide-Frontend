@@ -39,6 +39,7 @@ export interface GoogleAuthRequest {
 
 // الـ Backend بيبعت flat object مباشرة
 export interface LoginResponse {
+  userId: string;
   accessToken: string;
   refreshToken: string;
   role: string;

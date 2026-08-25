@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BookingService } from '../../../core/services/booking.service';
 import { BookingDto } from '../../../core/models/booking';
 
@@ -23,19 +24,20 @@ export class IncomingBookingsComponent implements OnInit {
   loading = true;
   error = '';
 
-  // Reject modal
   selectedBooking: BookingDto | null = null;
   rejectReason = '';
   rejectLoading = false;
   rejectError = '';
 
-  // Complete confirm
   completeTarget: BookingDto | null = null;
   completeLoading = false;
 
   successMsg = '';
 
-  constructor(private bookingService: BookingService) {}
+  constructor(
+    private bookingService: BookingService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.load();
@@ -73,7 +75,10 @@ export class IncomingBookingsComponent implements OnInit {
     return this.bookings.filter(b => b.status === s).length;
   }
 
-  // Accept
+  openChat(bookingId: number) {
+    this.router.navigate(['/chat'], { queryParams: { bookingId } });
+  }
+
   accept(booking: BookingDto) {
     this.bookingService.acceptBooking(booking.id).subscribe({
       next: () => {
@@ -85,7 +90,6 @@ export class IncomingBookingsComponent implements OnInit {
     });
   }
 
-  // Reject modal
   openRejectModal(booking: BookingDto) {
     this.selectedBooking = booking;
     this.rejectReason = '';
@@ -121,7 +125,6 @@ export class IncomingBookingsComponent implements OnInit {
     this.rejectLoading = false;
   }
 
-  // Complete
   openCompleteConfirm(booking: BookingDto) {
     this.completeTarget = booking;
   }

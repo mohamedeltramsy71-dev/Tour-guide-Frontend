@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg sticky-top py-1" style="background-color: #FAF8F5; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+<nav class="navbar navbar-expand-lg sticky-top py-1"
+  style="background-color: #FAF8F5; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
   <div class="container-fluid px-4">
 
     <!-- Logo -->
@@ -15,7 +16,8 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mx-auto gap-1">
         <li class="nav-item">
-          <a class="nav-link px-3" routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}">Home</a>
+          <a class="nav-link px-3" routerLink="/" routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{exact:true}">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link px-3" routerLink="/cities" routerLinkActive="active-link">Cities</a>
@@ -37,19 +39,18 @@
         <!-- Guest -->
         <ng-container *ngIf="!isLoggedIn">
           <a routerLink="/auth/login" class="btn btn-outline-danger px-4">Login</a>
-          <a routerLink="/auth/register" class="btn px-4 text-white" style="background-color: var(--primary);">Sign Up</a>
+          <a routerLink="/auth/register" class="btn px-4 text-white" style="background-color: var(--primary);">Sign
+            Up</a>
         </ng-container>
 
         <!-- Logged In -->
         <ng-container *ngIf="isLoggedIn">
 
           <!-- Dashboard link by Role -->
-          <a *ngIf="role === 'Admin'" routerLink="/admin"
-            class="btn btn-sm btn-outline-secondary px-3">
+          <a *ngIf="role === 'Admin'" routerLink="/admin" class="btn btn-sm btn-outline-secondary px-3">
             <i class="fas fa-tachometer-alt me-1"></i> Dashboard
           </a>
-          <a *ngIf="role === 'Guide'" routerLink="/guide"
-            class="btn btn-sm btn-outline-secondary px-3">
+          <a *ngIf="role === 'Guide'" routerLink="/guide" class="btn btn-sm btn-outline-secondary px-3">
             <i class="fas fa-tachometer-alt me-1"></i> Dashboard
           </a>
 
@@ -60,10 +61,10 @@
               data-bs-toggle="dropdown">
               <div class="avatar-circle">
                 @if (currentUser()?.avatarUrl) {
-                  <img [src]="currentUser()?.avatarUrl" alt="avatar"
-                       style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />
+                <img [src]="currentUser()?.avatarUrl" alt="avatar"
+                  style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />
                 } @else {
-                  <i class="fas fa-user"></i>
+                <i class="fas fa-user"></i>
                 }
               </div>
               <span class="fw-semibold" style="color: var(--dark); font-size: 0.9rem;">
@@ -88,7 +89,14 @@
                   <i class="fas fa-bell me-2" style="color: var(--primary);"></i> Notifications
                 </a>
               </li>
-              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item py-2" routerLink="/chat">
+                  <i class="fas fa-comments me-2" style="color: var(--primary);"></i> My Chat
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
               <li>
                 <button class="dropdown-item py-2 text-danger" (click)="onLogout()">
                   <i class="fas fa-sign-out-alt me-2"></i> Logout

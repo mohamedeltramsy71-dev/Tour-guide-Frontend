@@ -94,6 +94,18 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/bookings/my-bookings/my-bookings').then(m => m.MyBookingsComponent),
   },
+  {
+    path: 'notifications',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/notifications/notifications').then(m => m.NotificationsComponent),
+  },
+  {
+    path: 'chat',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/chat/chat').then(m => m.ChatComponent),
+  },
 
   // ─── Admin ────────────────────────────────────────────────
   {

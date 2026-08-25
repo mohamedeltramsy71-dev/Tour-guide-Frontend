@@ -1,0 +1,77 @@
+.notifications-page {
+  min-height: 100vh;
+  background: var(--light-bg);
+
+  h2 {
+    color: var(--dark);
+  }
+}
+
+.back-btn {
+  background: white;
+  border: 1px solid #e5e7eb;
+  color: var(--dark);
+  font-weight: 500;
+  padding: 8px 20px;
+  border-radius: 8px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+}
+
+.primary-spinner {
+  color: var(--primary);
+}
+
+.empty-state {
+  i {
+    color: var(--text-gray);
+  }
+}
+
+.notification-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--primary);
+    transform: translateX(4px);
+  }
+
+  &.unread {
+    background: #fff8f6;
+    border-left: 3px solid var(--primary);
+  }
+}
+
+.notif-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  i {
+    color: white;
+    font-size: 14px;
+  }
+}
+
+.notif-message {
+  color: var(--dark);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-top: 6px;
+  flex-shrink: 0;
+}

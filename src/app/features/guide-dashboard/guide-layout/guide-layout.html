@@ -53,13 +53,19 @@
             <div class="ms-auto d-flex align-items-center gap-3">
 
                 <!-- Notifications bell -->
-                <a routerLink="/guide/notifications" class="topbar-icon-btn" title="Notifications">
+                <a routerLink="/notifications" class="topbar-icon-btn position-relative" title="Notifications">
                     <i class="fas fa-bell"></i>
+                    <span class="notif-badge" *ngIf="unreadCount > 0">
+                        {{ unreadCount > 99 ? '99+' : unreadCount }}
+                    </span>
                 </a>
 
                 <!-- Chat icon -->
-                <a routerLink="/guide/chat" class="topbar-icon-btn" title="Chat">
+                <a routerLink="/chat" class="topbar-icon-btn position-relative" title="Chat">
                     <i class="fas fa-comments"></i>
+                    <span class="notif-badge" *ngIf="chatUnreadCount > 0">
+                        {{ chatUnreadCount > 99 ? '99+' : chatUnreadCount }}
+                    </span>
                 </a>
 
                 <!-- Profile dropdown -->

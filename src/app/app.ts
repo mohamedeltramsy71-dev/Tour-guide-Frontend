@@ -25,7 +25,10 @@ export class App {
         const isAdminPage = url.startsWith('/admin');
         const isGuidePage = url.startsWith('/guide/') || url === '/guide';
 
-        this.showNavbar = !isAuthPage && !isAdminPage && !isAdminUser && !isGuidePage;
+        const isNotificationsPage = url.startsWith('/notifications');
+        this.showNavbar = !isAuthPage && !isAdminPage && !isAdminUser && !isGuidePage && !isNotificationsPage;
+        const isChatPage = url.startsWith('/chat');
+        this.showNavbar = !isAuthPage && !isAdminPage && !isAdminUser && !isGuidePage && !isNotificationsPage && !isChatPage;
       }
     });
   }

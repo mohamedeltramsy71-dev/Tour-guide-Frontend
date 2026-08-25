@@ -38,6 +38,7 @@ rihla/
 │   │   │   │   ├── admin.ts                                ✅
 │   │   │   │   ├── booking.ts                              ✅ (+ Create/Reject requests, FilterParams)
 │   │   │   │   ├── review.ts                               ✅ (+ CreateReviewRequest, UpdateReviewRequest)
+│   │   │   │   ├── notification.ts                         ✅
 │   │   │   │   └── user.model.ts                           ✅
 │   │   │   └── services/
 │   │   │       ├── api.ts                                  ✅ (+ putForm)
@@ -49,6 +50,7 @@ rihla/
 │   │   │       ├── admin.service.ts                        ✅
 │   │   │       ├── booking.service.ts                      ✅ (Tourist + Guide + Admin)
 │   │   │       ├── review.service.ts                       ✅ (+ createReview, updateReview, deleteReview)
+│   │   │       ├── notification.service.ts                 ✅ (+ SignalR + Email trigger)
 │   │   │       └── user.ts                                 ✅
 │   │   ├── shared/components/navbar/                       ✅
 │   │   ├── features/
@@ -76,11 +78,11 @@ rihla/
 │   │   │   ├── profile/                                    ✅
 │   │   │   ├── bookings/my-bookings/                       ✅ (+ Leave Review / Edit Review modal)
 │   │   │   ├── leave-review/                               ✅ (modal component — used in my-bookings)
+│   │   │   ├── notifications/                              ✅ (+ SignalR + Email + Back button)
 │   │   │   ├── payment/                                    ⬜
 │   │   │   ├── chat/                                       ⬜
-│   │   │   ├── notifications/                              ⬜
 │   │   │   ├── guide-dashboard/
-│   │   │   │   ├── guide-layout/                           ✅
+│   │   │   │   ├── guide-layout/                           ✅ (+ bell badge + SignalR)
 │   │   │   │   ├── guide-dashboard/                        ✅
 │   │   │   │   ├── guide-profile/                          ✅
 │   │   │   │   ├── guide-packages/                         ✅
@@ -96,11 +98,11 @@ rihla/
 │   │   │       ├── cities/                                 ✅
 │   │   │       ├── landmarks/                              ✅
 │   │   │       └── categories/                             ✅
-│   │   ├── app.routes.ts                                   ✅
+│   │   ├── app.routes.ts                                   ✅ (+ /notifications route)
 │   │   ├── app.config.ts                                   ✅
-│   │   ├── app.ts                                          ✅ (Navbar hidden for Admin + Guide roles)
+│   │   ├── app.ts                                          ✅ (Navbar hidden for Admin + Guide + /notifications)
 │   │   └── app.html                                        ✅
-│   ├── environments/                                       ✅
+│   ├── environments/                                       ✅ (+ hubUrl)
 │   ├── index.html, styles.scss, main.ts                    ✅
 └── angular.json                                            ✅
 ```
@@ -123,7 +125,7 @@ rihla/
 ### Layout Patterns
 - Auth pages (Login/Register): half screen image + form (480px)
 - Auth pages (Select/Forgot/Reset/Confirm): full screen + overlay + centered card
-- Navbar: hidden in `/auth/*`, `/admin/*`, `/guide/*`, and any Admin role
+- Navbar: hidden in `/auth/*`, `/admin/*`, `/guide/*`, `/notifications`, and any Admin role
 - Guide: Navbar visible on public pages (e.g. /guides), hidden inside /guide/* layout
 - Admin Layout: Sidebar collapsible 260px to 72px + Top Navbar
 - Guide Layout: Sidebar collapsible 260px to 72px + Top Navbar
@@ -162,7 +164,7 @@ rihla/
 | 19 | Guide Profile (Public) | ✅ Done | GET /api/guides/{id} + reviews + packages |
 | 20 | Book a Package | ✅ Done | POST /api/bookings (inline on Package Details) |
 | 21 | Reviews (Tourist) | ✅ Done | POST /api/reviews + PUT /api/reviews/{id} |
-| 22 | Notifications | ⬜ Not Started | GET /api/notifications + SignalR |
+| 22 | Notifications | ✅ Done | GET /api/notifications + SignalR + Email |
 | 23 | Chat | ⬜ Not Started | SignalR + /api/chat |
 | 24 | Payment | ⬜ Not Started | POST /api/payments/initiate |
 | 25 | Custom Trip Builder | ⬜ Not Started | POST /api/custom-trips/calculate |
@@ -234,6 +236,27 @@ rihla/
 - review.ts model: ReviewDto, CreateReviewRequest, UpdateReviewRequest
 - review.service.ts: createReview, updateReview, deleteReview, getGuideReviews
 
+### Notifications ✅
+- Path: features/notifications/
+- Route: /notifications (authGuard — all roles)
+- Navbar hidden on /notifications page (app.ts)
+- GET /api/notifications → load paginated notifications
+- GET /api/notifications/count → unread count
+- PUT /api/notifications/{id}/read → mark single as read
+- PUT /api/notifications/read-all → mark all as read
+- SignalR: connects to /hubs/notifications on login → listens to NotificationReceived
+- Email: backend sends email on every CreateNotificationAsync call (fire & forget)
+- Back button (Location.back()) → styled with hover primary color
+- Unread dot + unread border-left on each item
+- Icon + color per NotificationType
+- Relative time formatting (Just now / Xm ago / Xh ago / Xd ago)
+- notification.ts model: NotificationDto
+- notification.service.ts: BehaviorSubject for notifications$ + unreadCount$
+- Guide Layout: bell icon with unread badge → /notifications
+- Tourist Navbar: Notifications link with unread badge → /notifications
+- npm package: @microsoft/signalr installed
+- environment.ts: hubUrl added
+
 ### City Details ✅
 - Path: features/cities/city-detail/
 - Route: /cities/:id
@@ -283,6 +306,7 @@ rihla/
 - Nav: Dashboard, Users, Guides, Cities, Landmarks, Bookings, Categories, Reviews
 - Reactive avatar + fullName via currentUser$ subscription
 - Topbar dropdown: My Profile → /profile
+- No notifications needed for Admin role
 
 ### Admin Dashboard ✅
 - KPI: Users, Guides, Bookings Today, Revenue Today, Pending Guides
@@ -325,6 +349,9 @@ rihla/
 - Topbar dropdown: My Profile → /profile (shared), My Guide Profile → /guide/profile
 - router-outlet for child routes under /guide
 - app.ts: Navbar hidden for /guide/* routes AND Admin role; Guide role sees Navbar on public pages
+- Bell icon with unread badge → /notifications
+- SignalR connection starts on GuideLayout init + stops on destroy
+- unreadCount$ subscribed from NotificationService
 
 ### Guide Dashboard ✅
 - GET /api/guides/me → profile summary
@@ -413,6 +440,11 @@ UpdatePackageRequest { title, description?, price, durationDays, maxPersons }
 AddLandmarkToPackageRequest { landmarkId, dayNumber, order }
 ```
 
+### notification.ts
+```
+NotificationDto { id, message, type, isRead, createdAt, bookingId? }
+```
+
 ### admin.ts
 ```
 DashboardSummaryDto, BookingsReportDto, RevenueReportDto,
@@ -462,6 +494,18 @@ updateReview(id, request)                   PUT /api/reviews/{id}
 deleteReview(id)                            DELETE /api/reviews/{id}
 ```
 
+### notification.service.ts
+```
+startConnection()         — connect to SignalR /hubs/notifications
+stopConnection()          — disconnect SignalR
+loadNotifications(page?)  GET /api/notifications
+loadUnreadCount()         GET /api/notifications/count
+markAsRead(id)            PUT /api/notifications/{id}/read
+markAllAsRead()           PUT /api/notifications/read-all
+notifications$            BehaviorSubject<NotificationDto[]>
+unreadCount$              BehaviorSubject<number>
+```
+
 ### package.ts service
 ```
 getPackages(params?)             GET /api/packages
@@ -498,6 +542,11 @@ removeLandmark(pkgId, lmId)     DELETE /api/packages/{id}/landmarks/{landmarkId}
 | Bookings enum fix (string to int in DB) | SQL UPDATE |
 | PackageDto.Images → List of PackageImageDto { Id, ImageUrl } | PackageDto.cs + PackageService.cs |
 | PackageDto.GuideProfileId added | PackageDto.cs + PackageService.cs |
+| NotificationService + SignalR push via INotificationPushService | NotificationService.cs |
+| NotificationService + Email on every notification | NotificationService.cs + EmailService.cs |
+| INotificationPushService + NotificationPushService | Application + Infrastructure |
+| IEmailService.SendNotificationEmailAsync added | IEmailService.cs + EmailService.cs |
+| ServiceCollectionExtensions + INotificationPushService DI | ServiceCollectionExtensions.cs |
 
 ---
 
@@ -519,17 +568,21 @@ Authorized JavaScript origins: add Vercel URL
 Authorized redirect URIs: add Vercel URL
 ```
 
+```typescript
+// environment.ts — update hubUrl for production
+hubUrl: 'https://tourguidee.runasp.net'
+```
+
 ---
 
 ## 📌 Next Steps — Priority Order
 
 | # | Page | Notes |
 |---|------|-------|
-| 1 | Notifications | GET /api/notifications + SignalR NotificationReceived |
-| 2 | Chat | SignalR Hub + /api/chat — Tourist and Guide per booking |
-| 3 | Payment | Paymob iFrame — POST /api/payments/initiate |
-| 4 | Custom Trip Builder | POST /api/custom-trips/calculate + available-guides |
-| 5 | Footer | Static component |
+| 1 | Chat | SignalR Hub + /api/chat — Tourist and Guide per booking |
+| 2 | Payment | Paymob iFrame — POST /api/payments/initiate |
+| 3 | Custom Trip Builder | POST /api/custom-trips/calculate + available-guides |
+| 4 | Footer | Static component |
 
 ---
 

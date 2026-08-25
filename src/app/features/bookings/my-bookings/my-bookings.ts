@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { BookingService } from '../../../core/services/booking.service';
 import { ReviewService } from '../../../core/services/review.service';
 import { BookingDto } from '../../../core/models/booking';
@@ -17,6 +17,7 @@ import { LeaveReviewComponent } from '../../../features/leave-review/leave-revie
 export class MyBookingsComponent implements OnInit {
   private bookingService = inject(BookingService);
   private reviewService  = inject(ReviewService);
+  private router         = inject(Router);
 
   allBookings  = signal<BookingDto[]>([]);
   activeTab    = signal<string>('All');
@@ -67,6 +68,10 @@ export class MyBookingsComponent implements OnInit {
       },
       error: () => { this.cancellingId.set(null); this.showError('Failed to cancel booking.'); },
     });
+  }
+
+  openChat(bookingId: number) {
+    this.router.navigate(['/chat'], { queryParams: { bookingId } });
   }
 
   openReviewModal(booking: BookingDto) { this.reviewModalBooking.set(booking); }

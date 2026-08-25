@@ -1,0 +1,65 @@
+<div class="notifications-page">
+  <div class="container py-5">
+
+    <!-- Back Button -->
+    <button class="btn back-btn mb-4" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left me-2"></i> Back
+    </button>
+
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Notifications</h2>
+        <p class="text-muted mb-0" *ngIf="unreadCount > 0">
+          {{ unreadCount }} unread
+        </p>
+      </div>
+      <button
+        class="btn btn-outline-secondary btn-sm"
+        *ngIf="unreadCount > 0"
+        (click)="markAllAsRead()">
+        Mark all as read
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div class="text-center py-5" *ngIf="loading">
+      <div class="spinner-border primary-spinner"></div>
+    </div>
+
+    <!-- Empty -->
+    <div class="empty-state text-center py-5" *ngIf="!loading && notifications.length === 0">
+      <i class="fa-regular fa-bell fa-3x mb-3"></i>
+      <p class="text-muted">No notifications yet</p>
+    </div>
+
+    <!-- List -->
+    <div class="notifications-list" *ngIf="!loading && notifications.length > 0">
+      <div
+        *ngFor="let n of notifications"
+        class="notification-item d-flex align-items-start gap-3 p-3 mb-2 rounded-3"
+        [class.unread]="!n.isRead"
+        (click)="onNotificationClick(n)">
+
+        <!-- Icon -->
+        <div class="notif-icon flex-shrink-0 rounded-circle d-flex align-items-center justify-content-center"
+             [style.background]="getIconBg(n.type)">
+          <i class="fa-solid" [class]="getIcon(n.type)"></i>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-grow-1">
+          <p class="notif-message mb-1" [class.fw-semibold]="!n.isRead">
+            {{ n.message }}
+          </p>
+          <small class="text-muted">{{ formatDate(n.createdAt) }}</small>
+        </div>
+
+        <!-- Unread dot -->
+        <div class="unread-dot flex-shrink-0" *ngIf="!n.isRead"></div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
