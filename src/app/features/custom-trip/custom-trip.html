@@ -1,0 +1,401 @@
+<div class="ctrip-page">
+
+  <!-- ── Hero ──────────────────────────────────── -->
+  <div class="ctrip-hero">
+    <div class="container">
+      <div class="row justify-content-center text-center py-5">
+        <div class="col-lg-7">
+          <p class="hero-eyebrow"><i class="fas fa-wand-magic-sparkles me-2"></i>Personalized Experience</p>
+          <h1 class="hero-title">Build Your Custom Trip</h1>
+          <p class="hero-sub">
+            Pick your city, choose the landmarks that matter to you, find an available guide,
+            and get an instant price — all in one flow.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Wizard ────────────────────────────────── -->
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-xl-9 col-lg-10">
+
+        <!-- Step indicator -->
+        <div class="step-indicator mb-5">
+          @for (item of [
+            { n: 1, label: 'Trip Details',  icon: 'fa-map-location-dot' },
+            { n: 2, label: 'Landmarks',     icon: 'fa-monument'         },
+            { n: 3, label: 'Select Guide',  icon: 'fa-user-tie'         },
+            { n: 4, label: 'Confirm',       icon: 'fa-circle-check'     }
+          ]; track item.n) {
+            <div class="si-item" [class.active]="step() === item.n" [class.done]="step() > item.n">
+              <div class="si-circle">
+                @if (step() > item.n) {
+                  <i class="fas fa-check"></i>
+                } @else {
+                  <i class="fas {{ item.icon }}"></i>
+                }
+              </div>
+              <span class="si-label">{{ item.label }}</span>
+            </div>
+            @if (item.n < 4) {
+              <div class="si-line" [class.done]="step() > item.n"></div>
+            }
+          }
+        </div>
+
+        <!-- ════════ STEP 1: Trip Details ════════ -->
+        @if (step() === 1) {
+          <div class="wcard animate-in">
+            <div class="wcard-header">
+              <i class="fas fa-map-location-dot me-2"></i> Trip Details
+            </div>
+            <div class="wcard-body">
+              <div class="row g-4">
+
+                <!-- City -->
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    Destination City <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select form-select-lg"
+                    [ngModel]="selectedCityId()"
+                    (ngModelChange)="selectedCityId.set($event ? +$event : null)">
+                    <option [ngValue]="null" disabled>Choose a city...</option>
+                    @for (city of cities(); track city.id) {
+                      <option [ngValue]="city.id">{{ city.nameEn }}</option>
+                    }
+                  </select>
+                </div>
+
+                <!-- Start Date -->
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    Start Date <span class="text-danger">*</span>
+                  </label>
+                  <input type="date" class="form-control form-control-lg"
+                    [min]="today"
+                    [ngModel]="startDate()"
+                    (ngModelChange)="startDate.set($event)" />
+                </div>
+
+                <!-- Duration -->
+                <div class="col-md-3">
+                  <label class="form-label fw-semibold">Days</label>
+                  <div class="input-group input-group-lg">
+                    <button class="btn btn-outline-secondary" type="button"
+                      (click)="durationDays.update(d => d > 1 ? d - 1 : 1)">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="number" class="form-control text-center fw-bold"
+                      [ngModel]="durationDays()"
+                      (ngModelChange)="durationDays.set(+$event)" min="1" readonly />
+                    <button class="btn btn-outline-secondary" type="button"
+                      (click)="durationDays.update(d => d + 1)">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Persons -->
+                <div class="col-md-3">
+                  <label class="form-label fw-semibold">Persons</label>
+                  <div class="input-group input-group-lg">
+                    <button class="btn btn-outline-secondary" type="button"
+                      (click)="numberOfPersons.update(p => p > 1 ? p - 1 : 1)">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="number" class="form-control text-center fw-bold"
+                      [ngModel]="numberOfPersons()"
+                      (ngModelChange)="numberOfPersons.set(+$event)" min="1" readonly />
+                    <button class="btn btn-outline-secondary" type="button"
+                      (click)="numberOfPersons.update(p => p + 1)">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Summary pill -->
+              @if (step1Valid()) {
+                <div class="summary-pill mt-4">
+                  <span><i class="fas fa-city me-1"></i>{{ selectedCity()?.nameEn }}</span>
+                  <span class="pill-sep">·</span>
+                  <span><i class="fas fa-calendar-alt me-1"></i>{{ startDate() }}</span>
+                  <span class="pill-sep">→</span>
+                  <span>{{ endDate() }}</span>
+                  <span class="pill-sep">·</span>
+                  <span><i class="fas fa-moon me-1"></i>{{ durationDays() }} day{{ durationDays() > 1 ? 's' : '' }}</span>
+                  <span class="pill-sep">·</span>
+                  <span><i class="fas fa-users me-1"></i>{{ numberOfPersons() }} person{{ numberOfPersons() > 1 ? 's' : '' }}</span>
+                </div>
+              }
+            </div>
+
+            <div class="wcard-footer justify-content-end">
+              <button class="btn btn-primary btn-lg px-5"
+                [disabled]="!step1Valid() || landmarksLoading()"
+                (click)="nextStep1()">
+                @if (landmarksLoading()) {
+                  <span class="spinner-border spinner-border-sm me-2"></span> Loading...
+                } @else {
+                  Next <i class="fas fa-arrow-right ms-2"></i>
+                }
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- ════════ STEP 2: Landmarks ════════ -->
+        @if (step() === 2) {
+          <div class="wcard animate-in">
+            <div class="wcard-header">
+              <i class="fas fa-monument me-2"></i>
+              Select Landmarks
+              @if (selectedLandmarkIds().size > 0) {
+                <span class="count-badge ms-2">{{ selectedLandmarkIds().size }} selected</span>
+              }
+            </div>
+            <div class="wcard-body">
+              @if (landmarks().length === 0) {
+                <div class="empty-state">
+                  <i class="fas fa-map-pin"></i>
+                  <p>No landmarks found for this city.</p>
+                </div>
+              } @else {
+                <div class="landmark-grid">
+                  @for (lm of landmarks(); track lm.id) {
+                    <div class="lm-card" [class.selected]="isLandmarkSelected(lm.id)"
+                      (click)="toggleLandmark(lm.id)">
+                      <div class="lm-img-wrap">
+                        <img [src]="lm.images[0] || '/images/step1.jpg'" [alt]="lm.nameEn" />
+                        <div class="lm-check-icon">
+                          @if (isLandmarkSelected(lm.id)) {
+                            <i class="fas fa-circle-check selected-icon"></i>
+                          } @else {
+                            <i class="far fa-circle unselected-icon"></i>
+                          }
+                        </div>
+                        <span class="lm-cat-badge">{{ lm.category }}</span>
+                      </div>
+                      <div class="lm-info">
+                        <h6>{{ lm.nameEn }}</h6>
+                        <div class="lm-meta">
+                          <span><i class="fas fa-ticket me-1"></i>EGP {{ lm.entryFee }}</span>
+                          <span><i class="fas fa-star text-warning me-1"></i>{{ lm.averageRating | number:'1.1-1' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <div class="wcard-footer justify-content-between">
+              <button class="btn btn-outline-secondary btn-lg px-4" (click)="prevStep()">
+                <i class="fas fa-arrow-left me-2"></i> Back
+              </button>
+              <button class="btn btn-primary btn-lg px-5"
+                [disabled]="!step2Valid() || guidesLoading()"
+                (click)="nextStep2()">
+                @if (guidesLoading()) {
+                  <span class="spinner-border spinner-border-sm me-2"></span> Finding Guides...
+                } @else {
+                  Next <i class="fas fa-arrow-right ms-2"></i>
+                }
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- ════════ STEP 3: Select Guide ════════ -->
+        @if (step() === 3) {
+          <div class="wcard animate-in">
+            <div class="wcard-header">
+              <i class="fas fa-user-tie me-2"></i> Available Guides
+            </div>
+            <div class="wcard-body">
+              @if (availableGuides().length === 0) {
+                <div class="empty-state">
+                  <i class="fas fa-user-slash"></i>
+                  <p>No guides available for your selected dates.</p>
+                  <p class="text-muted small">Try different dates or a shorter duration.</p>
+                </div>
+              } @else {
+                <div class="guides-grid">
+                  @for (guide of availableGuides(); track guide.userId) {
+                    <div class="guide-card" [class.selected]="selectedGuide()?.userId === guide.userId"
+                      (click)="selectGuide(guide)">
+                      <div class="guide-avatar-wrap">
+                        @if (guide.avatarUrl) {
+                          <img [src]="guide.avatarUrl" [alt]="guide.fullName" class="guide-img" />
+                        } @else {
+                          <div class="guide-initials">{{ getInitials(guide.fullName) }}</div>
+                        }
+                        @if (selectedGuide()?.userId === guide.userId) {
+                          <div class="guide-selected-dot"><i class="fas fa-check"></i></div>
+                        }
+                      </div>
+                      <div class="guide-body">
+                        <h6 class="guide-name">{{ guide.fullName }}</h6>
+                        <div class="guide-stars">
+                          @for (i of starsArr; track i) {
+                            <i class="fas fa-star" [class.lit]="i < guide.averageRating"></i>
+                          }
+                          <span class="ms-1 text-muted small">({{ guide.totalReviews }})</span>
+                        </div>
+                        <div class="guide-pills mt-2">
+                          <span class="gpill"><i class="fas fa-briefcase me-1"></i>{{ guide.experienceYears }}y</span>
+                          <span class="gpill"><i class="fas fa-language me-1"></i>{{ guide.languages.slice(0, 2).join(', ') }}</span>
+                        </div>
+                        <div class="guide-cities mt-2">
+                          @for (city of guide.coveredCities.slice(0, 3); track city) {
+                            <span class="city-tag">{{ city }}</span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <div class="wcard-footer justify-content-between">
+              <button class="btn btn-outline-secondary btn-lg px-4" (click)="prevStep()">
+                <i class="fas fa-arrow-left me-2"></i> Back
+              </button>
+              <button class="btn btn-primary btn-lg px-5"
+                [disabled]="!step3Valid() || priceLoading()"
+                (click)="nextStep3()">
+                @if (priceLoading()) {
+                  <span class="spinner-border spinner-border-sm me-2"></span> Calculating...
+                } @else {
+                  Review Trip <i class="fas fa-arrow-right ms-2"></i>
+                }
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- ════════ STEP 4: Confirm ════════ -->
+        @if (step() === 4) {
+          @if (success()) {
+            <div class="success-card animate-in">
+              <div class="success-icon"><i class="fas fa-circle-check"></i></div>
+              <h3>Trip Created Successfully!</h3>
+              <p class="text-muted">Redirecting you to My Bookings...</p>
+            </div>
+          } @else {
+            <div class="wcard animate-in">
+              <div class="wcard-header">
+                <i class="fas fa-receipt me-2"></i> Review & Confirm
+              </div>
+              <div class="wcard-body">
+                <div class="row g-4">
+
+                  <!-- Left: Trip summary -->
+                  <div class="col-md-6">
+                    <div class="confirm-section">
+                      <div class="csection-title">
+                        <i class="fas fa-map-location-dot me-2"></i>Trip Details
+                      </div>
+                      <ul class="csummary-list">
+                        <li><span>City</span><strong>{{ selectedCity()?.nameEn }}</strong></li>
+                        <li><span>Start Date</span><strong>{{ startDate() }}</strong></li>
+                        <li><span>Duration</span><strong>{{ durationDays() }} day{{ durationDays() > 1 ? 's' : '' }}</strong></li>
+                        <li><span>Persons</span><strong>{{ numberOfPersons() }}</strong></li>
+                      </ul>
+                    </div>
+
+                    <div class="confirm-section mt-3">
+                      <div class="csection-title">
+                        <i class="fas fa-user-tie me-2"></i>Your Guide
+                      </div>
+                      <div class="guide-mini">
+                        @if (selectedGuide()?.avatarUrl) {
+                          <img [src]="selectedGuide()!.avatarUrl!" class="mini-img" />
+                        } @else {
+                          <div class="mini-initials">{{ getInitials(selectedGuide()!.fullName) }}</div>
+                        }
+                        <div>
+                          <strong>{{ selectedGuide()?.fullName }}</strong>
+                          <div class="text-muted small">
+                            {{ selectedGuide()?.experienceYears }}y experience ·
+                            {{ selectedGuide()?.averageRating | number:'1.1-1' }} ★
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="confirm-section mt-3">
+                      <div class="csection-title">
+                        <i class="fas fa-monument me-2"></i>Landmarks ({{ selectedLandmarksList().length }})
+                      </div>
+                      <div class="lm-chips">
+                        @for (lm of selectedLandmarksList(); track lm.id) {
+                          <span class="lm-chip">{{ lm.nameEn }}</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right: Price breakdown -->
+                  <div class="col-md-6">
+                    <div class="price-card">
+                      <div class="csection-title">
+                        <i class="fas fa-receipt me-2"></i>Price Breakdown
+                      </div>
+                      <div class="breakdown-rows">
+                        @for (item of priceResult()?.breakdown; track item.landmarkId) {
+                          <div class="brow">
+                            <span>{{ item.name }}</span>
+                            <span class="brow-val">EGP {{ entryFeePerPerson(item.entryFee) | number:'1.0-0' }}</span>
+                          </div>
+                        }
+                      </div>
+                      <div class="multiplier-note">
+                        <i class="fas fa-clock me-1"></i>
+                        {{ durationDays() }}-day multiplier ×{{ priceResult()?.durationMultiplier | number:'1.1-2' }}
+                      </div>
+                      <div class="total-row">
+                        <span>Total</span>
+                        <span class="total-amt">EGP {{ priceResult()?.totalPrice | number:'1.0-0' }}</span>
+                      </div>
+                      <p class="payment-note mt-3 mb-0">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Payment is collected after guide confirms your booking.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+
+                @if (error()) {
+                  <div class="alert alert-danger mt-3">
+                    <i class="fas fa-triangle-exclamation me-2"></i>{{ error() }}
+                  </div>
+                }
+              </div>
+
+              <div class="wcard-footer justify-content-between">
+                <button class="btn btn-outline-secondary btn-lg px-4"
+                  [disabled]="submitting()" (click)="prevStep()">
+                  <i class="fas fa-arrow-left me-2"></i> Back
+                </button>
+                <button class="btn btn-primary btn-lg px-5"
+                  [disabled]="submitting()" (click)="confirm()">
+                  @if (submitting()) {
+                    <span class="spinner-border spinner-border-sm me-2"></span> Booking...
+                  } @else {
+                    <i class="fas fa-check me-2"></i> Confirm & Book
+                  }
+                </button>
+              </div>
+            </div>
+          }
+        }
+
+      </div>
+    </div>
+  </div>
+</div>

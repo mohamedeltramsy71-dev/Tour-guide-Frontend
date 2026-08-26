@@ -50,7 +50,7 @@
           <div class="landmark-card" [routerLink]="['/landmarks', lm.id]">
 
             <div class="landmark-img">
-              @if ((lm.images?.length ?? 0) > 0) {
+              @if ((lm.images.length) > 0) {
                 <img [src]="lm.images[0]" [alt]="lm.nameEn" />
               } @else {
                 <div class="no-img"><i class="fas fa-image"></i></div>

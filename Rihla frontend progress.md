@@ -34,11 +34,14 @@ rihla/
 │   │   │   │   ├── landmark.ts                             ✅
 │   │   │   │   ├── package.ts                              ✅ (+ Create/Update/AddLandmark + guideProfileId)
 │   │   │   │   ├── guide.ts                                ✅ (+ UpdateGuideRequest)
-│   │   │   │   ├── auth.ts                                 ✅ (+ avatarUrl?)
+│   │   │   │   ├── auth.ts                                 ✅ (+ userId + avatarUrl?)
 │   │   │   │   ├── admin.ts                                ✅
 │   │   │   │   ├── booking.ts                              ✅ (+ Create/Reject requests, FilterParams)
 │   │   │   │   ├── review.ts                               ✅ (+ CreateReviewRequest, UpdateReviewRequest)
 │   │   │   │   ├── notification.ts                         ✅
+│   │   │   │   ├── chat.ts                                 ✅ (MessageDto, ConversationDto, SendMessageRequest)
+│   │   │   │   ├── payment.ts                              ✅ (InitiatePaymentRequest, InitiatePaymentResponse, PaymentStatusDto)
+│   │   │   │   ├── custom-trip.ts                          ✅ (CalculatePriceRequest/Response, AvailableGuidesRequest, CreateCustomTripRequest, LandmarkPriceBreakdown)
 │   │   │   │   └── user.model.ts                           ✅
 │   │   │   └── services/
 │   │   │       ├── api.ts                                  ✅ (+ putForm)
@@ -48,13 +51,19 @@ rihla/
 │   │   │       ├── package.ts                              ✅ (+ CRUD + toggle + images + landmarks + getById)
 │   │   │       ├── guide.ts                                ✅
 │   │   │       ├── admin.service.ts                        ✅
-│   │   │       ├── booking.service.ts                      ✅ (Tourist + Guide + Admin)
+│   │   │       ├── booking.service.ts                      ✅ (Tourist + Guide + Admin + getBookingById)
 │   │   │       ├── review.service.ts                       ✅ (+ createReview, updateReview, deleteReview)
 │   │   │       ├── notification.service.ts                 ✅ (+ SignalR + Email trigger)
+│   │   │       ├── chat.service.ts                         ✅ (+ SignalR + JoinBookingGroup + markConversationAsRead + decrementUnreadCount)
+│   │   │       ├── payment.service.ts                      ✅ (initiatePayment, getPaymentStatus)
+│   │   │       ├── custom-trip.service.ts                  ✅ (calculatePrice, getAvailableGuides, createCustomTrip)
 │   │   │       └── user.ts                                 ✅
-│   │   ├── shared/components/navbar/                       ✅
+│   │   ├── shared/components/
+│   │   │   ├── navbar/                                     ✅ (+ Custom Trip link in Tourist dropdown)
+│   │   │   └── footer/                                     ✅ (+ Social links + Payment badges)
 │   │   ├── features/
 │   │   │   ├── home/                                       ✅
+│   │   │   ├── about/                                      ✅ (Hero + What is Rihla + How It Works + Why Choose Us + CTA)
 │   │   │   ├── cities/
 │   │   │   │   ├── cities/                                 ✅
 │   │   │   │   └── city-detail/                            ✅
@@ -76,17 +85,27 @@ rihla/
 │   │   │   │   ├── reset-password/                         ✅
 │   │   │   │   └── confirm-email/                          ✅
 │   │   │   ├── profile/                                    ✅
-│   │   │   ├── bookings/my-bookings/                       ✅ (+ Leave Review / Edit Review modal)
+│   │   │   ├── bookings/my-bookings/                       ✅ (+ Leave Review / Edit Review modal + Chat with Guide + Pay Now)
 │   │   │   ├── leave-review/                               ✅ (modal component — used in my-bookings)
 │   │   │   ├── notifications/                              ✅ (+ SignalR + Email + Back button)
-│   │   │   ├── payment/                                    ⬜
-│   │   │   ├── chat/                                       ⬜
+│   │   │   ├── chat/                                       ✅ (+ SignalR + phantom conversation + mark as read + UTC time fix)
+│   │   │   ├── payment/
+│   │   │   │   ├── payment.ts                              ✅ (iFrame component)
+│   │   │   │   ├── payment.html                            ✅
+│   │   │   │   ├── payment.scss                            ✅
+│   │   │   │   ├── payment-callback.ts                     ✅ (success/fail page)
+│   │   │   │   ├── payment-callback.html                   ✅
+│   │   │   │   └── payment-callback.scss                   ✅
+│   │   │   ├── custom-trip/
+│   │   │   │   ├── custom-trip.ts                          ✅ (4-step wizard component)
+│   │   │   │   ├── custom-trip.html                        ✅
+│   │   │   │   └── custom-trip.scss                        ✅
 │   │   │   ├── guide-dashboard/
-│   │   │   │   ├── guide-layout/                           ✅ (+ bell badge + SignalR)
+│   │   │   │   ├── guide-layout/                           ✅ (+ bell badge + chat badge + SignalR)
 │   │   │   │   ├── guide-dashboard/                        ✅
 │   │   │   │   ├── guide-profile/                          ✅
 │   │   │   │   ├── guide-packages/                         ✅
-│   │   │   │   ├── incoming-bookings/                      ✅
+│   │   │   │   ├── incoming-bookings/                      ✅ (+ Chat with Tourist button)
 │   │   │   │   └── guide-reviews/                          ✅
 │   │   │   └── admin/
 │   │   │       ├── admin-layout/                           ✅
@@ -98,11 +117,11 @@ rihla/
 │   │   │       ├── cities/                                 ✅
 │   │   │       ├── landmarks/                              ✅
 │   │   │       └── categories/                             ✅
-│   │   ├── app.routes.ts                                   ✅ (+ /notifications route)
+│   │   ├── app.routes.ts                                   ✅ (+ /about + /custom-trip + /notifications + /chat + /payment + /payment/callback)
 │   │   ├── app.config.ts                                   ✅
-│   │   ├── app.ts                                          ✅ (Navbar hidden for Admin + Guide + /notifications)
-│   │   └── app.html                                        ✅
-│   ├── environments/                                       ✅ (+ hubUrl)
+│   │   ├── app.ts                                          ✅ (Navbar + Footer hidden for Admin + Guide + /notifications + /chat + /payment)
+│   │   └── app.html                                        ✅ (+ app-footer)
+│   ├── environments/                                       ✅ (+ hubUrl + paymobIframeId: '1069052')
 │   ├── index.html, styles.scss, main.ts                    ✅
 └── angular.json                                            ✅
 ```
@@ -125,7 +144,8 @@ rihla/
 ### Layout Patterns
 - Auth pages (Login/Register): half screen image + form (480px)
 - Auth pages (Select/Forgot/Reset/Confirm): full screen + overlay + centered card
-- Navbar: hidden in `/auth/*`, `/admin/*`, `/guide/*`, `/notifications`, and any Admin role
+- Navbar: hidden in `/auth/*`, `/admin/*`, `/guide/*`, `/notifications`, `/chat`, `/payment*`, and any Admin role
+- Footer: hidden in same pages as Navbar (same `showNavbar` flag)
 - Guide: Navbar visible on public pages (e.g. /guides), hidden inside /guide/* layout
 - Admin Layout: Sidebar collapsible 260px to 72px + Top Navbar
 - Guide Layout: Sidebar collapsible 260px to 72px + Top Navbar
@@ -133,13 +153,13 @@ rihla/
 
 ### Navbar — Auth State
 - Guest: Login + Sign Up
-- Tourist: avatar dropdown (My Profile, My Bookings, Notifications, Logout)
-- Guide: Dashboard button + avatar dropdown (My Profile, Logout)
+- Tourist: avatar dropdown (My Profile, My Bookings, Custom Trip, My Chat, Notifications, Logout)
+- Guide: Dashboard button + bell badge + chat badge + avatar dropdown (My Profile, Logout)
 - Admin: Dashboard button + avatar dropdown (My Profile, Logout)
 
 ---
 
-## ✅ Progress Overview
+## ✅ Progress Overview — ALL DONE 🎉
 
 | # | Page | Status | Endpoints |
 |---|------|--------|-----------|
@@ -157,7 +177,7 @@ rihla/
 | 12 | Auth — Reset Password | ✅ Done | POST /api/auth/reset-password |
 | 13 | Auth — Confirm Email | ✅ Done | GET /api/auth/confirm-email |
 | 14 | My Profile (All Roles) | ✅ Done | GET/PUT /api/users/me + avatar + change-password |
-| 15 | My Bookings (Tourist) | ✅ Done | GET /api/bookings/my + cancel + leave/edit review |
+| 15 | My Bookings (Tourist) | ✅ Done | GET /api/bookings/my + cancel + leave/edit review + chat + pay |
 | 16 | City Details | ✅ Done | GET /api/cities/{id} + GET /api/landmarks?cityId={id} |
 | 17 | Landmark Details | ✅ Done | GET /api/landmarks/{id} |
 | 18 | Package Details | ✅ Done | GET /api/packages/{id} + POST /api/bookings |
@@ -165,25 +185,26 @@ rihla/
 | 20 | Book a Package | ✅ Done | POST /api/bookings (inline on Package Details) |
 | 21 | Reviews (Tourist) | ✅ Done | POST /api/reviews + PUT /api/reviews/{id} |
 | 22 | Notifications | ✅ Done | GET /api/notifications + SignalR + Email |
-| 23 | Chat | ⬜ Not Started | SignalR + /api/chat |
-| 24 | Payment | ⬜ Not Started | POST /api/payments/initiate |
-| 25 | Custom Trip Builder | ⬜ Not Started | POST /api/custom-trips/calculate |
-| 26 | Footer | ⬜ Not Started | — |
-| 27 | Guide Dashboard | ✅ Done | GET /api/guides/me + GET /api/bookings/guide |
-| 28 | Guide — My Profile | ✅ Done | GET/PUT /api/guides/me + GET /api/cities |
-| 29 | Guide — My Packages | ✅ Done | GET/POST/PUT/DELETE /api/packages + toggle + images + landmarks |
-| 30 | Guide — Incoming Bookings | ✅ Done | GET /api/bookings/guide + accept/reject/complete |
-| 31 | Guide — My Reviews | ✅ Done | GET /api/reviews/guide/{guideId} |
-| 32 | Admin Dashboard | ✅ Done | GET /api/admin/dashboard + reports |
-| 33 | Admin Users | ✅ Done | GET /api/admin/users + ban + delete |
-| 34 | Admin Guides | ✅ Done | pending + approve/reject/suspend |
-| 35 | Admin Cities | ✅ Done | GET/POST/PUT/DELETE + upload-image |
-| 36 | Admin Landmarks | ✅ Done | GET/POST/PUT/DELETE + upload-image |
-| 37 | Admin Categories | ✅ Done | GET/POST/DELETE /api/categories |
-| 38 | Admin Bookings | ✅ Done | GET /api/bookings/admin |
-| 39 | Admin Reviews | ✅ Done | GET /api/admin/reviews + delete |
-| 40 | Auth Guard | ✅ Done | — |
-| 41 | JWT Interceptor | ✅ Done | — |
+| 23 | Chat | ✅ Done | SignalR /hubs/chat + GET /api/chat/* + mark as read + UTC fix |
+| 24 | Payment | ✅ Done | POST /api/payments/initiate + Paymob iFrame + callback |
+| 25 | About Page | ✅ Done | — |
+| 26 | Footer | ✅ Done | — |
+| 27 | Custom Trip Builder | ✅ Done | POST /api/custom-trips/calculate + /available-guides + POST /api/custom-trips |
+| 28 | Guide Dashboard | ✅ Done | GET /api/guides/me + GET /api/bookings/guide |
+| 29 | Guide — My Profile | ✅ Done | GET/PUT /api/guides/me + GET /api/cities |
+| 30 | Guide — My Packages | ✅ Done | GET/POST/PUT/DELETE /api/packages + toggle + images + landmarks |
+| 31 | Guide — Incoming Bookings | ✅ Done | GET /api/bookings/guide + accept/reject/complete + chat |
+| 32 | Guide — My Reviews | ✅ Done | GET /api/reviews/guide/{guideId} |
+| 33 | Admin Dashboard | ✅ Done | GET /api/admin/dashboard + reports |
+| 34 | Admin Users | ✅ Done | GET /api/admin/users + ban + delete |
+| 35 | Admin Guides | ✅ Done | pending + approve/reject/suspend |
+| 36 | Admin Cities | ✅ Done | GET/POST/PUT/DELETE + upload-image |
+| 37 | Admin Landmarks | ✅ Done | GET/POST/PUT/DELETE + upload-image |
+| 38 | Admin Categories | ✅ Done | GET/POST/DELETE /api/categories |
+| 39 | Admin Bookings | ✅ Done | GET /api/bookings/admin |
+| 40 | Admin Reviews | ✅ Done | GET /api/admin/reviews + delete |
+| 41 | Auth Guard | ✅ Done | — |
+| 42 | JWT Interceptor | ✅ Done | — |
 
 ---
 
@@ -220,8 +241,10 @@ rihla/
 - PUT /api/bookings/{id}/cancel → cancel Pending booking only
 - Filter tabs: All / Pending / Confirmed / Completed / Rejected / Cancelled (with count badges)
 - Booking cards: Guide avatar+name, Package title, Date, Persons, Price, Status+Payment badges
-- Actions: Cancel (Pending) | Pay Now placeholder (Confirmed+Unpaid) | Leave Review / Edit Review (Completed)
+- Actions: Cancel (Pending) | Pay Now → /payment?bookingId=X (Confirmed+Unpaid) | Chat with Guide (Confirmed/Completed) | Leave Review / Edit Review (Completed)
 - Empty state with link to /packages
+- openChat(bookingId) → navigate to /chat?bookingId=X
+- openPayment(bookingId) → navigate to /payment?bookingId=X
 
 ### Reviews (Tourist) ✅
 - Path: features/leave-review/ (modal component, no dedicated route)
@@ -256,6 +279,61 @@ rihla/
 - Tourist Navbar: Notifications link with unread badge → /notifications
 - npm package: @microsoft/signalr installed
 - environment.ts: hubUrl added
+
+### Chat ✅
+- Path: features/chat/
+- Route: /chat (Tourist → roleGuard Tourist) + /guide/chat (Guide → child of GuideLayout)
+- Navbar hidden on /chat page (app.ts)
+- GET /api/chat/conversations → load all conversations
+- GET /api/chat/{bookingId}/messages → load messages (paginated, page=1, pageSize=50)
+- GET /api/chat/unread-count → unread badge in Guide Topbar
+- PUT /api/chat/{bookingId}/read → mark all messages in conversation as read (on selectConversation)
+- SignalR: connects to /hubs/chat → JoinBookingGroup + ReceiveMessage + UserOnline/Offline
+- Phantom conversation: لو فتح الشات من booking مش عنده conversation بعد → يعمل phantom من BookingService.getBookingById
+- JoinBookingGroup: بيتنادى عند selectConversation + setActiveConversation (phantom)
+- onreconnected: بيعمل rejoin للـ booking group تلقائياً بعد reconnect
+- selectConversation: بيعمل decrementUnreadCount + markConversationAsRead في نفس الوقت
+- UTC time fix: formatTime + formatDate بيضيف 'Z' للـ date string لو مش موجودة
+- Sidebar: قائمة conversations مع avatar + last message + unread badge + online dot
+- Messages body: mine (يمين أحمر) / other (شمال أبيض)
+- Input: textarea + Enter to send (Shift+Enter for new line)
+- Scroll: بيروح للآخر تلقائياً عند رسايل جديدة فقط (shouldScrollToBottom flag)
+- Guide Layout: chat icon مع unread badge → /guide/chat (child route — الـ GuideLayout مش بيتدمر)
+- Guide Incoming Bookings: Chat with Tourist button → /guide/chat?bookingId=X
+- Tourist My Bookings: Chat with Guide button → /chat?bookingId=X
+- chat.ts models: MessageDto, ConversationDto, SendMessageRequest
+- chat.service.ts: BehaviorSubject conversations$ + messages$ + onlineUsers$ + chatUnreadCount$
+- chat.service.ts: markConversationAsRead(bookingId) → PUT /api/chat/{bookingId}/read
+- chat.service.ts: decrementUnreadCount(amount) → local update للـ badge
+
+### Payment ✅
+- Path: features/payment/
+- Routes: /payment (Tourist — roleGuard) + /payment/callback (AllowAnonymous)
+- Navbar hidden on /payment* pages (app.ts)
+- POST /api/payments/initiate → { paymentKey, paymobOrderId, amount }
+- iFrame URL: https://accept.paymob.com/api/acceptance/iframes/1069052?payment_token={paymentKey}
+- payment.ts: loading/error/iframeUrl signals + DomSanitizer.bypassSecurityTrustResourceUrl
+- payment-callback.ts: reads success query param من Paymob redirect
+- My Bookings: Pay Now button → navigate to /payment?bookingId=X (Confirmed + Unpaid فقط)
+- Paymob Dashboard: رابط الويب هوك = https://tourguidee.runasp.net/api/payments/webhook
+- Paymob Dashboard: الرابط (Response URL) = http://localhost:4200/payment/callback
+- environment.ts: paymobIframeId: '1069052'
+- Test Card: 5123456789012346 | 12/27 | 123
+
+### Custom Trip Builder ✅
+- Path: features/custom-trip/
+- Route: /custom-trip (Tourist only — roleGuard)
+- 4-step wizard: Trip Details → Landmarks → Select Guide → Review & Confirm
+- Step 1: City dropdown + Start Date + Duration (days spinner) + Persons spinner + summary pill
+- Step 2: Landmark grid (click to toggle) — GET /api/landmarks?cityId={id} — images from landmarks[0]
+- Step 3: Available guides grid (click to select) — POST /api/custom-trips/available-guides
+- Step 4: Full price breakdown table + trip summary + confirm button
+- POST /api/custom-trips/calculate → { landmarkEntryFeesTotal, guideFixedFee, durationMultiplier, totalPrice, breakdown[] }
+- POST /api/custom-trips → creates booking → navigate to /bookings on success
+- Price formula: (sum of entryFees × persons) × (1 + (days-1) × 0.2)
+- Navbar link "Custom Trip" added to Tourist dropdown (fa-wand-magic-sparkles icon)
+- custom-trip.ts models: CalculatePriceRequest, CalculatePriceResponse, LandmarkPriceBreakdown, AvailableGuidesRequest, CreateCustomTripRequest
+- custom-trip.service.ts: calculatePrice, getAvailableGuides, createCustomTrip
 
 ### City Details ✅
 - Path: features/cities/city-detail/
@@ -300,13 +378,35 @@ rihla/
 - Right tabs: Packages grid | Reviews list
 - Back link → /guides
 
+### About Page ✅
+- Path: features/about/
+- Route: /about
+- Static page — no API calls
+- Hero: background image (auth/auth.png) + overlay + title + CTA
+- What is Rihla: text block + hero image + mini stats (Multiple Cities / Certified Guides / Rich Landmarks)
+- How It Works: 3 step cards (Browse / Book / Explore & Review)
+- Why Choose Us: 4 feature cards (Verified Guides / Rich Landmarks / Real-time Chat / Secure Payment)
+- CTA Section: background image (auth/auth.png) + Browse Packages + Meet Our Guides buttons
+- Navbar link "About" added
+
+### Footer ✅
+- Path: shared/components/footer/
+- Used in: app.html (same showNavbar flag — hidden on auth/admin/guide/chat/payment/notifications)
+- 3 columns: Brand + Quick Links + Contact & Payment
+- Brand: Logo (white filter) + tagline + Social icons
+- Social: Facebook (#1877F2) + Instagram (gradient) + LinkedIn (#0A66C2) — real links
+- Quick Links: Home / Cities / Landmarks / Packages / Guides / About
+- Contact: mohamedeltramsy71@gmail.com + Egypt
+- We Accept: Visa badge + Paymob badge (styled fit-content width)
+- Bottom bar: © year + "Made with ❤️ for Egypt"
+
 ### Admin Layout ✅
 - Sidebar collapsible (260px to 72px), Toggle always visible
 - Logout → /auth/login
 - Nav: Dashboard, Users, Guides, Cities, Landmarks, Bookings, Categories, Reviews
 - Reactive avatar + fullName via currentUser$ subscription
 - Topbar dropdown: My Profile → /profile
-- No notifications needed for Admin role
+- No notifications or chat needed for Admin role
 
 ### Admin Dashboard ✅
 - KPI: Users, Guides, Bookings Today, Revenue Today, Pending Guides
@@ -346,12 +446,15 @@ rihla/
 - Sidebar collapsible (260px to 72px)
 - Nav: Dashboard, My Profile, My Packages, Incoming Bookings, My Reviews
 - Top Navbar: avatar + fullName + Logout → /auth/login
-- Topbar dropdown: My Profile → /profile (shared), My Guide Profile → /guide/profile
-- router-outlet for child routes under /guide
-- app.ts: Navbar hidden for /guide/* routes AND Admin role; Guide role sees Navbar on public pages
+- Topbar dropdown: My Profile → /profile (shared)
+- router-outlet for child routes under /guide (including /guide/chat)
+- app.ts: Navbar hidden for /guide/* routes AND Admin role
 - Bell icon with unread badge → /notifications
-- SignalR connection starts on GuideLayout init + stops on destroy
+- Chat icon with unread badge → /guide/chat
+- SignalR (Notifications + Chat) starts on GuideLayout init + stops on destroy
 - unreadCount$ subscribed from NotificationService
+- chatUnreadCount$ subscribed from ChatService
+- /guide/chat is child route → GuideLayout stays alive → badge updates correctly
 
 ### Guide Dashboard ✅
 - GET /api/guides/me → profile summary
@@ -372,8 +475,9 @@ rihla/
 
 ### Guide — Incoming Bookings ✅
 - Filter tabs: All / Pending / Confirmed / Rejected / Completed
-- Actions: Accept / Reject (with reason modal) / Mark Complete
+- Actions: Accept / Reject (with reason modal) / Mark Complete / Chat with Tourist (Confirmed/Completed)
 - Toast notifications after each action
+- openChat(bookingId) → navigate to /guide/chat?bookingId=X
 
 ### Guide — My Reviews ✅
 - GET /api/guides/me → guideProfileId
@@ -388,8 +492,15 @@ rihla/
 
 ### auth.ts
 ```
-LoginResponse { accessToken, refreshToken, role, fullName, email, avatarUrl? }
+LoginResponse { userId, accessToken, refreshToken, role, fullName, email, avatarUrl? }
 Backend wraps: { message, data: LoginResponse }
+```
+
+### chat.ts
+```
+MessageDto { id, content, isRead, createdAt, senderId, senderName, bookingId }
+ConversationDto { bookingId, otherUserId, otherUserName, otherUserAvatar?, lastMessage, lastMessageAt, unreadCount }
+SendMessageRequest { receiverId, content, bookingId }
 ```
 
 ### user.model.ts
@@ -421,11 +532,11 @@ PaginatedReviews { items: ReviewDto[], totalCount, page, pageSize, totalPages }
 
 ### guide.ts
 ```
-GuideProfileDto { userId, fullName, email, avatarUrl?, bio?,
-                  languages[], experienceYears, averageRating,
-                  totalReviews, isApproved, isAvailable, coveredCities[] }
-GuideListDto { userId, fullName, avatarUrl?, averageRating,
-               totalReviews, experienceYears, languages[], coveredCities[], isAvailable }
+Guide { guideProfileId, userId, fullName, bio, avatarUrl?, experienceYears,
+        averageRating, languages[], coveredCities[], totalReviews, isAvailable }
+GuideProfile { id, userId, fullName, email, avatarUrl?, bio?, languages[],
+               experienceYears, averageRating, totalReviews, isApproved,
+               isAvailable, coveredCities[] }
 UpdateGuideRequest { bio?, languages[], experienceYears, coveredCityIds[] }
 ```
 
@@ -440,9 +551,31 @@ UpdatePackageRequest { title, description?, price, durationDays, maxPersons }
 AddLandmarkToPackageRequest { landmarkId, dayNumber, order }
 ```
 
+### landmark.ts
+```
+Landmark { id, nameEn, nameAr, description, location, entryFee,
+           averageRating, category, cityId, cityNameEn, images: string[] }
+```
+
 ### notification.ts
 ```
 NotificationDto { id, message, type, isRead, createdAt, bookingId? }
+```
+
+### payment.ts
+```
+InitiatePaymentRequest { bookingId: number }
+InitiatePaymentResponse { paymentKey, paymobOrderId, amount }
+PaymentStatusDto { id, bookingId, amount, status, paymobOrderId?, paymobTransactionId?, createdAt }
+```
+
+### custom-trip.ts
+```
+CalculatePriceRequest { landmarkIds: number[], durationDays, numberOfPersons, guideProfileId }
+LandmarkPriceBreakdown { landmarkId, name, entryFee }
+CalculatePriceResponse { landmarkEntryFeesTotal, guideFixedFee, durationMultiplier, totalPrice, breakdown: LandmarkPriceBreakdown[] }
+AvailableGuidesRequest { cityId, startDate: string, endDate: string }
+CreateCustomTripRequest { landmarkIds: number[], guideProfileId, startDate: string, numberOfPersons, durationDays }
 ```
 
 ### admin.ts
@@ -464,6 +597,38 @@ postForm<T>(endpoint, FormData)    — POST image upload
 put<T>(endpoint, body)
 putForm<T>(endpoint, FormData)     — PUT image upload (avatar)
 delete<T>(endpoint)
+```
+
+### custom-trip.service.ts
+```
+calculatePrice(request)      POST /api/custom-trips/calculate → CalculatePriceResponse
+getAvailableGuides(request)  POST /api/custom-trips/available-guides → Guide[]
+createCustomTrip(request)    POST /api/custom-trips → { bookingId, message }
+```
+
+### payment.service.ts
+```
+initiatePayment(request)     POST /api/payments/initiate → InitiatePaymentResponse
+getPaymentStatus(bookingId)  GET /api/payments/{bookingId} → PaymentStatusDto
+```
+
+### chat.service.ts
+```
+startConnection()                           — connect to SignalR /hubs/chat
+stopConnection()                            — disconnect SignalR
+sendMessage(receiverId, content, bookingId) — invoke SendMessage via SignalR (JoinBookingGroup first)
+markAsRead(messageId)                       — invoke MarkAsRead via SignalR
+loadConversations()                         GET /api/chat/conversations
+loadMessages(bookingId, page?, pageSize?)   GET /api/chat/{bookingId}/messages
+loadChatUnreadCount()                       GET /api/chat/unread-count
+markConversationAsRead(bookingId)           PUT /api/chat/{bookingId}/read
+setActiveConversation(bookingId?)           — set active + join group (phantom support)
+decrementUnreadCount(amount)                — local update للـ chatUnreadCount$ badge
+isUserOnline(userId)                        — check online status
+conversations$                              BehaviorSubject<ConversationDto[]>
+messages$                                   BehaviorSubject<MessageDto[]>
+onlineUsers$                                BehaviorSubject<string[]>
+chatUnreadCount$                            BehaviorSubject<number>
 ```
 
 ### booking.service.ts
@@ -531,6 +696,8 @@ removeLandmark(pkgId, lmId)     DELETE /api/packages/{id}/landmarks/{landmarkId}
 | Reset/Confirm Email links → Frontend | AuthController.cs |
 | JWT Interceptor PUBLIC_ENDPOINTS fix | jwt.interceptor.ts |
 | IRepository + GenericRepository Include methods | Domain + Infrastructure |
+| IRepository.FindWithNestedIncludeAsync → object? (nullable fix) | IRepository.cs + GenericRepository.cs |
+| BookingService .Include(b => b.Package) — removed cast | BookingService.cs |
 | ReviewService Include Tourist + GuideProfile | ReviewService.cs |
 | ReviewDto + GuideName | ReviewDto.cs |
 | BookingService Include Tourist + Guide + Package | BookingService.cs |
@@ -542,11 +709,28 @@ removeLandmark(pkgId, lmId)     DELETE /api/packages/{id}/landmarks/{landmarkId}
 | Bookings enum fix (string to int in DB) | SQL UPDATE |
 | PackageDto.Images → List of PackageImageDto { Id, ImageUrl } | PackageDto.cs + PackageService.cs |
 | PackageDto.GuideProfileId added | PackageDto.cs + PackageService.cs |
+| LoginResponse.UserId + AvatarUrl added | LoginResponse.cs |
+| AuthService — UserId + AvatarUrl في كل new LoginResponse | AuthService.cs |
 | NotificationService + SignalR push via INotificationPushService | NotificationService.cs |
-| NotificationService + Email on every notification | NotificationService.cs + EmailService.cs |
+| NotificationService + Email on every notification (fire & forget) | NotificationService.cs + EmailService.cs |
 | INotificationPushService + NotificationPushService | Application + Infrastructure |
 | IEmailService.SendNotificationEmailAsync added | IEmailService.cs + EmailService.cs |
+| IEmailService.SendNewMessageEmailAsync added | IEmailService.cs + EmailService.cs |
+| ChatHub inject IEmailService + UserManager — email on new message | ChatHub.cs |
 | ServiceCollectionExtensions + INotificationPushService DI | ServiceCollectionExtensions.cs |
+| ChatHub.OnConnectedAsync: user_{userId} group فقط (شيل DB query) | ChatHub.cs |
+| ChatHub.JoinBookingGroup: method جديدة — الـ Frontend بيناديها | ChatHub.cs |
+| ChatHub.SendMessage: تحقق participant + SenderName + ISO CreatedAt + Email | ChatHub.cs |
+| IChatService.MarkMessagesAsReadAsync added | IChatService.cs |
+| ChatService.MarkMessagesAsReadAsync implemented | ChatService.cs |
+| ChatController PUT /{bookingId}/read endpoint added | ChatController.cs |
+| ChatRepository.GetMessagesAsync: OrderBy بدل OrderByDescending | ChatRepository.cs |
+| ChatRepository.GetBookingWithGuideAsync: أضاف Include(GuideProfile) | ChatRepository.cs |
+| PaymentService + PaymobService (3-step flow) | PaymentService.cs + PaymobService.cs |
+| PaymentsController: initiate + webhook + status | PaymentsController.cs |
+| Payment + PaymentStatus entities | Payment.cs |
+| CustomTripService.GetAvailableGuidesAsync: استخدام FindWithNestedIncludeAsync | CustomTripService.cs |
+| GuideListDto + GuideProfileId = g.Id | GuideListDto.cs + CustomTripService.cs |
 
 ---
 
@@ -569,20 +753,30 @@ Authorized redirect URIs: add Vercel URL
 ```
 
 ```typescript
-// environment.ts — update hubUrl for production
+// environment.ts — update for production
 hubUrl: 'https://tourguidee.runasp.net'
+paymobIframeId: '1069052'
+
+// EmailService.cs → SendNewMessageEmailAsync
+// غير href="http://localhost:4200/chat" → href="https://your-app.vercel.app/chat"
+```
+
+```
+// Paymob Dashboard → تكاملات الدفع → الرابط (Response URL)
+// Local:      http://localhost:4200/payment/callback
+// Production: https://your-app.vercel.app/payment/callback
 ```
 
 ---
 
-## 📌 Next Steps — Priority Order
+## 🧪 Test Data
 
-| # | Page | Notes |
-|---|------|-------|
-| 1 | Chat | SignalR Hub + /api/chat — Tourist and Guide per booking |
-| 2 | Payment | Paymob iFrame — POST /api/payments/initiate |
-| 3 | Custom Trip Builder | POST /api/custom-trips/calculate + available-guides |
-| 4 | Footer | Static component |
+### Paymob Test Card
+```
+Card Number : 5123456789012346
+Expiry      : 12/27
+CVV         : 123
+```
 
 ---
 
@@ -595,3 +789,7 @@ hubUrl: 'https://tourguidee.runasp.net'
 | ✅ | Done |
 | ⚠️ | Has Issue / Pending Fix |
 | ⏳ | Pending |
+
+---
+
+> 🎉 **Project Complete — 42/42 pages & features done!**

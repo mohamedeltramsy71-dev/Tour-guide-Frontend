@@ -1,0 +1,50 @@
+<div class="payment-page">
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="payment-loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Preparing your payment...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="payment-error">
+      <div class="error-card">
+        <i class="fa fa-exclamation-circle fa-3x mb-3"></i>
+        <h5>Payment Could Not Be Initiated</h5>
+        <p>{{ error() }}</p>
+        <button class="btn btn-primary" (click)="goBack()">
+          <i class="fa fa-arrow-left me-1"></i> Go Back
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- iFrame -->
+  @if (iframeUrl()) {
+    <div class="iframe-wrapper">
+      <div class="iframe-header">
+        <button class="btn btn-link" (click)="goBack()">
+          <i class="fa fa-arrow-left me-1"></i> Cancel Payment
+        </button>
+        <div class="amount-badge">
+          Amount: <strong>EGP {{ amount() | number:'1.2-2' }}</strong>
+        </div>
+        <div class="logo-text">
+          Secured by <span>Paymob</span>
+        </div>
+      </div>
+      <iframe
+        [src]="iframeUrl()!"
+        class="payment-iframe"
+        frameborder="0"
+        allow="payment">
+      </iframe>
+    </div>
+  }
+
+</div>

@@ -27,6 +27,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   loadingMessages = false;
   private subs: Subscription[] = [];
   private pendingBookingId: number | null = null;
+  private shouldScrollToBottom = false;
 
   constructor(
     private chatService: ChatService,
@@ -34,7 +35,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     private bookingService: BookingService,
     private location: Location,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.currentUserId = this.auth.getUserFromStorage()?.userId ?? '';
@@ -55,20 +56,20 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         if (this.pendingBookingId) {
           const conv = data.find(c => c.bookingId === this.pendingBookingId);
           if (conv) {
-            // conversation موجودة — افتحها
             if (!this.activeConversation) {
               this.selectConversation(conv);
             }
           } else {
-            // conversation مش موجودة — جيب الـ booking details وعمل phantom
             this.loadPhantomConversation(this.pendingBookingId);
           }
           this.pendingBookingId = null;
         }
       }),
+
       this.chatService.messages$.subscribe(data => {
         this.messages = data;
         this.loadingMessages = false;
+        this.shouldScrollToBottom = true;
       })
     );
   }
@@ -92,6 +93,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.activeConversation = phantom;
         this.messages = [];
         this.loadingMessages = false;
+        this.chatService.setActiveConversation(booking.id);
       },
       error: () => {
         this.loadingMessages = false;
@@ -103,25 +105,27 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.activeConversation = conv;
     this.loadingMessages = true;
     this.chatService.loadMessages(conv.bookingId);
+    const unread = conv.unreadCount;
     conv.unreadCount = 0;
+    this.chatService.decrementUnreadCount(unread);
+    this.chatService.markConversationAsRead(conv.bookingId);
   }
 
   sendMessage(): void {
     const text = this.messageText.trim();
     if (!text || !this.activeConversation) return;
 
+    const bookingId = this.activeConversation.bookingId;
+
     this.chatService.sendMessage(
       this.activeConversation.otherUserId,
       text,
-      this.activeConversation.bookingId
+      bookingId
     );
 
     this.messageText = '';
 
-    // لو phantom conversation — أضفها للـ list
-    const exists = this.conversations.find(
-      c => c.bookingId === this.activeConversation!.bookingId
-    );
+    const exists = this.conversations.find(c => c.bookingId === bookingId);
     if (!exists && this.activeConversation) {
       this.conversations = [this.activeConversation, ...this.conversations];
     }
@@ -147,18 +151,19 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   formatTime(dateStr: string): string {
-    return new Date(dateStr).toLocaleTimeString('en-US', {
+    const utcDate = dateStr.endsWith('Z') ? new Date(dateStr) : new Date(dateStr + 'Z');
+    return utcDate.toLocaleTimeString('en-US', {
       hour: '2-digit', minute: '2-digit'
     });
   }
 
   formatDate(dateStr: string): string {
-    const date = new Date(dateStr);
+    const utcDate = dateStr.endsWith('Z') ? new Date(dateStr) : new Date(dateStr + 'Z');
     const now = new Date();
-    const diffDays = Math.floor((now.getTime() - date.getTime()) / 86400000);
+    const diffDays = Math.floor((now.getTime() - utcDate.getTime()) / 86400000);
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday';
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return utcDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
   getInitials(name: string): string {
@@ -166,18 +171,21 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    this.scrollToBottom();
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
   }
 
   private scrollToBottom(): void {
     try {
       this.messagesEnd?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
-    } catch {}
+    } catch { }
   }
 
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe());
     this.chatService.setActiveConversation(null);
-    this.chatService.stopConnection();
+    // مش بنوقف الـ connection — الـ Guide Layout محتاجه
   }
 }

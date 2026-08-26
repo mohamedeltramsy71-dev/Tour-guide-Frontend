@@ -25,7 +25,7 @@ export class ChatService implements OnDestroy {
 
   private activeBookingId: number | null = null;
 
-  constructor(private api: ApiService, private auth: AuthService) {}
+  constructor(private api: ApiService, private auth: AuthService) { }
 
   // ── SignalR ───────────────────────────────────────────────
 
@@ -45,7 +45,10 @@ export class ChatService implements OnDestroy {
     this.hub.on('ReceiveMessage', (message: MessageDto) => {
       if (message.bookingId === this.activeBookingId) {
         const current = this.messagesSubject.value;
-        this.messagesSubject.next([...current, message]);
+        const alreadyExists = current.some(m => m.id === message.id && message.id > 0);
+        if (!alreadyExists) {
+          this.messagesSubject.next([...current, message]);
+        }
       }
       this.updateConversationLastMessage(message);
     });
@@ -63,7 +66,19 @@ export class ChatService implements OnDestroy {
       );
     });
 
-    this.hub.start().catch((err: unknown) => console.error('Chat SignalR error:', err));
+    this.hub.onreconnected(() => {
+      if (this.activeBookingId) {
+        this.joinBookingGroup(this.activeBookingId);
+      }
+    });
+
+    this.hub.start()
+      .then(() => {
+        if (this.activeBookingId) {
+          this.joinBookingGroup(this.activeBookingId);
+        }
+      })
+      .catch((err: unknown) => console.error('Chat SignalR error:', err));
   }
 
   stopConnection(): void {
@@ -72,8 +87,11 @@ export class ChatService implements OnDestroy {
 
   sendMessage(receiverId: string, content: string, bookingId: number): void {
     if (this.hub?.state === signalR.HubConnectionState.Connected) {
-      this.hub.invoke('SendMessage', receiverId, content, bookingId)
+      this.hub.invoke('JoinBookingGroup', bookingId)
+        .then(() => this.hub.invoke('SendMessage', receiverId, content, bookingId))
         .catch((err: unknown) => console.error('Send error:', err));
+    } else {
+      console.warn('SignalR not connected — state:', this.hub?.state);
     }
   }
 
@@ -81,6 +99,27 @@ export class ChatService implements OnDestroy {
     if (this.hub?.state === signalR.HubConnectionState.Connected) {
       this.hub.invoke('MarkAsRead', messageId)
         .catch((err: unknown) => console.error('MarkAsRead error:', err));
+    }
+  }
+
+  private joinBookingGroup(bookingId: number): void {
+    if (!this.hub) return;
+
+    if (this.hub.state === signalR.HubConnectionState.Connected) {
+      this.hub.invoke('JoinBookingGroup', bookingId)
+        .catch((err: unknown) => console.error('JoinBookingGroup error:', err));
+    } else if (
+      this.hub.state === signalR.HubConnectionState.Connecting ||
+      this.hub.state === signalR.HubConnectionState.Reconnecting
+    ) {
+      const interval = setInterval(() => {
+        if (this.hub.state === signalR.HubConnectionState.Connected) {
+          clearInterval(interval);
+          this.hub.invoke('JoinBookingGroup', bookingId)
+            .catch((err: unknown) => console.error('JoinBookingGroup error:', err));
+        }
+      }, 100);
+      setTimeout(() => clearInterval(interval), 5000);
     }
   }
 
@@ -94,6 +133,8 @@ export class ChatService implements OnDestroy {
 
   loadMessages(bookingId: number, page = 1, pageSize = 50): void {
     this.activeBookingId = bookingId;
+    this.joinBookingGroup(bookingId);
+
     const params = new HttpParams()
       .set('page', page)
       .set('pageSize', pageSize);
@@ -111,7 +152,21 @@ export class ChatService implements OnDestroy {
 
   setActiveConversation(bookingId: number | null): void {
     this.activeBookingId = bookingId;
-    if (!bookingId) this.messagesSubject.next([]);
+    if (bookingId) {
+      this.joinBookingGroup(bookingId);
+    } else {
+      this.messagesSubject.next([]);
+    }
+  }
+
+  decrementUnreadCount(amount: number): void {
+    const current = this.chatUnreadCountSubject.value;
+    const newCount = Math.max(0, current - amount);
+    this.chatUnreadCountSubject.next(newCount);
+  }
+  
+  markConversationAsRead(bookingId: number): void {
+    this.api.put(`chat/${bookingId}/read`, {}).subscribe();
   }
 
   // ── Helpers ───────────────────────────────────────────────

@@ -105,7 +105,7 @@
 
           <!-- Image -->
           <div class="position-relative" style="cursor:pointer;" [routerLink]="['/packages', pkg.id]">
-            <img [src]="pkg.images?.[0] || 'images/hero.jpg'"
+            <img [src]="pkg.images[0] || 'images/hero.jpg'"
               [alt]="pkg.title"
               class="card-img-top"
               style="height: 220px; object-fit: cover;">

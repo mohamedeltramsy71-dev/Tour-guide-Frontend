@@ -37,7 +37,7 @@ export class IncomingBookingsComponent implements OnInit {
   constructor(
     private bookingService: BookingService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.load();
@@ -76,7 +76,7 @@ export class IncomingBookingsComponent implements OnInit {
   }
 
   openChat(bookingId: number) {
-    this.router.navigate(['/chat'], { queryParams: { bookingId } });
+    this.router.navigate(['/guide/chat'], { queryParams: { bookingId } });
   }
 
   accept(booking: BookingDto) {
@@ -158,9 +158,9 @@ export class IncomingBookingsComponent implements OnInit {
 
   statusClass(status: string): string {
     return {
-      Pending:   'badge-pending',
+      Pending: 'badge-pending',
       Confirmed: 'badge-confirmed',
-      Rejected:  'badge-rejected',
+      Rejected: 'badge-rejected',
       Completed: 'badge-completed',
       Cancelled: 'badge-cancelled',
     }[status] ?? '';
@@ -168,7 +168,7 @@ export class IncomingBookingsComponent implements OnInit {
 
   paymentClass(status: string): string {
     return {
-      Paid:   'badge-paid',
+      Paid: 'badge-paid',
       Unpaid: 'badge-unpaid',
       Failed: 'badge-failed',
     }[status] ?? '';

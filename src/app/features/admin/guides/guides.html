@@ -66,7 +66,7 @@
                 <span><i class="fas fa-users me-1"></i>{{ guide.totalReviews }} reviews</span>
               </div>
 
-              @if (guide.languages?.length) {
+              @if (guide.languages.length) {
                 <div class="guide-tags">
                   @for (lang of guide.languages; track lang) {
                     <span class="tag tag-lang">{{ lang }}</span>
@@ -74,7 +74,7 @@
                 </div>
               }
 
-              @if (guide.coveredCities?.length) {
+              @if (guide.coveredCities.length) {
                 <div class="guide-tags">
                   @for (city of guide.coveredCities; track city) {
                     <span class="tag tag-city"><i class="fas fa-map-marker-alt me-1"></i>{{ city }}</span>
@@ -152,21 +152,21 @@
                   <td>{{ guide.experienceYears }} yrs</td>
                   <td>
                     <div class="tags-cell">
-                      @for (lang of guide.languages?.slice(0,2); track lang) {
+                      @for (lang of guide.languages.slice(0,2); track lang) {
                         <span class="tag tag-sm">{{ lang }}</span>
                       }
-                      @if ((guide.languages?.length ?? 0) > 2) {
-                        <span class="tag tag-sm tag-more">+{{ (guide.languages?.length ?? 0) - 2 }}</span>
+                      @if ((guide.languages.length) > 2) {
+                        <span class="tag tag-sm tag-more">+{{ (guide.languages.length) - 2 }}</span>
                       }
                     </div>
                   </td>
                   <td>
                     <div class="tags-cell">
-                      @for (city of guide.coveredCities?.slice(0,2); track city) {
+                      @for (city of guide.coveredCities.slice(0,2); track city) {
                         <span class="tag tag-sm tag-city-sm">{{ city }}</span>
                       }
-                      @if ((guide.coveredCities?.length ?? 0) > 2) {
-                        <span class="tag tag-sm tag-more">+{{ (guide.coveredCities?.length ?? 0) - 2 }}</span>
+                      @if ((guide.coveredCities.length) > 2) {
+                        <span class="tag tag-sm tag-more">+{{ (guide.coveredCities.length) - 2 }}</span>
                       }
                     </div>
                   </td>

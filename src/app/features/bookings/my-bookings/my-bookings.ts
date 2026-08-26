@@ -66,8 +66,15 @@ export class MyBookingsComponent implements OnInit {
         this.cancellingId.set(null);
         this.showSuccess('Booking cancelled successfully.');
       },
-      error: () => { this.cancellingId.set(null); this.showError('Failed to cancel booking.'); },
+      error: () => {
+        this.cancellingId.set(null);
+        this.showError('Failed to cancel booking.');
+      },
     });
+  }
+
+  openPayment(bookingId: number) {
+    this.router.navigate(['/payment'], { queryParams: { bookingId } });
   }
 
   openChat(bookingId: number) {
@@ -97,8 +104,11 @@ export class MyBookingsComponent implements OnInit {
 
   getStatusClass(status: string): string {
     const map: Record<string, string> = {
-      Pending: 'badge-pending', Confirmed: 'badge-confirmed',
-      Completed: 'badge-completed', Rejected: 'badge-rejected', Cancelled: 'badge-cancelled',
+      Pending:   'badge-pending',
+      Confirmed: 'badge-confirmed',
+      Completed: 'badge-completed',
+      Rejected:  'badge-rejected',
+      Cancelled: 'badge-cancelled',
     };
     return map[status] ?? 'badge-secondary';
   }

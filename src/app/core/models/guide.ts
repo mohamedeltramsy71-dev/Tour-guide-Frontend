@@ -1,4 +1,5 @@
 export interface Guide {
+  guideProfileId: number;
   userId: string;
   fullName: string;
   bio: string;

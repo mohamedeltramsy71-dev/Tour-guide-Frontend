@@ -3,10 +3,11 @@ import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Navbar } from './shared/components/navbar/navbar';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/auth';
+import { Footer } from './shared/components/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, CommonModule],
+  imports: [RouterOutlet, Navbar, Footer, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -19,16 +20,17 @@ export class App {
       if (event instanceof NavigationEnd) {
         const url = event.url;
         const role = this.authService.getRole();
-        const isAdminUser = role === 'Admin';
-        const isGuideUser = role === 'Guide';
-        const isAuthPage = url.startsWith('/auth');
-        const isAdminPage = url.startsWith('/admin');
-        const isGuidePage = url.startsWith('/guide/') || url === '/guide';
-
+        const isAdminUser    = role === 'Admin';
+        const isAuthPage     = url.startsWith('/auth');
+        const isAdminPage    = url.startsWith('/admin');
+        const isGuidePage    = url.startsWith('/guide/') || url === '/guide';
         const isNotificationsPage = url.startsWith('/notifications');
-        this.showNavbar = !isAuthPage && !isAdminPage && !isAdminUser && !isGuidePage && !isNotificationsPage;
-        const isChatPage = url.startsWith('/chat');
-        this.showNavbar = !isAuthPage && !isAdminPage && !isAdminUser && !isGuidePage && !isNotificationsPage && !isChatPage;
+        const isChatPage     = url.startsWith('/chat');
+        const isPaymentPage  = url.startsWith('/payment');
+
+        this.showNavbar = !isAuthPage && !isAdminPage && !isAdminUser &&
+                          !isGuidePage && !isNotificationsPage &&
+                          !isChatPage && !isPaymentPage;
       }
     });
   }

@@ -1,0 +1,80 @@
+<footer class="site-footer">
+    <div class="footer-main">
+        <div class="container">
+            <div class="row g-5">
+
+                <!-- Col 1 — Brand -->
+                <div class="col-lg-4 col-md-12">
+                    <a routerLink="/" class="footer-brand d-flex align-items-center gap-2 mb-3">
+                        <img src="images/logo.png" alt="Rihla" height="50">
+                    </a>
+                    <p class="footer-tagline">
+                        Your smart tour guide across Egypt. Connecting curious travelers with verified local guides
+                        in Egypt's most iconic destinations.
+                    </p>
+                    <!-- Social Icons -->
+                    <div class="social-icons d-flex gap-2 mt-4">
+                        @for (social of socialLinks; track social.name) {
+                        <a [href]="social.url" target="_blank" rel="noopener noreferrer" class="social-btn"
+                            [class.instagram-btn]="social.gradient" [style.--social-color]="social.color"
+                            [style.--social-bg]="social.bg" [attr.aria-label]="social.name">
+                            <i [class]="social.icon"></i>
+                        </a>
+                        }
+                    </div>
+                </div>
+
+                <!-- Col 2 — Quick Links -->
+                <div class="col-lg-3 col-md-4 col-6">
+                    <h6 class="footer-heading">Quick Links</h6>
+                    <ul class="footer-links">
+                        @for (link of quickLinks; track link.label) {
+                        <li>
+                            <a [routerLink]="link.path">
+                                <i class="fas fa-chevron-right me-2"></i>{{ link.label }}
+                            </a>
+                        </li>
+                        }
+                    </ul>
+                </div>
+
+                <!-- Col 3 — Contact + Payment -->
+                <div class="col-lg-4 col-md-4 col-12">
+                    <h6 class="footer-heading">Contact Us</h6>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>mohamedeltramsy71&#64;gmail.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Egypt</span>
+                        </li>
+                    </ul>
+
+                    <!-- Payment Methods -->
+                    <h6 class="footer-heading mt-4">We Accept</h6>
+                    <div class="payment-badges">
+                        <div class="payment-badge visa-badge">
+                            <span class="badge-label">VISA</span>
+                            <div class="badge-icon">VISA</div>
+                        </div>
+                        <div class="payment-badge paymob-badge">
+                            <span class="badge-label">Pay<span>mob</span></span>
+                            <div class="badge-icon">Pay</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+        <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+            <p class="mb-0">© {{ currentYear }} Rihla. All rights reserved.</p>
+            <p class="mb-0 footer-bottom-sub">Made with <i class="fas fa-heart text-danger mx-1"></i> for Egypt</p>
+        </div>
+    </div>
+</footer>

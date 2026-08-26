@@ -11,7 +11,7 @@
     <!-- Hero Image -->
     <div class="hero-section">
       <div class="hero-image">
-        @if ((landmark()!.images?.length ?? 0) > 0) {
+        @if ((landmark()!.images.length) > 0) {
           <img [src]="landmark()!.images[activeImage()]" [alt]="landmark()!.nameEn" />
         } @else {
           <div class="no-image">
@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      @if ((landmark()!.images?.length ?? 0) > 1) {
+      @if ((landmark()!.images.length) > 1) {
         <div class="thumbnails">
           @for (img of landmark()!.images; track $index) {
             <div class="thumb" [class.active]="activeImage() === $index" (click)="setActiveImage($index)">

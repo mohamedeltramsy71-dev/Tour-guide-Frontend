@@ -1,0 +1,134 @@
+.payment-page {
+  min-height: 100vh;
+  background: var(--light-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ──── Loading ──── */
+.payment-loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  p {
+    color: var(--text-gray);
+    font-size: 1rem;
+  }
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: var(--primary) !important;
+  }
+}
+
+/* ──── Error ──── */
+.payment-error {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.error-card {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  max-width: 420px;
+  width: 100%;
+
+  i {
+    color: #dc3545;
+  }
+
+  h5 {
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--text-gray);
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    border-radius: 8px;
+    padding: 0.6rem 2rem;
+    font-weight: 600;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+/* ──── iFrame ──── */
+.iframe-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.iframe-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.5rem;
+  background: white;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .btn-link {
+    color: var(--text-gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    i {
+      font-size: 0.85rem;
+    }
+  }
+
+  .amount-badge {
+    background: var(--light-bg);
+    border: 1px solid #e5e0d8;
+    border-radius: 20px;
+    padding: 0.35rem 1rem;
+    font-size: 0.9rem;
+    color: var(--text-gray);
+
+    strong {
+      color: var(--dark);
+    }
+  }
+
+  .logo-text {
+    font-size: 0.78rem;
+    color: #aaa;
+
+    span {
+      color: var(--primary);
+      font-weight: 700;
+    }
+  }
+}
+
+.payment-iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+}

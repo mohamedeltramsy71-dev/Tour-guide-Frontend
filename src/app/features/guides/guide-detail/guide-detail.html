@@ -90,7 +90,7 @@
           }
 
           <!-- Languages -->
-          @if (guide()!.languages?.length) {
+          @if (guide()!.languages.length) {
             <div class="gd-card">
               <div class="gd-card__header">
                 <i class="fas fa-language"></i> Languages
@@ -104,7 +104,7 @@
           }
 
           <!-- Cities -->
-          @if (guide()!.coveredCities?.length) {
+          @if (guide()!.coveredCities.length) {
             <div class="gd-card">
               <div class="gd-card__header">
                 <i class="fas fa-map-marker-alt"></i> Covered Cities
@@ -170,7 +170,7 @@
                 @for (pkg of packages(); track pkg.id) {
                   <a [routerLink]="['/packages', pkg.id]" class="gd-pkg-card">
                     <div class="gd-pkg-img-wrap">
-                      @if (pkg.images?.length) {
+                      @if (pkg.images.length) {
                         <img [src]="pkg.images[0]" [alt]="pkg.title" class="gd-pkg-img" />
                       } @else {
                         <div class="gd-pkg-img gd-pkg-img--placeholder">

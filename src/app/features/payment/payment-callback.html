@@ -1,0 +1,37 @@
+<div class="callback-page">
+  <div class="callback-card">
+
+    <!-- Success -->
+    @if (success()) {
+      <i class="fa fa-check-circle fa-4x icon-success"></i>
+      <h4>Payment Successful!</h4>
+      <p>Your booking is now confirmed and paid. Enjoy your trip with Rihla!</p>
+      <hr class="divider">
+      <button class="btn btn-primary" (click)="goToBookings()">
+        <i class="fa fa-list me-2"></i> View My Bookings
+      </button>
+      <button class="btn btn-outline" (click)="goHome()">
+        <i class="fa fa-home me-2"></i> Back to Home
+      </button>
+    }
+
+    <!-- Failed -->
+    @if (!success()) {
+      <i class="fa fa-times-circle fa-4x icon-fail"></i>
+      <h4>Payment Failed</h4>
+      <p>Something went wrong with your payment. Please try again or contact support.</p>
+      <hr class="divider">
+      <button class="btn btn-primary" (click)="goToBookings()">
+        <i class="fa fa-redo me-2"></i> Try Again
+      </button>
+      <button class="btn btn-outline" (click)="goHome()">
+        <i class="fa fa-home me-2"></i> Back to Home
+      </button>
+    }
+
+    <p class="secured-note">
+      <i class="fa fa-lock"></i> Secured by Paymob
+    </p>
+
+  </div>
+</div>

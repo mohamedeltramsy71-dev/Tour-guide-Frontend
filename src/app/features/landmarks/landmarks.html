@@ -86,7 +86,7 @@
           [routerLink]="['/landmarks', landmark.id]" style="cursor:pointer;">
 
           <div class="position-relative">
-            <img [src]="landmark.images?.[0] || 'images/hero.jpg'"
+            <img [src]="landmark.images[0] || 'images/hero.jpg'"
               [alt]="landmark.nameEn"
               class="card-img-top"
               style="height: 200px; object-fit: cover;">

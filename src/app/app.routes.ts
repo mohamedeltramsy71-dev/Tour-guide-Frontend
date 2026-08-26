@@ -43,6 +43,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/landmarks/landmark-detail/landmark-detail').then(m => m.LandmarkDetailComponent),
   },
+  {
+    path: 'about',
+    loadComponent: () => import('./features/about/about').then(m => m.About),
+  },
+
 
   // ─── Auth (Guests Only) ───────────────────────────────────
   {
@@ -102,9 +107,28 @@ export const routes: Routes = [
   },
   {
     path: 'chat',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard(['Tourist'])],
     loadComponent: () =>
       import('./features/chat/chat').then(m => m.ChatComponent),
+  },
+  {
+    path: 'payment',
+    loadComponent: () =>
+      import('./features/payment/payment').then(m => m.PaymentComponent),
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Tourist'] }
+  },
+  {
+    path: 'payment/callback',
+    loadComponent: () =>
+      import('./features/payment/payment-callback').then(m => m.PaymentCallbackComponent)
+  },
+  {
+    path: 'custom-trip',
+    loadComponent: () =>
+      import('./features/custom-trip/custom-trip').then(m => m.CustomTripComponent),
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Tourist'] }
   },
 
   // ─── Admin ────────────────────────────────────────────────
@@ -190,6 +214,11 @@ export const routes: Routes = [
         path: 'reviews',
         loadComponent: () =>
           import('./features/guide-dashboard/guide-reviews/guide-reviews').then(m => m.GuideReviews),
+      },
+      {
+        path: 'chat',
+        loadComponent: () =>
+          import('./features/chat/chat').then(m => m.ChatComponent),
       },
     ],
   },

@@ -1,0 +1,84 @@
+.callback-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--light-bg);
+  padding: 1.5rem;
+}
+
+.callback-card {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  max-width: 440px;
+  width: 100%;
+
+  .icon-success {
+    color: #22c55e;
+    margin-bottom: 1.25rem;
+  }
+
+  .icon-fail {
+    color: #dc3545;
+    margin-bottom: 1.25rem;
+  }
+
+  h4 {
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--text-gray);
+    margin-bottom: 0;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #f0ebe4;
+    margin: 1.5rem 0;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    border-radius: 8px;
+    padding: 0.65rem 2rem;
+    font-weight: 600;
+    width: 100%;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .btn-outline {
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+    border-radius: 8px;
+    padding: 0.65rem 2rem;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 0.75rem;
+
+    &:hover {
+      background: var(--primary);
+      color: white;
+    }
+  }
+
+  .secured-note {
+    font-size: 0.78rem;
+    color: #bbb;
+    margin-top: 1.25rem;
+
+    i {
+      margin-right: 0.3rem;
+    }
+  }
+}

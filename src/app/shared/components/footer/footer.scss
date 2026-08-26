@@ -1,0 +1,224 @@
+.site-footer {
+    background-color: var(--dark);
+    color: rgba(255, 255, 255, 0.75);
+}
+
+// ─── Main Section ────────────────────────────────────────────
+.footer-main {
+    padding: 64px 0 48px;
+}
+
+// ─── Brand ───────────────────────────────────────────────────
+.footer-brand img {
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+    height: 70px;
+}
+
+.footer-tagline {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.55);
+    max-width: 320px;
+}
+
+// ─── Social Icons ────────────────────────────────────────────
+.social-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--social-bg);
+    color: var(--social-color);
+    font-size: 1rem;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s ease, filter 0.2s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+        filter: brightness(1.2);
+        color: var(--social-color);
+    }
+}
+
+.instagram-btn {
+    background: rgba(225, 48, 108, 0.12);
+    color: transparent;
+
+    i {
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.1rem;
+    }
+
+    &:hover {
+        filter: brightness(1.15);
+        color: transparent;
+    }
+}
+
+// ─── Headings ────────────────────────────────────────────────
+.footer-heading {
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 28px;
+        height: 2px;
+        background: var(--primary);
+        border-radius: 2px;
+    }
+}
+
+// ─── Quick Links ─────────────────────────────────────────────
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        margin-bottom: 10px;
+    }
+
+    a {
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.2s ease, padding-left 0.2s ease;
+
+        i {
+            font-size: 0.65rem;
+            color: var(--primary);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        &:hover {
+            color: #fff;
+            padding-left: 4px;
+
+            i {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+// ─── Contact ─────────────────────────────────────────────────
+.footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 14px;
+        font-size: 0.88rem;
+        color: rgba(255, 255, 255, 0.6);
+
+        i {
+            color: var(--primary);
+            font-size: 1rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+    }
+}
+
+// ─── Payment Badges ──────────────────────────────────────────
+.payment-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.payment-badge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 8px 12px;
+    width: fit-content;
+    min-width: 160px;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .badge-label {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .badge-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: #fff;
+    }
+}
+
+.visa-badge {
+    .badge-label {
+        color: #a78bfa;
+    }
+
+    .badge-icon {
+        background: #1a1f71;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+}
+
+.paymob-badge {
+    .badge-label {
+        font-weight: 800;
+        color: #fff;
+
+        span {
+            color: var(--primary);
+        }
+    }
+
+    .badge-icon {
+        background: #0070f3;
+        font-size: 0.9rem;
+    }
+}
+
+// ─── Bottom Bar ──────────────────────────────────────────────
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.footer-bottom-sub {
+    font-size: 0.82rem;
+}
