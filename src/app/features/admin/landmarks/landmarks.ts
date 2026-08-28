@@ -44,14 +44,14 @@ interface CategoryDto {
 })
 export class AdminLandmarksComponent implements OnInit {
   landmarks: LandmarkDto[] = [];
-  cities: City[]           = [];
+  cities: City[] = [];
   categories: CategoryDto[] = [];
   loading = true;
-  error   = false;
+  error = false;
 
   // Filters
-  searchTerm     = '';
-  filterCity     = '';
+  searchTerm = '';
+  filterCity = '';
   filterCategory = '';
 
   // Modal
@@ -59,18 +59,18 @@ export class AdminLandmarksComponent implements OnInit {
   selectedLandmark: LandmarkDto | null = null;
   form: LandmarkForm = this.emptyForm();
   formLoading = false;
-  formError   = '';
+  formError = '';
   formSuccess = '';
 
   // Image upload
-  imageFile: File | null    = null;
-  imageLoading              = false;
+  imageFile: File | null = null;
+  imageLoading = false;
   imagePreview: string | null = null;
 
   constructor(
     private api: ApiService,
     private cityService: CityService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadLandmarks();
@@ -86,11 +86,11 @@ export class AdminLandmarksComponent implements OnInit {
 
   loadLandmarks(): void {
     this.loading = true;
-    this.error   = false;
+    this.error = false;
     let params = new HttpParams().set('pageSize', 100);
-    if (this.filterCity)     params = params.set('cityId', this.filterCity);
+    if (this.filterCity) params = params.set('cityId', this.filterCity);
     if (this.filterCategory) params = params.set('category', this.filterCategory);
-    if (this.searchTerm)     params = params.set('search', this.searchTerm);
+    if (this.searchTerm) params = params.set('search', this.searchTerm);
     this.api.get<LandmarkDto[]>('landmarks', { params }).subscribe({
       next: (data) => { this.landmarks = data; this.loading = false; },
       error: () => { this.error = true; this.loading = false; },
@@ -98,16 +98,16 @@ export class AdminLandmarksComponent implements OnInit {
   }
 
   loadCities(): void {
-    this.cityService.getCities().subscribe({
+    this.cityService.getCities(1, 100).subscribe({
       next: (data) => this.cities = data,
-      error: () => {},
+      error: () => { },
     });
   }
 
   loadCategories(): void {
     this.api.get<CategoryDto[]>('categories').subscribe({
       next: (data) => this.categories = data,
-      error: () => {},
+      error: () => { },
     });
   }
 
