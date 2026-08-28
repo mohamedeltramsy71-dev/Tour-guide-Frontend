@@ -26,10 +26,10 @@ export class Cities implements OnInit {
     { image: 'images/cities/slide5.jpg', title: 'Desert Safari', subtitle: 'Adventure in the golden sands' },
   ];
 
-  constructor(private cityService: CityService) {}
+  constructor(private cityService: CityService) { }
 
   ngOnInit(): void {
-    this.cityService.getCities().subscribe(data => {
+    this.cityService.getCities(1, 100).subscribe(data => {
       this.cities = data;
       this.filteredCities = data;
     });
