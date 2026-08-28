@@ -8,14 +8,13 @@ $sidebar-text:      #A8B4CC;
 $sidebar-active-bg: rgba(200, 92, 58, 0.15);
 $transition:        0.25s ease;
 
-// ─── Shell ────────────────────────────────────────────────────────────────────
 .admin-shell {
   display: flex;
   min-height: 100vh;
   background: #F4F6FA;
 }
 
-// ─── Sidebar ─────────────────────────────────────────────────────────────────
+// ─── Sidebar ─────────────────────────────────────────────
 .admin-sidebar {
   width: $sidebar-width;
   min-height: 100vh;
@@ -26,15 +25,22 @@ $transition:        0.25s ease;
   top: 0;
   left: 0;
   z-index: 1000;
-  transition: width $transition;
+  transition: width $transition, transform $transition;
   overflow: hidden;
 
-  .admin-shell.collapsed & {
-    width: $sidebar-collapsed;
-  }
+  .admin-shell.collapsed & { width: $sidebar-collapsed; }
 }
 
-// ─── Sidebar Header ──────────────────────────────────────────────────────────
+// ─── Overlay (mobile only) ───────────────────────────────
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+// ─── Sidebar Header ──────────────────────────────────────
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -93,18 +99,14 @@ $transition:        0.25s ease;
   white-space: nowrap;
 }
 
-// ─── Nav ─────────────────────────────────────────────────────────────────────
+// ─── Nav ─────────────────────────────────────────────────
 .sidebar-nav {
   flex: 1;
   padding: 12px 0;
   overflow-y: auto;
   overflow-x: hidden;
 
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+  ul { list-style: none; margin: 0; padding: 0; }
 }
 
 .sidebar-link {
@@ -130,10 +132,7 @@ $transition:        0.25s ease;
     .admin-shell.collapsed & { opacity: 0; }
   }
 
-  &:hover {
-    background: rgba(255,255,255,0.06);
-    color: #fff;
-  }
+  &:hover { background: rgba(255,255,255,0.06); color: #fff; }
 
   &.active {
     background: $sidebar-active-bg;
@@ -143,7 +142,7 @@ $transition:        0.25s ease;
   }
 }
 
-// ─── Sidebar Footer ──────────────────────────────────────────────────────────
+// ─── Sidebar Footer ──────────────────────────────────────
 .sidebar-footer {
   padding: 12px 0;
   border-top: 1px solid rgba(255,255,255,0.07);
@@ -155,7 +154,7 @@ $transition:        0.25s ease;
   }
 }
 
-// ─── Main Area ────────────────────────────────────────────────────────────────
+// ─── Main Area ────────────────────────────────────────────
 .admin-main {
   margin-left: $sidebar-width;
   flex: 1;
@@ -163,12 +162,10 @@ $transition:        0.25s ease;
   flex-direction: column;
   transition: margin-left $transition;
 
-  .admin-shell.collapsed & {
-    margin-left: $sidebar-collapsed;
-  }
+  .admin-shell.collapsed & { margin-left: $sidebar-collapsed; }
 }
 
-// ─── Topbar ──────────────────────────────────────────────────────────────────
+// ─── Topbar ──────────────────────────────────────────────
 .admin-topbar {
   height: $topbar-height;
   background: #fff;
@@ -178,11 +175,24 @@ $transition:        0.25s ease;
   padding: 0 24px;
   position: sticky;
   top: 0;
-  z-index: 999;
+  z-index: 998;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
-// ─── Profile Button ──────────────────────────────────────────────────────────
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  color: $dark;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-right: 12px;
+  &:hover { background: #F4F6FA; }
+}
+
+// ─── Profile Button ──────────────────────────────────────
 .admin-profile-btn {
   display: flex;
   align-items: center;
@@ -216,30 +226,49 @@ $transition:        0.25s ease;
   flex-direction: column;
   text-align: left;
 
-  .admin-name {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: $dark;
-    line-height: 1.2;
-  }
-  .admin-role {
-    font-size: 0.72rem;
-    color: $primary;
-    font-weight: 500;
-  }
+  .admin-name { font-size: 0.88rem; font-weight: 600; color: $dark; line-height: 1.2; }
+  .admin-role { font-size: 0.72rem; color: $primary; font-weight: 500; }
 }
 
-// ─── Content ─────────────────────────────────────────────────────────────────
+// ─── Content ─────────────────────────────────────────────
 .admin-content {
   padding: 28px;
   flex: 1;
 }
 
-// ─── Responsive ──────────────────────────────────────────────────────────────
+// ─── Mobile ──────────────────────────────────────────────
 @media (max-width: 991px) {
+  .mobile-menu-btn { display: flex; align-items: center; }
+
   .admin-sidebar {
     transform: translateX(-100%);
-    .admin-shell.collapsed & { transform: translateX(0); width: $sidebar-width; }
+    width: $sidebar-width !important; // دايماً full width على موبايل
+
+    &.mobile-open {
+      transform: translateX(0);
+    }
+
+    // إخفاء الـ brand wrap collapse على موبايل
+    .link-label { opacity: 1 !important; }
+    .sidebar-brand-wrap { opacity: 1 !important; width: auto !important; pointer-events: auto !important; }
   }
+
+  .sidebar-overlay {
+    display: block; // بيظهر بس لما يكون open
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity $transition;
+
+    &.mobile-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
   .admin-main { margin-left: 0 !important; }
+
+  .admin-content { padding: 16px; }
+
+  // إخفاء الـ desktop toggle في الـ sidebar على موبايل
+  .admin-sidebar .sidebar-toggle { display: none; }
 }

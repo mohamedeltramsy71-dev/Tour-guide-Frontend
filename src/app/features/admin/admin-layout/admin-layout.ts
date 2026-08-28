@@ -13,8 +13,9 @@ import { Subscription } from 'rxjs';
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   sidebarCollapsed = signal(false);
-  avatarUrl = signal<string>('');
-  fullName = signal<string>('Admin');
+  mobileOpen       = signal(false);
+  avatarUrl        = signal<string>('');
+  fullName         = signal<string>('Admin');
 
   private sub!: Subscription;
 
@@ -38,17 +39,20 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
+  ngOnDestroy() { this.sub.unsubscribe(); }
 
+  // Desktop toggle
   toggleSidebar(): void {
     this.sidebarCollapsed.update(v => !v);
   }
 
+  // Mobile open/close
+  openMobileSidebar(): void  { this.mobileOpen.set(true); }
+  closeMobileSidebar(): void { this.mobileOpen.set(false); }
+
   logout(): void {
     this.auth.logout().subscribe({
-      next: () => this.router.navigate(['/auth/login']),
+      next:  () => this.router.navigate(['/auth/login']),
       error: () => this.router.navigate(['/auth/login']),
     });
   }
