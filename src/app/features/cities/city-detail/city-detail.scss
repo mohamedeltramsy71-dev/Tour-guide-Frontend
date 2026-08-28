@@ -186,3 +186,57 @@
   i { font-size: 3rem; color: #ddd; margin-bottom: 16px; display: block; }
   h5 { color: var(--dark); font-weight: 600; margin-bottom: 8px; }
 }
+
+// ── Mobile ───────────────────────────────
+@media (max-width: 768px) {
+
+  .city-hero {
+    height: 300px;
+  }
+
+  .hero-overlay {
+    padding-bottom: 28px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .detail-card {
+    padding: 20px;
+  }
+
+  .landmarks-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .landmark-img {
+    height: 200px;
+  }
+
+  .landmark-meta {
+    gap: 8px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .city-hero {
+    height: 260px;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .landmark-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

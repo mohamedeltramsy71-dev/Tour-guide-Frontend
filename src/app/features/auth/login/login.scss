@@ -114,3 +114,19 @@
         color: var(--primary);
     }
 }
+
+// ── Mobile ───────────────────────────────────────────
+@media (max-width: 768px) {
+
+  .auth-wrapper { flex-direction: column; }
+
+  // اخبي الـ left panel على موبايل
+  .auth-left { display: none; }
+
+  .auth-right {
+    width: 100%;
+    min-width: unset;
+    padding: 40px 24px;
+    min-height: 100vh;
+  }
+}

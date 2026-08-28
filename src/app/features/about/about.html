@@ -7,7 +7,7 @@
     <p class="lead mx-auto" style="max-width: 600px; opacity: 0.9;">
       Rihla connects curious travelers with verified local guides across Egypt's most breathtaking destinations.
     </p>
-    <a routerLink="/packages" class="btn btn-primary-custom btn-lg mt-3 px-5">
+    <a routerLink="/packages" class="btn btn-primary-custom btn-lg mt-3">
       Start Exploring <i class="fas fa-arrow-right ms-2"></i>
     </a>
   </div>
@@ -32,7 +32,7 @@
           From browsing packages and booking trips to chatting with your guide in real-time, Rihla handles
           every step of the journey so you can focus on the experience.
         </p>
-        <div class="d-flex gap-4 mt-4">
+        <div class="d-flex flex-wrap gap-3 mt-4">
           <div class="mini-stat">
             <i class="fas fa-city"></i>
             <span>Multiple Cities</span>
@@ -58,7 +58,7 @@
       <p class="section-eyebrow">Simple Steps</p>
       <h2 class="section-title">How It Works</h2>
     </div>
-    <div class="row g-4 justify-content-center">
+    <div class="row g-4 justify-content-center" style="row-gap: 2rem !important;">
       @for (step of steps; track $index) {
         <div class="col-md-4">
           <div class="step-card text-center h-100">
@@ -107,10 +107,10 @@
       Find your perfect guide and start your journey today.
     </p>
     <div class="d-flex gap-3 justify-content-center flex-wrap">
-      <a routerLink="/packages" class="btn btn-primary-custom btn-lg px-5">
+      <a routerLink="/packages" class="btn btn-primary-custom btn-lg">
         Browse Packages <i class="fas fa-compass ms-2"></i>
       </a>
-      <a routerLink="/guides" class="btn btn-outline-light btn-lg px-5">
+      <a routerLink="/guides" class="btn btn-outline-light btn-lg">
         Meet Our Guides
       </a>
     </div>

@@ -349,3 +349,33 @@
   i { color: var(--primary); width: 16px; text-align: center; }
   span { font-weight: 500; color: var(--dark); }
 }
+
+@media (max-width: 768px) {
+
+  .hero-image { height: 280px; }
+
+  .detail-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .package-title { font-size: 1.5rem; }
+
+  .booking-card { position: static !important; }
+
+  .price-value { font-size: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+
+  .hero-image { height: 220px; }
+
+  .package-title { font-size: 1.25rem; }
+
+  .package-meta { gap: 8px; font-size: 0.82rem; }
+
+  .detail-card,
+  .booking-card { padding: 16px; }
+
+  .day-block { flex-direction: column; gap: 8px; }
+}

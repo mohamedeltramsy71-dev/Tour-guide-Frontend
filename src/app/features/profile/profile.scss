@@ -179,3 +179,29 @@ textarea.form-control { resize: none; }
   &:hover:not(:disabled) { opacity: 0.9; }
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
+
+// ── Mobile ───────────────────────────────────────────
+@media (max-width: 768px) {
+
+  .profile-header-card { padding: 20px; }
+
+  .profile-card { padding: 20px; }
+
+  // Save button: فل عرض على موبايل
+  .d-flex.justify-content-end {
+    justify-content: stretch !important;
+
+    .btn-primary { width: 100%; }
+  }
+}
+
+@media (max-width: 480px) {
+
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .user-name  { font-size: 1.25rem; }
+  .user-email { font-size: 0.875rem; }
+}

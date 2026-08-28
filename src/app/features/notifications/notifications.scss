@@ -75,3 +75,20 @@
   margin-top: 6px;
   flex-shrink: 0;
 }
+
+// ── Mobile ───────────────────────────────────────────
+@media (max-width: 480px) {
+
+  // Header: stack لو الاسم طويل
+  .d-flex.align-items-center.justify-content-between {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  // Notification item: امنع الـ hover transform يقطع الشاشة
+  .notification-item:hover {
+    transform: none;
+  }
+
+  .notif-message { font-size: 13px; }
+}

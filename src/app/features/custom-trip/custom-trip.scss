@@ -569,3 +569,75 @@
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0);    }
 }
+// ── Mobile ───────────────────────────────────────────
+@media (max-width: 768px) {
+
+  // Hero
+  .ctrip-hero {
+    .hero-title { font-size: 1.8rem; }
+    .hero-sub   { font-size: 0.95rem; }
+  }
+
+  // Step indicator
+  .step-indicator {
+    .si-circle {
+      width: 40px;
+      height: 40px;
+      font-size: 0.9rem;
+    }
+    .si-label { font-size: 0.65rem; }
+    .si-line  { max-width: 40px; margin-bottom: 22px; }
+  }
+
+  // Wizard card
+  .wcard {
+    .wcard-header { padding: 1rem 1.25rem; font-size: 0.95rem; }
+    .wcard-body   { padding: 1.25rem 1rem; }
+    .wcard-footer { padding: 1rem; flex-wrap: wrap; }
+  }
+
+  // Summary pill
+  .summary-pill {
+    font-size: 0.8rem;
+    padding: 8px 14px;
+    border-radius: 12px;       // flatten pill on mobile
+  }
+
+  // Landmark grid → 2 columns
+  .landmark-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .lm-card {
+    .lm-img-wrap { height: 100px; }
+    .lm-info {
+      padding: 8px 10px;
+      h6 { font-size: 0.8rem; }
+      .lm-meta { font-size: 0.7rem; }
+    }
+  }
+
+  // Guides grid → 1 column
+  .guides-grid { grid-template-columns: 1fr; }
+
+  // Confirm step: stack columns
+  .price-card {
+    .total-amt { font-size: 1.3rem; }
+  }
+}
+
+@media (max-width: 480px) {
+
+  .step-indicator {
+    .si-label { display: none; }    // تخفي النص، يفضل بس الأيقونة
+    .si-line  { max-width: 24px; }
+  }
+
+  // Landmark grid → 1 column على الشاشات الضيقة جداً
+  .landmark-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lm-card .lm-img-wrap { height: 160px; }
+}

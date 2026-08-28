@@ -35,9 +35,7 @@
   border-radius: 6px;
   transition: background 0.2s;
 
-  &:hover {
-    background: var(--light-bg);
-  }
+  &:hover { background: var(--light-bg); }
 }
 
 .conversation-list {
@@ -54,9 +52,7 @@
   transition: background 0.15s;
   border-bottom: 1px solid #f3f4f6;
 
-  &:hover {
-    background: #faf8f5;
-  }
+  &:hover { background: #faf8f5; }
 
   &.active {
     background: rgba(200, 92, 58, 0.08);
@@ -164,6 +160,7 @@
   color: var(--text-gray);
 }
 
+// ── Chat Header ──────────────────────────────────────────
 .chat-header {
   display: flex;
   align-items: center;
@@ -172,6 +169,22 @@
   background: white;
   border-bottom: 1px solid #e5e7eb;
   flex-shrink: 0;
+}
+
+// Back arrow inside the messages panel — mobile only
+.mobile-back-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--dark);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+
+  &:hover { background: var(--light-bg); }
 }
 
 .chat-avatar {
@@ -195,30 +208,33 @@
   }
 }
 
+// ── Messages Body ────────────────────────────────────────
 .messages-body {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  @media (min-width: 768px) { padding: 20px; }
 }
 
 .message-row {
   display: flex;
   justify-content: flex-start;
 
-  &.mine {
-    justify-content: flex-end;
-  }
+  &.mine { justify-content: flex-end; }
 }
 
 .message-bubble {
-  max-width: 65%;
+  max-width: 75%;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 16px 16px 16px 4px;
   padding: 10px 14px;
+
+  @media (min-width: 768px) { max-width: 65%; }
 
   p {
     margin: 0;
@@ -245,14 +261,17 @@
   margin-top: 4px;
 }
 
+// ── Input Area ───────────────────────────────────────────
 .chat-input-area {
   display: flex;
   align-items: flex-end;
   gap: 10px;
-  padding: 16px 20px;
+  padding: 12px 16px;
   background: white;
   border-top: 1px solid #e5e7eb;
   flex-shrink: 0;
+
+  @media (min-width: 768px) { padding: 16px 20px; }
 }
 
 .chat-input {
@@ -268,9 +287,7 @@
   overflow-y: auto;
   transition: border-color 0.2s;
 
-  &:focus {
-    border-color: var(--primary);
-  }
+  &:focus { border-color: var(--primary); }
 }
 
 .send-btn {
@@ -287,29 +304,30 @@
   flex-shrink: 0;
   transition: opacity 0.2s;
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  &:not(:disabled):hover {
-    opacity: 0.85;
-  }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:not(:disabled):hover { opacity: 0.85; }
 }
 
-// ── Responsive ───────────────────────────────────────────
-@media (max-width: 768px) {
+// ── Mobile Layout ────────────────────────────────────────
+@media (max-width: 767px) {
   .conversations-panel {
     width: 100%;
     min-width: unset;
+    // default: visible
   }
 
   .messages-panel {
     display: none;
+    width: 100%;
   }
 
-  .chat-page.conversation-open {
+  .mobile-back-btn {
+    display: flex;
+  }
+
+  // When a conversation is open, swap panels
+  .chat-page.show-messages {
     .conversations-panel { display: none; }
-    .messages-panel { display: flex; }
+    .messages-panel      { display: flex; }
   }
 }

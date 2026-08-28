@@ -108,3 +108,68 @@
     box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
   }
 }
+
+// ── Mobile ───────────────────────────────────────────
+@media (max-width: 768px) {
+
+  // Slider
+  .landmarks-slider {
+    height: 55vh;
+
+    .slide-content {
+      h2 { font-size: 1.6rem; }
+      p  { font-size: 0.95rem; }
+    }
+
+    .slider-dots { bottom: 90px; }
+
+    .search-overlay {
+      .search-box {
+        padding: 10px 14px !important;
+        gap: 8px !important;
+        input { font-size: 1rem !important; }
+      }
+    }
+  }
+
+  // Filters: category buttons تتسكرول أفقياً
+  .sticky-top .d-flex {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    gap: 8px !important;
+
+    // رجّع الـ select والـ clear button يبقوا في سطر تاني
+    .form-select,
+    .btn.ms-auto {
+      flex-shrink: 0;
+    }
+  }
+
+  // Landmark grid → 2 columns
+  .col-md-4 { flex: 0 0 50%; max-width: 50%; }
+
+  .landmark-card {
+    .card-img-top { height: 150px !important; }
+
+    .card-body {
+      padding: .75rem;
+      h6       { font-size: 0.85rem; }
+      .small   { font-size: 0.75rem; }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+
+  .landmarks-slider {
+    height: 50vh;
+    .slide-content h2 { font-size: 1.3rem; }
+  }
+
+  // Landmark grid → 1 column
+  .col-md-4 { flex: 0 0 100%; max-width: 100%; }
+
+  .landmark-card .card-img-top { height: 200px !important; }
+}

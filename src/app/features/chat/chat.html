@@ -1,4 +1,4 @@
-<div class="chat-page">
+<div class="chat-page" [class.show-messages]="showMessages()">
 
   <!-- Conversations Sidebar -->
   <aside class="conversations-panel">
@@ -68,6 +68,11 @@
 
       <!-- Chat Header -->
       <div class="chat-header">
+        <!-- Back button — visible on mobile only -->
+        <button class="mobile-back-btn" (click)="backToSidebar()">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
         <div class="chat-avatar">
           <img *ngIf="activeConversation.otherUserAvatar"
                [src]="activeConversation.otherUserAvatar"

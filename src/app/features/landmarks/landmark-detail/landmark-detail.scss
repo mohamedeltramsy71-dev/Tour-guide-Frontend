@@ -232,3 +232,43 @@
 
   &:hover { opacity: 0.9; color: white; }
 }
+
+// ── Mobile ───────────────────────────────────────────
+@media (max-width: 768px) {
+
+  // Hero image
+  .hero-image { height: 280px; }
+
+  // Thumbnails أصغر شوية
+  .thumbnails {
+    .thumb {
+      width: 64px;
+      height: 46px;
+    }
+  }
+
+  // Header: stack vertically
+  .detail-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .landmark-title { font-size: 1.5rem; }
+
+  // Info card: أزل الـ sticky على موبايل
+  .info-card {
+    position: static !important;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .hero-image { height: 220px; }
+
+  .landmark-title { font-size: 1.25rem; }
+
+  .landmark-meta { gap: 8px; font-size: 0.82rem; }
+
+  .detail-card,
+  .info-card { padding: 16px; }
+}

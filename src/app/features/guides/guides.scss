@@ -90,3 +90,69 @@
   position: relative;
   display: inline-block;
 }
+
+// ── Mobile ───────────────────────────────────────────
+@media (max-width: 768px) {
+
+  // Slider
+  .guides-slider {
+    height: 55vh;
+
+    .slide-content {
+      h2 { font-size: 1.6rem; }
+      p  { font-size: 0.95rem; }
+    }
+
+    .slider-dots { bottom: 90px; }
+
+    .search-overlay {
+      .search-box {
+        padding: 10px 14px !important;
+        gap: 8px !important;
+
+        input { font-size: 1rem !important; }
+      }
+    }
+  }
+
+  // Filters bar
+  .sticky-top {
+    .d-flex {
+      gap: 8px !important;
+
+      .form-select { font-size: 0.85rem; }
+    }
+  }
+
+  // Guide grid → 2 columns
+  .col-md-4 { flex: 0 0 50%; max-width: 50%; }
+
+  .guide-card {
+    .guide-avatar-wrapper img {
+      width: 72px !important;
+      height: 72px !important;
+    }
+
+    .card-body {
+      padding: 0.75rem !important;
+
+      h6         { font-size: 0.85rem; }
+      .text-muted { font-size: 0.75rem; }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+
+  .guides-slider {
+    height: 50vh;
+
+    .slide-content h2 { font-size: 1.3rem; }
+  }
+
+  // Guide grid → 1 column
+  .col-md-4 { flex: 0 0 100%; max-width: 100%; }
+
+  // Filters: اخبي الـ "X guides found" عشان مايزحمش
+  .ms-auto.small { display: none; }
+}

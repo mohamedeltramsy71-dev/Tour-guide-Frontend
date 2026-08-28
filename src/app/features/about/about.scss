@@ -1,5 +1,9 @@
 .section-pad {
-  padding: 80px 0;
+  padding: 50px 0;
+
+  @media (min-width: 768px) {
+    padding: 80px 0;
+  }
 }
 
 .section-eyebrow {
@@ -12,9 +16,13 @@
 }
 
 .section-title {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: var(--dark);
+
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
 }
 
 .text-gold {
@@ -23,10 +31,30 @@
 
 // ─── Hero ───────────────────────────────────────────────────
 .about-hero {
-  min-height: 520px;
+  min-height: 380px;
   background: url('/images/auth/auth.png') center center / cover no-repeat;
   position: relative;
   overflow: hidden;
+
+  @media (min-width: 768px) {
+    min-height: 520px;
+  }
+
+  .display-4 {
+    font-size: 1.9rem;
+
+    @media (min-width: 768px) {
+      font-size: 2.8rem;
+    }
+  }
+
+  .lead {
+    font-size: 0.95rem;
+
+    @media (min-width: 768px) {
+      font-size: 1.1rem;
+    }
+  }
 }
 
 .hero-overlay {
@@ -50,21 +78,34 @@
 // ─── About Image ────────────────────────────────────────────
 .about-img {
   object-fit: cover;
-  max-height: 420px;
+  max-height: 280px;
+
+  @media (min-width: 768px) {
+    max-height: 420px;
+  }
 }
 
 // ─── Mini Stats ─────────────────────────────────────────────
 .mini-stat {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
+  gap: 6px;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--dark);
 
+  @media (min-width: 768px) {
+    font-size: 0.9rem;
+    gap: 8px;
+  }
+
   i {
     color: var(--primary);
-    font-size: 1.1rem;
+    font-size: 1rem;
+
+    @media (min-width: 768px) {
+      font-size: 1.1rem;
+    }
   }
 }
 
@@ -72,10 +113,16 @@
 .step-card {
   background: #fff;
   border-radius: 16px;
-  padding: 36px 28px;
+  padding: 36px 20px 28px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
   position: relative;
+  margin-top: 16px;
+
+  @media (min-width: 768px) {
+    padding: 36px 28px;
+    margin-top: 0;
+  }
 
   &:hover {
     box-shadow: 0 12px 32px rgba(200, 92, 58, 0.12);
@@ -101,17 +148,27 @@
 }
 
 .step-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
   background: rgba(200, 92, 58, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
 
+  @media (min-width: 768px) {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+  }
+
   i {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     color: var(--primary);
+
+    @media (min-width: 768px) {
+      font-size: 1.6rem;
+    }
   }
 }
 
@@ -119,9 +176,13 @@
 .feature-card {
   background: var(--light-bg);
   border-radius: 16px;
-  padding: 32px 24px;
+  padding: 24px 20px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+  @media (min-width: 768px) {
+    padding: 32px 24px;
+  }
 
   &:hover {
     box-shadow: 0 8px 24px rgba(200, 92, 58, 0.1);
@@ -130,26 +191,55 @@
 }
 
 .feature-icon {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
   background: rgba(200, 92, 58, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
 
+  @media (min-width: 768px) {
+    width: 52px;
+    height: 52px;
+  }
+
   i {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     color: var(--primary);
+
+    @media (min-width: 768px) {
+      font-size: 1.4rem;
+    }
   }
 }
 
 // ─── CTA ────────────────────────────────────────────────────
 .cta-section {
-  padding: 100px 16px;
+  padding: 64px 16px;
   background: url('/images/auth/auth.png') center center / cover no-repeat;
   position: relative;
   overflow: hidden;
+
+  @media (min-width: 768px) {
+    padding: 100px 16px;
+  }
+
+  .display-5 {
+    font-size: 1.7rem;
+
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  .lead {
+    font-size: 0.95rem;
+
+    @media (min-width: 768px) {
+      font-size: 1.1rem;
+    }
+  }
 }
 
 .cta-overlay {
@@ -166,6 +256,13 @@
   font-weight: 600;
   border-radius: 8px;
   transition: opacity 0.2s ease;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+
+  @media (min-width: 768px) {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
 
   &:hover {
     opacity: 0.88;

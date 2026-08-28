@@ -79,3 +79,64 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
   }
 }
+
+// ── Mobile ───────────────────────────────────────────
+@media (max-width: 768px) {
+
+  // Hero
+  .hero-section {
+    height: auto;
+    min-height: 80vh;
+
+    .hero-img {
+      height: 80vh;
+      border-radius: 0 0 30px 30px;
+    }
+
+    .hero-overlay {
+      border-radius: 0 0 30px 30px;
+      align-items: flex-start;
+      padding-top: 5rem;
+    }
+
+    h1.display-4 { font-size: 2rem; }
+    .lead        { font-size: 0.95rem; }
+
+    .d-flex.gap-3 { flex-direction: column; gap: .75rem !important; }
+  }
+
+  // Search bar
+  .search-bar-wrapper { margin-top: -40px; }
+
+  .search-card {
+    padding: 1.25rem !important;
+
+    // Tabs: scroll أفقي لو ضاقت
+    .d-flex.gap-3:first-child {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  .search-tab { white-space: nowrap; font-size: 0.85rem; }
+
+  // Steps → 1 column
+  .step-card img { height: 180px !important; }
+
+  // Cities & Packages → 2 columns
+  .col-md-3 { flex: 0 0 50%; max-width: 50%; }
+
+  .card img.card-img-top { height: 160px !important; }
+}
+
+@media (max-width: 480px) {
+
+  .hero-section {
+    h1.display-4 { font-size: 1.6rem; }
+  }
+
+  // Cities & Packages → 1 column
+  .col-md-3 { flex: 0 0 100%; max-width: 100%; }
+}

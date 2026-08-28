@@ -217,5 +217,30 @@ $gold:    #D4A853;
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
+// ── Mobile ───────────────────────────────────────────
+@media (max-width: 480px) {
+
+  .review-modal {
+    border-radius: 16px;
+  }
+
+  .review-header { padding: 16px 18px 14px; }
+
+  .review-body { padding: 16px 18px; }
+
+  .review-footer {
+    padding: 14px 18px 18px;
+    flex-wrap: wrap;
+
+    .btn-cancel,
+    .btn-submit { flex: 1; justify-content: center; }
+  }
+
+  // Stars: كبّرهم شوية عشان أسهل تاب
+  .star-btn i { font-size: 2.2rem; }
+
+  .stars-section { flex-wrap: wrap; gap: 8px; }
+}
+
 @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

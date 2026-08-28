@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -25,6 +25,10 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   currentUserId = '';
   loadingConversations = true;
   loadingMessages = false;
+
+  /** Controls mobile panel visibility — true = show messages, false = show sidebar */
+  showMessages = signal(false);
+
   private subs: Subscription[] = [];
   private pendingBookingId: number | null = null;
   private shouldScrollToBottom = false;
@@ -93,6 +97,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.activeConversation = phantom;
         this.messages = [];
         this.loadingMessages = false;
+        this.showMessages.set(true);
         this.chatService.setActiveConversation(booking.id);
       },
       error: () => {
@@ -104,11 +109,17 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   selectConversation(conv: ConversationDto): void {
     this.activeConversation = conv;
     this.loadingMessages = true;
+    this.showMessages.set(true);
     this.chatService.loadMessages(conv.bookingId);
     const unread = conv.unreadCount;
     conv.unreadCount = 0;
     this.chatService.decrementUnreadCount(unread);
     this.chatService.markConversationAsRead(conv.bookingId);
+  }
+
+  /** Back arrow inside chat header — returns to sidebar on mobile */
+  backToSidebar(): void {
+    this.showMessages.set(false);
   }
 
   sendMessage(): void {

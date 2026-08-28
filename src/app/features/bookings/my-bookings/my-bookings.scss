@@ -6,21 +6,23 @@
 // ── Header ───────────────────────────────
 .page-header {
   .page-title {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--dark);
     margin-bottom: 4px;
+
+    @media (min-width: 768px) { font-size: 1.8rem; }
   }
   .page-subtitle {
     color: var(--text-gray);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 }
 
 // ── Tabs ─────────────────────────────────
 .bookings-tabs {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
@@ -28,15 +30,20 @@
   background: white;
   border: 1.5px solid #e0e0e0;
   border-radius: 20px;
-  padding: 6px 16px;
-  font-size: 0.875rem;
+  padding: 5px 12px;
+  font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-gray);
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+
+  @media (min-width: 768px) {
+    padding: 6px 16px;
+    font-size: 0.875rem;
+  }
 
   &:hover { border-color: var(--primary); color: var(--primary); }
 
@@ -52,28 +59,35 @@
 .tab-count {
   background: rgba(0,0,0,0.08);
   border-radius: 10px;
-  padding: 1px 7px;
-  font-size: 0.75rem;
+  padding: 1px 6px;
+  font-size: 0.72rem;
   font-weight: 600;
 }
 
 // ── Grid ─────────────────────────────────
 .bookings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 16px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
 }
 
 // ── Card ─────────────────────────────────
 .booking-card {
   background: white;
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   transition: box-shadow 0.2s;
+
+  @media (min-width: 768px) { padding: 20px; gap: 14px; }
 
   &:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
 }
@@ -82,14 +96,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 
   .booking-id {
     font-weight: 700;
     color: var(--text-gray);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
 
-  .badges { display: flex; gap: 6px; }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; }
 }
 
 // ── Guide Info ───────────────────────────
@@ -99,32 +115,34 @@
   gap: 12px;
 
   .guide-avatar {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: rgba(200,92,58,0.1);
     color: var(--primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
     flex-shrink: 0;
     overflow: hidden;
+
+    @media (min-width: 768px) { width: 44px; height: 44px; font-size: 1.1rem; }
 
     img { width: 100%; height: 100%; object-fit: cover; }
   }
 
-  .guide-name { font-weight: 600; color: var(--dark); font-size: 0.95rem; }
-  .guide-label { font-size: 0.8rem; color: var(--text-gray); }
+  .guide-name { font-weight: 600; color: var(--dark); font-size: 0.9rem; }
+  .guide-label { font-size: 0.78rem; color: var(--text-gray); }
 }
 
 // ── Package ──────────────────────────────
 .booking-package {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--dark);
   background: var(--light-bg);
-  padding: 8px 12px;
+  padding: 7px 12px;
   border-radius: 8px;
 
   &.custom { color: var(--primary); }
@@ -140,11 +158,11 @@
 .detail-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
+  gap: 7px;
+  font-size: 0.82rem;
   color: var(--text-gray);
 
-  i { color: var(--primary); width: 14px; text-align: center; }
+  i { color: var(--primary); width: 14px; text-align: center; flex-shrink: 0; }
   span { font-weight: 500; color: var(--dark); }
 }
 
@@ -154,16 +172,18 @@
   border: 1px solid #ffc107;
   border-radius: 8px;
   padding: 8px 12px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #856404;
+  line-height: 1.5;
 }
 
 // ── Badges ───────────────────────────────
 .status-badge {
-  padding: 3px 10px;
+  padding: 3px 9px;
   border-radius: 12px;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
+  white-space: nowrap;
 
   &.badge-pending   { background: #fff3e0; color: #e65100; }
   &.badge-confirmed { background: #e3f2fd; color: #1565c0; }
@@ -177,6 +197,7 @@
 // ── Actions ──────────────────────────────
 .booking-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 4px;
 }
@@ -184,11 +205,22 @@
 .btn {
   border: none;
   border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 0.85rem;
+  padding: 8px 14px;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 480px) {
+    flex: 0 1 auto;
+    padding: 8px 16px;
+  }
 
   &:disabled { opacity: 0.5; cursor: not-allowed; }
   &:not(:disabled):hover { opacity: 0.85; }
@@ -196,17 +228,50 @@
   &.btn-cancel  { background: #fce4ec; color: #c62828; }
   &.btn-pay     { background: var(--primary); color: white; }
   &.btn-review  { background: var(--gold); color: white; }
+
+  &.btn-review--done {
+    background: white;
+    color: var(--gold);
+    border: 1.5px solid var(--gold);
+  }
+}
+
+// ── Chat Button ──────────────────────────
+.btn-chat {
+  background: #f0f9ff;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 480px) {
+    flex: 0 1 auto;
+    padding: 8px 16px;
+  }
+
+  &:hover {
+    background: #0284c7;
+    color: white;
+    border-color: #0284c7;
+  }
 }
 
 // ── Empty State ──────────────────────────
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
+  padding: 48px 20px;
   color: var(--text-gray);
 
-  i { font-size: 3.5rem; color: #ddd; margin-bottom: 16px; display: block; }
+  i { font-size: 3rem; color: #ddd; margin-bottom: 16px; display: block; }
   h5 { color: var(--dark); font-weight: 600; margin-bottom: 8px; }
-  p { margin-bottom: 24px; }
+  p { margin-bottom: 24px; font-size: 0.9rem; }
 }
 
 .btn-primary {
@@ -216,23 +281,7 @@
   color: white;
   font-weight: 600;
   padding: 10px 24px;
+  display: inline-block;
 
-  &:hover { opacity: 0.9; }
-}
-
-.btn-chat {
-  background: #f0f9ff;
-  color: #0284c7;
-  border: 1px solid #bae6fd;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #0284c7;
-    color: white;
-    border-color: #0284c7;
-  }
+  &:hover { opacity: 0.9; color: white; }
 }
