@@ -4,6 +4,7 @@ import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CityService } from '../../core/services/city';
 import { PackageService } from '../../core/services/package';
+import { AuthService } from '../../core/services/auth';
 import { City } from '../../core/models/city';
 import { Package } from '../../core/models/package';
 
@@ -27,13 +28,20 @@ export class Home implements OnInit {
   constructor(
     private cityService: CityService,
     private packageService: PackageService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    // ✅ لو admin يروح للـ dashboard أوتوماتيك
+    if (this.authService.getRole() === 'Admin') {
+      this.router.navigate(['/admin']);
+      return;
+    }
+
     this.cityService.getTrendingCities().subscribe(data => this.trendingCities = data);
     this.packageService.getPackages().subscribe(data => this.featuredPackages = data.slice(0, 4));
-    this.cityService.getCities().subscribe(data => this.allCities = data);
+    this.cityService.getCities(1, 100).subscribe(data => this.allCities = data);
   }
 
   setTab(tab: 'packages' | 'landmarks' | 'guides') {
