@@ -16,22 +16,24 @@
              placeholder="Search by name or email…" class="search-input" />
     </div>
 
-    <select [(ngModel)]="roleFilter" (change)="onFilterChange()" class="filter-select">
-      <option value="">All Roles</option>
-      <option value="Tourist">Tourist</option>
-      <option value="Guide">Guide</option>
-      <option value="Admin">Admin</option>
-    </select>
+    <div class="filter-row">
+      <select [(ngModel)]="roleFilter" (change)="onFilterChange()" class="filter-select">
+        <option value="">All Roles</option>
+        <option value="Tourist">Tourist</option>
+        <option value="Guide">Guide</option>
+        <option value="Admin">Admin</option>
+      </select>
 
-    <select [(ngModel)]="bannedFilter" (change)="onFilterChange()" class="filter-select">
-      <option value="">All Status</option>
-      <option value="false">Active</option>
-      <option value="true">Banned</option>
-    </select>
+      <select [(ngModel)]="bannedFilter" (change)="onFilterChange()" class="filter-select">
+        <option value="">All Status</option>
+        <option value="false">Active</option>
+        <option value="true">Banned</option>
+      </select>
 
-    <button class="btn-clear" (click)="clearFilters()">
-      <i class="fas fa-times me-1"></i> Clear
-    </button>
+      <button class="btn-clear" (click)="clearFilters()">
+        <i class="fas fa-times me-1"></i> Clear
+      </button>
+    </div>
   </div>
 
   <!-- Loading -->
@@ -51,10 +53,12 @@
     </div>
   }
 
-  <!-- Table -->
+  <!-- Content -->
   @if (!loading && !error) {
     <div class="table-card">
-      <div class="table-responsive">
+
+      <!-- Desktop Table -->
+      <div class="table-responsive d-none d-md-block">
         <table class="admin-table">
           <thead>
             <tr>
@@ -121,6 +125,57 @@
             }
           </tbody>
         </table>
+      </div>
+
+      <!-- Mobile Cards -->
+      <div class="mobile-list d-md-none">
+        @for (user of users; track user.id) {
+          <div class="user-card" [class.user-card--banned]="user.isBanned">
+            <div class="user-card__header">
+              <div class="user-cell">
+                @if (user.avatarUrl) {
+                  <img [src]="user.avatarUrl" [alt]="user.fullName" class="user-avatar" />
+                } @else {
+                  <div class="user-initials">{{ getInitials(user.fullName) }}</div>
+                }
+                <div>
+                  <div class="user-name">{{ user.fullName }}</div>
+                  <div class="user-email">{{ user.email }}</div>
+                </div>
+              </div>
+              <div class="action-btns">
+                <button class="btn-action btn-ban" (click)="openBanModal(user)"
+                        [title]="user.isBanned ? 'Unban User' : 'Ban User'">
+                  <i class="fas" [ngClass]="user.isBanned ? 'fa-unlock' : 'fa-ban'"></i>
+                </button>
+                <button class="btn-action btn-delete" (click)="openDeleteModal(user)"
+                        title="Delete User">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="user-card__footer">
+              <span class="role-badge" [ngClass]="getRoleBadgeClass(user.role)">{{ user.role }}</span>
+              @if (user.isBanned) {
+                <span class="status-badge status-banned">
+                  <i class="fas fa-ban me-1"></i> Banned
+                </span>
+              } @else {
+                <span class="status-badge status-active">
+                  <i class="fas fa-check-circle me-1"></i> Active
+                </span>
+              }
+              <span class="joined-date">{{ formatDate(user.createdAt) }}</span>
+            </div>
+          </div>
+        }
+        @empty {
+          <div class="empty-state-mobile">
+            <i class="fas fa-users"></i>
+            <p>No users found</p>
+          </div>
+        }
       </div>
 
       <!-- Table Footer -->

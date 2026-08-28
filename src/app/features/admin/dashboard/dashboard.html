@@ -10,231 +10,233 @@
 
   <!-- Loading -->
   @if (loading) {
-    <div class="dashboard-loading">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p>Loading dashboard data…</p>
-    </div>
+  <div class="dashboard-loading">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Loading dashboard data…</p>
+  </div>
   }
 
   <!-- Error -->
   @if (error) {
-    <div class="alert alert-danger">
-      <i class="fas fa-exclamation-circle me-2"></i>
-      Failed to load dashboard. <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadAll()">Retry</button>
-    </div>
+  <div class="alert alert-danger">
+    <i class="fas fa-exclamation-circle me-2"></i>
+    Failed to load dashboard. <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadAll()">Retry</button>
+  </div>
   }
 
   @if (!loading && !error && summary) {
 
-    <!-- ── KPI Cards ── -->
-    <div class="kpi-grid mb-4">
+  <!-- ── KPI Cards ── -->
+  <div class="kpi-grid mb-4">
 
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background: rgba(200,92,58,0.12); color: #C85C3A;">
-          <i class="fas fa-users"></i>
-        </div>
-        <div class="kpi-body">
-          <span class="kpi-label">Total Users</span>
-          <span class="kpi-value">{{ summary.totalUsers | number }}</span>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background: rgba(200,92,58,0.12); color: #C85C3A;">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Total Users</span>
+        <span class="kpi-value">{{ summary.totalUsers | number }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background: rgba(26,35,64,0.10); color: #1A2340;">
+        <i class="fas fa-compass"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Total Guides</span>
+        <span class="kpi-value">{{ summary.totalGuides | number }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background: rgba(212,168,83,0.15); color: #D4A853;">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Bookings Today</span>
+        <span class="kpi-value">{{ summary.totalBookingsToday | number }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background: rgba(34,197,94,0.12); color: #16a34a;">
+        <i class="fas fa-dollar-sign"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Revenue Today</span>
+        <span class="kpi-value">{{ formatCurrency(summary.revenueToday) }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card" [class.kpi-alert]="summary.pendingGuideRequests > 0">
+      <div class="kpi-icon" style="background: rgba(239,68,68,0.12); color: #dc2626;">
+        <i class="fas fa-user-clock"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Pending Guide Requests</span>
+        <span class="kpi-value">{{ summary.pendingGuideRequests }}</span>
+      </div>
+      @if (summary.pendingGuideRequests > 0) {
+      <a routerLink="/admin/guides" class="kpi-action">Review →</a>
+      }
+    </div>
+
+  </div>
+
+  <!-- ── Row 2: Bookings + Revenue Charts ── -->
+  <div class="charts-row mb-4">
+
+    <!-- Bookings Chart -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">Bookings</h2>
+        <div class="period-toggle">
+          <button [class.active]="bookingsPeriod === 'daily'" (click)="setBookingsPeriod('daily')">Daily</button>
+          <button [class.active]="bookingsPeriod === 'monthly'" (click)="setBookingsPeriod('monthly')">Monthly</button>
         </div>
       </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background: rgba(26,35,64,0.10); color: #1A2340;">
-          <i class="fas fa-compass"></i>
+      <div class="bar-chart">
+        @for (item of bookingsReport?.items; track item.period) {
+        <div class="bar-col">
+          <span class="bar-val">{{ item.count }}</span>
+          <div class="bar" [style.height]="barHeight(item.count, maxBookings)"></div>
+          <span class="bar-label">{{ item.period }}</span>
         </div>
-        <div class="kpi-body">
-          <span class="kpi-label">Total Guides</span>
-          <span class="kpi-value">{{ summary.totalGuides | number }}</span>
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background: rgba(212,168,83,0.15); color: #D4A853;">
-          <i class="fas fa-calendar-check"></i>
-        </div>
-        <div class="kpi-body">
-          <span class="kpi-label">Bookings Today</span>
-          <span class="kpi-value">{{ summary.totalBookingsToday | number }}</span>
-        </div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background: rgba(34,197,94,0.12); color: #16a34a;">
-          <i class="fas fa-dollar-sign"></i>
-        </div>
-        <div class="kpi-body">
-          <span class="kpi-label">Revenue Today</span>
-          <span class="kpi-value">{{ formatCurrency(summary.revenueToday) }}</span>
-        </div>
-      </div>
-
-      <div class="kpi-card" [class.kpi-alert]="summary.pendingGuideRequests > 0">
-        <div class="kpi-icon" style="background: rgba(239,68,68,0.12); color: #dc2626;">
-          <i class="fas fa-user-clock"></i>
-        </div>
-        <div class="kpi-body">
-          <span class="kpi-label">Pending Guide Requests</span>
-          <span class="kpi-value">{{ summary.pendingGuideRequests }}</span>
-        </div>
-        @if (summary.pendingGuideRequests > 0) {
-          <a routerLink="/admin/guides" class="kpi-action">Review →</a>
+        }
+        @empty {
+        <p class="no-data">No data available</p>
         }
       </div>
-
     </div>
 
-    <!-- ── Row 2: Bookings + Revenue Charts ── -->
-    <div class="charts-row mb-4">
-
-      <!-- Bookings Chart -->
-      <div class="chart-card">
-        <div class="chart-header">
-          <h2 class="chart-title">Bookings</h2>
-          <div class="period-toggle">
-            <button [class.active]="bookingsPeriod === 'daily'"   (click)="setBookingsPeriod('daily')">Daily</button>
-            <button [class.active]="bookingsPeriod === 'monthly'" (click)="setBookingsPeriod('monthly')">Monthly</button>
-          </div>
-        </div>
-        <div class="bar-chart">
-          @for (item of bookingsReport?.items; track item.period) {
-            <div class="bar-col">
-              <span class="bar-val">{{ item.count }}</span>
-              <div class="bar" [style.height]="barHeight(item.count, maxBookings)"></div>
-              <span class="bar-label">{{ item.period }}</span>
-            </div>
-          }
-          @empty {
-            <p class="no-data">No data available</p>
-          }
+    <!-- Revenue Chart -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">Revenue</h2>
+        <div class="period-toggle">
+          <button [class.active]="revenuePeriod === 'daily'" (click)="setRevenuePeriod('daily')">Daily</button>
+          <button [class.active]="revenuePeriod === 'monthly'" (click)="setRevenuePeriod('monthly')">Monthly</button>
         </div>
       </div>
-
-      <!-- Revenue Chart -->
-      <div class="chart-card">
-        <div class="chart-header">
-          <h2 class="chart-title">Revenue</h2>
-          <div class="period-toggle">
-            <button [class.active]="revenuePeriod === 'daily'"   (click)="setRevenuePeriod('daily')">Daily</button>
-            <button [class.active]="revenuePeriod === 'monthly'" (click)="setRevenuePeriod('monthly')">Monthly</button>
-          </div>
+      <div class="bar-chart revenue-chart">
+        @for (item of revenueReport?.items; track item.period) {
+        <div class="bar-col">
+          <span class="bar-val">{{ formatCurrency(item.amount) }}</span>
+          <div class="bar bar-gold" [style.height]="barHeight(item.amount, maxRevenue)"></div>
+          <span class="bar-label">{{ item.period }}</span>
         </div>
-        <div class="bar-chart revenue-chart">
-          @for (item of revenueReport?.items; track item.period) {
-            <div class="bar-col">
-              <span class="bar-val">{{ formatCurrency(item.amount) }}</span>
-              <div class="bar bar-gold" [style.height]="barHeight(item.amount, maxRevenue)"></div>
-              <span class="bar-label">{{ item.period }}</span>
-            </div>
-          }
-          @empty {
-            <p class="no-data">No data available</p>
-          }
-        </div>
-        <div class="revenue-total">
-          Total: <strong>{{ formatCurrency(revenueReport?.totalRevenue ?? 0) }}</strong>
-        </div>
+        }
+        @empty {
+        <p class="no-data">No data available</p>
+        }
       </div>
-
-    </div>
-
-    <!-- ── Row 3: User Growth + Top Cities + Top Landmarks ── -->
-    <div class="bottom-row mb-4">
-
-      <!-- User Growth -->
-      <div class="chart-card">
-        <div class="chart-header">
-          <h2 class="chart-title">User Growth</h2>
-          <span class="chart-sub">Monthly</span>
-        </div>
-        <div class="bar-chart">
-          @for (item of userGrowth?.items; track item.period) {
-            <div class="bar-col">
-              <span class="bar-val">{{ item.newUsers }}</span>
-              <div class="bar bar-dark" [style.height]="barHeight(item.newUsers, maxUserGrowth)"></div>
-              <span class="bar-label">{{ item.period }}</span>
-            </div>
-          }
-          @empty {
-            <p class="no-data">No data</p>
-          }
-        </div>
-      </div>
-
-      <!-- Top Cities -->
-      <div class="list-card">
-        <h2 class="chart-title mb-3">Top Cities</h2>
-        <ul class="rank-list">
-          @for (city of topCities; track city.cityId; let i = $index) {
-            <li class="rank-item">
-              <span class="rank-num">{{ i + 1 }}</span>
-              <span class="rank-name">{{ city.cityName }}</span>
-              <span class="rank-badge">{{ city.bookingCount }} bookings</span>
-            </li>
-          }
-          @empty {
-            <p class="no-data">No data</p>
-          }
-        </ul>
-      </div>
-
-      <!-- Top Landmarks -->
-      <div class="list-card">
-        <h2 class="chart-title mb-3">Top Landmarks</h2>
-        <ul class="rank-list">
-          @for (lm of topLandmarks; track lm.landmarkId; let i = $index) {
-            <li class="rank-item">
-              <span class="rank-num">{{ i + 1 }}</span>
-              <span class="rank-name">{{ lm.landmarkName }}</span>
-              <span class="rank-badge">{{ lm.inclusionCount }} inclusions</span>
-            </li>
-          }
-          @empty {
-            <p class="no-data">No data</p>
-          }
-        </ul>
-      </div>
-
-    </div>
-
-    <!-- ── Guide Performance Table ── -->
-    <div class="table-card">
-      <div class="chart-header mb-3">
-        <h2 class="chart-title">Guide Performance</h2>
-      </div>
-      <div class="table-responsive">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Guide Name</th>
-              <th>Avg Rating</th>
-              <th>Total Bookings</th>
-              <th>Total Revenue</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (g of guidePerformance; track g.guideProfileId; let i = $index) {
-              <tr>
-                <td>{{ i + 1 }}</td>
-                <td><strong>{{ g.guideName }}</strong></td>
-                <td>
-                  <span class="rating-badge">
-                    <i class="fas fa-star text-warning me-1"></i>
-                    {{ g.averageRating | number:'1.1-1' }}
-                  </span>
-                </td>
-                <td>{{ g.totalBookings }}</td>
-                <td>{{ formatCurrency(g.totalRevenue) }}</td>
-              </tr>
-            }
-            @empty {
-              <tr><td colspan="5" class="text-center text-muted py-3">No guide data</td></tr>
-            }
-          </tbody>
-        </table>
+      <div class="revenue-total">
+        Total: <strong>{{ formatCurrency(revenueReport?.totalRevenue ?? 0) }}</strong>
       </div>
     </div>
+
+  </div>
+
+  <!-- ── Row 3: User Growth + Top Cities + Top Landmarks ── -->
+  <div class="bottom-row mb-4">
+
+    <!-- User Growth -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">User Growth</h2>
+        <span class="chart-sub">Monthly</span>
+      </div>
+      <div class="bar-chart">
+        @for (item of userGrowth?.items; track item.period) {
+        <div class="bar-col">
+          <span class="bar-val">{{ item.newUsers }}</span>
+          <div class="bar bar-dark" [style.height]="barHeight(item.newUsers, maxUserGrowth)"></div>
+          <span class="bar-label">{{ item.period }}</span>
+        </div>
+        }
+        @empty {
+        <p class="no-data">No data</p>
+        }
+      </div>
+    </div>
+
+    <!-- Top Cities -->
+    <div class="list-card">
+      <h2 class="chart-title mb-3">Top Cities</h2>
+      <ul class="rank-list">
+        @for (city of topCities; track city.cityId; let i = $index) {
+        <li class="rank-item">
+          <span class="rank-num">{{ i + 1 }}</span>
+          <span class="rank-name">{{ city.cityName }}</span>
+          <span class="rank-badge">{{ city.bookingCount }} bookings</span>
+        </li>
+        }
+        @empty {
+        <p class="no-data">No data</p>
+        }
+      </ul>
+    </div>
+
+    <!-- Top Landmarks -->
+    <div class="list-card">
+      <h2 class="chart-title mb-3">Top Landmarks</h2>
+      <ul class="rank-list">
+        @for (lm of topLandmarks; track lm.landmarkId; let i = $index) {
+        <li class="rank-item">
+          <span class="rank-num">{{ i + 1 }}</span>
+          <span class="rank-name">{{ lm.landmarkName }}</span>
+          <span class="rank-badge">{{ lm.inclusionCount }} inclusions</span>
+        </li>
+        }
+        @empty {
+        <p class="no-data">No data</p>
+        }
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ── Guide Performance Table ── -->
+  <div class="table-card">
+    <div class="chart-header mb-3">
+      <h2 class="chart-title">Guide Performance</h2>
+    </div>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Guide Name</th>
+            <th>Avg Rating</th>
+            <th>Total Bookings</th>
+            <th>Total Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (g of guidePerformance; track g.guideProfileId; let i = $index) {
+          <tr>
+            <td data-label="#">{{ i + 1 }}</td>
+            <td data-label="Guide Name"><strong>{{ g.guideName }}</strong></td>
+            <td data-label="Avg Rating">
+              <span class="rating-badge">
+                <i class="fas fa-star text-warning me-1"></i>
+                {{ g.averageRating | number:'1.1-1' }}
+              </span>
+            </td>
+            <td data-label="Bookings">{{ g.totalBookings }}</td>
+            <td data-label="Revenue">{{ formatCurrency(g.totalRevenue) }}</td>
+          </tr>
+          }
+          @empty {
+          <tr>
+            <td colspan="5" class="text-center text-muted py-3">No guide data</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   }
 </div>

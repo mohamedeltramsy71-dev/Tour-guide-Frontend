@@ -5,8 +5,25 @@
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+
+  @media (max-width: 767px) {
+    padding: 12px;
+    border-radius: 12px;
+  }
 }
 
+// ── Page Header ────────────────────────────────────────────
+.page-header {
+  @media (max-width: 767px) {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+
+    .btn { width: 100%; justify-content: center; }
+  }
+}
+
+// ── Table ──────────────────────────────────────────────────
 table {
   th {
     font-size: 0.8rem;
@@ -16,15 +33,56 @@ table {
     letter-spacing: 0.5px;
     border-bottom: 2px solid #f0f0f0;
     padding: 12px 16px;
+    white-space: nowrap;
   }
   td {
     padding: 14px 16px;
     font-size: 0.9rem;
     border-bottom: 1px solid #f8f8f8;
+    white-space: nowrap;
   }
   tbody tr:hover { background: rgba(200, 92, 58, 0.03); }
 }
 
+// ── Mobile Cards ───────────────────────────────────────────
+@media (max-width: 767px) {
+  table thead { display: none; }
+
+  table tbody tr {
+    display: block;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 4px;
+    border-bottom: 1px solid #f8f8f8;
+    font-size: 0.85rem;
+    white-space: normal;
+
+    &:last-child { border-bottom: none; }
+
+    &::before {
+      content: attr(data-label);
+      font-weight: 600;
+      font-size: 0.75rem;
+      color: #9CA3AF;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+  }
+}
+
+// ── City Thumb ─────────────────────────────────────────────
 .city-thumb {
   width: 52px;
   height: 40px;
@@ -48,6 +106,11 @@ table {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (max-width: 767px) {
+    max-width: 160px;
+    white-space: normal;
+  }
 }
 
 // ── Image Upload ───────────────────────────────────────────
@@ -63,9 +126,7 @@ table {
   justify-content: center;
   transition: border-color 0.3s;
 
-  &:hover {
-    border-color: var(--primary);
-  }
+  &:hover { border-color: var(--primary); }
 }
 
 .img-preview-full {
@@ -106,7 +167,12 @@ table {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 16px;
+
+  @media (max-width: 767px) {
+    align-items: flex-end;
+    padding: 0;
+  }
 }
 
 .modal-custom-content {
@@ -117,6 +183,11 @@ table {
   box-shadow: 0 20px 60px rgba(0,0,0,0.2);
   max-height: 90vh;
   overflow-y: auto;
+
+  @media (max-width: 767px) {
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+  }
 }
 
 .modal-custom-header {
@@ -129,9 +200,19 @@ table {
   top: 0;
   background: #fff;
   z-index: 1;
+
+  @media (max-width: 767px) {
+    padding: 16px;
+  }
 }
 
-.modal-custom-body { padding: 24px; }
+.modal-custom-body {
+  padding: 24px;
+
+  @media (max-width: 767px) {
+    padding: 16px;
+  }
+}
 
 .modal-custom-footer {
   padding: 16px 24px;
@@ -142,6 +223,13 @@ table {
   position: sticky;
   bottom: 0;
   background: #fff;
+
+  @media (max-width: 767px) {
+    padding: 12px 16px;
+    flex-direction: column-reverse;
+
+    .btn { width: 100%; justify-content: center; }
+  }
 }
 
 .delete-icon {

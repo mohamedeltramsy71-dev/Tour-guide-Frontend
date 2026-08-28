@@ -13,7 +13,7 @@
     <div class="row g-3 align-items-end">
 
       <!-- Status -->
-      <div class="col-md-3">
+      <div class="col-12 col-md-3">
         <label class="form-label fw-semibold">Status</label>
         <select class="form-select" [(ngModel)]="filters.status" (change)="onFilter()">
           <option value="">All Statuses</option>
@@ -26,19 +26,19 @@
       </div>
 
       <!-- From Date -->
-      <div class="col-md-3">
+      <div class="col-12 col-md-3">
         <label class="form-label fw-semibold">From Date</label>
         <input type="date" class="form-control" [(ngModel)]="filters.fromDate" (change)="onFilter()">
       </div>
 
       <!-- To Date -->
-      <div class="col-md-3">
+      <div class="col-12 col-md-3">
         <label class="form-label fw-semibold">To Date</label>
         <input type="date" class="form-control" [(ngModel)]="filters.toDate" (change)="onFilter()">
       </div>
 
       <!-- Reset -->
-      <div class="col-md-3">
+      <div class="col-12 col-md-3">
         <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">
           <i class="fas fa-undo me-2"></i>Reset Filters
         </button>
@@ -80,67 +80,66 @@
         <tbody>
           <tr *ngFor="let booking of bookings">
 
-            <!-- ID -->
-            <td class="fw-bold" style="color: var(--primary);">#{{ booking.id }}</td>
+            <td data-label="ID" class="fw-bold" style="color: var(--primary);">
+              #{{ booking.id }}
+            </td>
 
-            <!-- Tourist -->
-            <td>
+            <td data-label="Tourist">
               <div class="d-flex align-items-center gap-2">
                 <div class="avatar-sm" *ngIf="!booking.touristAvatar">
                   {{ getInitials(booking.touristName) }}
                 </div>
-                <img [src]="booking.touristAvatar" class="avatar-img" *ngIf="booking.touristAvatar" alt="">
+                <img [src]="booking.touristAvatar" class="avatar-img"
+                  *ngIf="booking.touristAvatar" alt="">
                 <span class="fw-semibold">{{ booking.touristName || '—' }}</span>
               </div>
             </td>
 
-            <!-- Guide -->
-            <td>
+            <td data-label="Guide">
               <div class="d-flex align-items-center gap-2">
                 <div class="avatar-sm guide" *ngIf="!booking.guideAvatar">
                   {{ getInitials(booking.guideName) }}
                 </div>
-                <img [src]="booking.guideAvatar" class="avatar-img" *ngIf="booking.guideAvatar" alt="">
+                <img [src]="booking.guideAvatar" class="avatar-img"
+                  *ngIf="booking.guideAvatar" alt="">
                 <span>{{ booking.guideName || '—' }}</span>
               </div>
             </td>
 
-            <!-- Package -->
-            <td>
+            <td data-label="Package">
               <span *ngIf="booking.packageTitle" class="badge bg-light text-dark border">
                 {{ booking.packageTitle }}
               </span>
               <span *ngIf="!booking.packageTitle" class="text-muted">Custom Trip</span>
             </td>
 
-            <!-- Start Date -->
-            <td>{{ booking.startDate | date:'MMM d, y' }}</td>
+            <td data-label="Start Date">
+              {{ booking.startDate | date:'MMM d, y' }}
+            </td>
 
-            <!-- Persons -->
-            <td>
+            <td data-label="Persons">
               <i class="fas fa-users me-1 text-muted"></i>{{ booking.numberOfPersons }}
             </td>
 
-            <!-- Total Price -->
-            <td class="fw-bold">{{ booking.totalPrice | currency:'EGP ':'code':'1.0-0' }}</td>
+            <td data-label="Total Price" class="fw-bold">
+              {{ booking.totalPrice | currency:'EGP ':'code':'1.0-0' }}
+            </td>
 
-            <!-- Status -->
-            <td>
+            <td data-label="Status">
               <span class="status-badge" [ngClass]="getStatusClass(booking.status)">
                 {{ booking.status }}
               </span>
             </td>
 
-            <!-- Payment -->
-            <td>
+            <td data-label="Payment">
               <span class="status-badge" [ngClass]="getPaymentClass(booking.paymentStatus)">
                 {{ booking.paymentStatus }}
               </span>
             </td>
 
-            <!-- Type -->
-            <td>
-              <span class="badge" [ngClass]="booking.isCustom ? 'bg-warning text-dark' : 'bg-info text-white'">
+            <td data-label="Type">
+              <span class="badge"
+                [ngClass]="booking.isCustom ? 'bg-warning text-dark' : 'bg-info text-white'">
                 {{ booking.isCustom ? 'Custom' : 'Package' }}
               </span>
             </td>
@@ -160,7 +159,8 @@
     </div>
 
     <!-- Pagination -->
-    <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="bookings.length > 0">
+    <div class="d-flex justify-content-between align-items-center mt-3"
+      *ngIf="bookings.length > 0">
       <span class="text-muted">Page {{ filters.page }} of {{ totalPages }}</span>
       <div class="d-flex gap-2">
         <button class="btn btn-sm btn-outline-secondary"

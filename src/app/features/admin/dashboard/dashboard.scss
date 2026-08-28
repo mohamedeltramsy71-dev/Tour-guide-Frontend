@@ -9,6 +9,8 @@ $gold:    #D4A853;
     font-weight: 700;
     color: $dark;
     margin: 0;
+
+    @media (max-width: 767px) { font-size: 1.3rem; }
   }
   .page-subtitle {
     font-size: 0.875rem;
@@ -32,6 +34,15 @@ $gold:    #D4A853;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  @media (max-width: 400px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .kpi-card {
@@ -47,8 +58,13 @@ $gold:    #D4A853;
   transition: box-shadow 0.2s;
 
   &:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); }
-
   &.kpi-alert { border-color: rgba(220,38,38,0.3); }
+
+  @media (max-width: 767px) {
+    padding: 14px;
+    border-radius: 12px;
+    gap: 10px;
+  }
 }
 
 .kpi-icon {
@@ -60,6 +76,12 @@ $gold:    #D4A853;
   justify-content: center;
   font-size: 1.1rem;
   flex-shrink: 0;
+
+  @media (max-width: 767px) {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
 }
 
 .kpi-body {
@@ -72,6 +94,8 @@ $gold:    #D4A853;
   font-size: 0.78rem;
   color: #6B7280;
   font-weight: 500;
+
+  @media (max-width: 767px) { font-size: 0.72rem; }
 }
 
 .kpi-value {
@@ -79,6 +103,8 @@ $gold:    #D4A853;
   font-weight: 700;
   color: $dark;
   line-height: 1.2;
+
+  @media (max-width: 767px) { font-size: 1.2rem; }
 }
 
 .kpi-action {
@@ -116,6 +142,11 @@ $gold:    #D4A853;
   padding: 20px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   border: 1px solid #EEF0F4;
+
+  @media (max-width: 767px) {
+    padding: 14px;
+    border-radius: 12px;
+  }
 }
 
 .list-card {
@@ -124,6 +155,11 @@ $gold:    #D4A853;
   padding: 20px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   border: 1px solid #EEF0F4;
+
+  @media (max-width: 767px) {
+    padding: 14px;
+    border-radius: 12px;
+  }
 }
 
 .chart-header {
@@ -131,6 +167,8 @@ $gold:    #D4A853;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .chart-title {
@@ -180,6 +218,11 @@ $gold:    #D4A853;
   height: 150px;
   overflow-x: auto;
   padding-bottom: 4px;
+
+  @media (max-width: 767px) {
+    gap: 4px;
+    height: 120px;
+  }
 }
 
 .bar-col {
@@ -189,12 +232,16 @@ $gold:    #D4A853;
   gap: 4px;
   min-width: 36px;
   flex: 1;
+
+  @media (max-width: 767px) { min-width: 28px; }
 }
 
 .bar-val {
   font-size: 0.65rem;
   color: #6B7280;
   white-space: nowrap;
+
+  @media (max-width: 767px) { font-size: 0.58rem; }
 }
 
 .bar {
@@ -216,6 +263,8 @@ $gold:    #D4A853;
   text-overflow: ellipsis;
   max-width: 48px;
   text-align: center;
+
+  @media (max-width: 767px) { font-size: 0.55rem; max-width: 32px; }
 }
 
 .revenue-total {
@@ -262,6 +311,7 @@ $gold:    #D4A853;
   font-size: 0.85rem;
   color: $dark;
   font-weight: 500;
+  word-break: break-word;
 }
 
 .rank-badge {
@@ -270,6 +320,7 @@ $gold:    #D4A853;
   background: #F3F4F6;
   padding: 2px 8px;
   border-radius: 20px;
+  white-space: nowrap;
 }
 
 // ─── Table ───────────────────────────────────────────────────────────────────
@@ -279,6 +330,11 @@ $gold:    #D4A853;
   padding: 20px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   border: 1px solid #EEF0F4;
+
+  @media (max-width: 767px) {
+    padding: 12px;
+    border-radius: 12px;
+  }
 }
 
 .admin-table {
@@ -294,6 +350,7 @@ $gold:    #D4A853;
     padding: 8px 12px;
     border-bottom: 1px solid #F3F4F6;
     text-align: left;
+    white-space: nowrap;
   }
 
   td {
@@ -302,10 +359,49 @@ $gold:    #D4A853;
     color: #374151;
     border-bottom: 1px solid #F9FAFB;
     vertical-align: middle;
+    white-space: nowrap;
   }
 
   tbody tr:hover { background: #FAFBFC; }
   tbody tr:last-child td { border-bottom: none; }
+}
+
+// ── Guide Table Mobile Cards ───────────────────────────────
+@media (max-width: 767px) {
+  .admin-table thead { display: none; }
+
+  .admin-table tbody tr {
+    display: block;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .admin-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 4px;
+    border-bottom: 1px solid #f8f8f8;
+    font-size: 0.83rem;
+    white-space: normal;
+
+    &:last-child { border-bottom: none; }
+
+    &::before {
+      content: attr(data-label);
+      font-weight: 600;
+      font-size: 0.72rem;
+      color: #9CA3AF;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+  }
 }
 
 .rating-badge {

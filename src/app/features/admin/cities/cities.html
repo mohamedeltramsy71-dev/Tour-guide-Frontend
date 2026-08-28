@@ -34,22 +34,22 @@
         </thead>
         <tbody>
           <tr *ngFor="let city of cities">
-            <td class="fw-bold" style="color: var(--primary);">{{ city.id }}</td>
-            <td>
+            <td data-label="#">{{ city.id }}</td>
+            <td data-label="Image">
               <img *ngIf="city.imageUrl" [src]="city.imageUrl" class="city-thumb" alt="">
               <div *ngIf="!city.imageUrl" class="city-thumb-placeholder">
                 <i class="fas fa-city"></i>
               </div>
             </td>
-            <td class="fw-semibold">{{ city.nameEn }}</td>
-            <td>{{ city.nameAr }}</td>
-            <td class="text-muted desc-cell">{{ city.description || '—' }}</td>
-            <td>
+            <td data-label="Name EN" class="fw-semibold">{{ city.nameEn }}</td>
+            <td data-label="Name AR">{{ city.nameAr }}</td>
+            <td data-label="Description" class="text-muted desc-cell">{{ city.description || '—' }}</td>
+            <td data-label="Landmarks">
               <span class="badge bg-light text-dark border">
                 <i class="fas fa-landmark me-1"></i>{{ city.landmarksCount }}
               </span>
             </td>
-            <td>
+            <td data-label="Actions">
               <div class="d-flex gap-2">
                 <button class="btn btn-sm btn-outline-primary" (click)="openEditModal(city)">
                   <i class="fas fa-edit"></i>
@@ -111,7 +111,8 @@
       <!-- Description -->
       <div class="mb-3">
         <label class="form-label fw-semibold">Description</label>
-        <textarea class="form-control" rows="3" placeholder="Brief description..." [(ngModel)]="form.description"></textarea>
+        <textarea class="form-control" rows="3" placeholder="Brief description..."
+          [(ngModel)]="form.description"></textarea>
       </div>
 
       <!-- Image Upload -->
@@ -133,11 +134,9 @@
           </div>
         </div>
 
-        <input type="file" #fileInput accept="image/*" style="display:none"
-          (change)="onImageSelected($event)">
+        <input type="file" #fileInput accept="image/*" style="display:none" (change)="onImageSelected($event)">
 
-        <button *ngIf="form.imageUrl" class="btn btn-sm btn-outline-danger mt-2"
-          (click)="form.imageUrl = ''">
+        <button *ngIf="form.imageUrl" class="btn btn-sm btn-outline-danger mt-2" (click)="form.imageUrl = ''">
           <i class="fas fa-times me-1"></i>Remove Image
         </button>
       </div>
@@ -146,8 +145,8 @@
 
     <div class="modal-custom-footer">
       <button class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
-      <button class="btn text-white px-4" style="background-color: var(--primary);"
-        (click)="onSubmit()" [disabled]="isSaving || isUploading">
+      <button class="btn text-white px-4" style="background-color: var(--primary);" (click)="onSubmit()"
+        [disabled]="isSaving || isUploading">
         <span *ngIf="!isSaving">{{ isEditing ? 'Save Changes' : 'Add City' }}</span>
         <span *ngIf="isSaving"><span class="spinner-border spinner-border-sm me-2"></span>Saving...</span>
       </button>

@@ -81,7 +81,8 @@
             <tbody>
               @for (lm of landmarks; track lm.id) {
                 <tr>
-                  <td>
+
+                  <td data-label="Landmark">
                     <div class="landmark-cell">
                       @if (getThumb(lm)) {
                         <img [src]="getThumb(lm)!" [alt]="lm.nameEn" class="landmark-thumb" />
@@ -96,26 +97,32 @@
                       </div>
                     </div>
                   </td>
-                  <td>
+
+                  <td data-label="Category">
                     <span class="category-badge">{{ lm.category }}</span>
                   </td>
-                  <td class="text-muted">{{ lm.cityName }}</td>
-                  <td>
+
+                  <td data-label="City" class="text-muted">{{ lm.cityName }}</td>
+
+                  <td data-label="Entry Fee">
                     <span [class.fee-free]="lm.entryFee === 0" [class.fee-paid]="lm.entryFee > 0">
                       {{ formatFee(lm.entryFee) }}
                     </span>
                   </td>
-                  <td>
+
+                  <td data-label="Rating">
                     <span class="rating-pill">
                       <i class="fas fa-star"></i> {{ lm.averageRating | number:'1.1-1' }}
                     </span>
                   </td>
-                  <td>
+
+                  <td data-label="Images">
                     <span class="img-count">
-                      <i class="fas fa-images me-1"></i>{{lm.images.length}}
+                      <i class="fas fa-images me-1"></i>{{ lm.images.length }}
                     </span>
                   </td>
-                  <td>
+
+                  <td data-label="Actions">
                     <div class="action-btns">
                       <button class="btn-action btn-edit" (click)="openEdit(lm)" title="Edit">
                         <i class="fas fa-pen"></i>
@@ -125,6 +132,7 @@
                       </button>
                     </div>
                   </td>
+
                 </tr>
               }
             </tbody>

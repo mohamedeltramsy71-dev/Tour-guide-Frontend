@@ -133,7 +133,8 @@
             <tbody>
               @for (guide of allGuides; track guide.userId) {
                 <tr>
-                  <td>
+
+                  <td data-label="Guide">
                     <div class="user-cell">
                       @if (guide.avatarUrl) {
                         <img [src]="guide.avatarUrl" [alt]="guide.fullName" class="user-avatar" />
@@ -143,14 +144,17 @@
                       <span class="user-name">{{ guide.fullName }}</span>
                     </div>
                   </td>
-                  <td>
+
+                  <td data-label="Rating">
                     <span class="rating-pill">
                       <i class="fas fa-star"></i> {{ guide.averageRating | number:'1.1-1' }}
                       <span class="text-muted">({{ guide.totalReviews }})</span>
                     </span>
                   </td>
-                  <td>{{ guide.experienceYears }} yrs</td>
-                  <td>
+
+                  <td data-label="Experience">{{ guide.experienceYears }} yrs</td>
+
+                  <td data-label="Languages">
                     <div class="tags-cell">
                       @for (lang of guide.languages.slice(0,2); track lang) {
                         <span class="tag tag-sm">{{ lang }}</span>
@@ -160,7 +164,8 @@
                       }
                     </div>
                   </td>
-                  <td>
+
+                  <td data-label="Cities">
                     <div class="tags-cell">
                       @for (city of guide.coveredCities.slice(0,2); track city) {
                         <span class="tag tag-sm tag-city-sm">{{ city }}</span>
@@ -170,19 +175,26 @@
                       }
                     </div>
                   </td>
-                  <td>
+
+                  <td data-label="Available">
                     @if (guide.isAvailable) {
-                      <span class="status-badge badge-active"><i class="fas fa-circle me-1" style="font-size:0.5rem"></i>Available</span>
+                      <span class="status-badge badge-active">
+                        <i class="fas fa-circle me-1" style="font-size:0.5rem"></i>Available
+                      </span>
                     } @else {
-                      <span class="status-badge badge-off"><i class="fas fa-circle me-1" style="font-size:0.5rem"></i>Unavailable</span>
+                      <span class="status-badge badge-off">
+                        <i class="fas fa-circle me-1" style="font-size:0.5rem"></i>Unavailable
+                      </span>
                     }
                   </td>
-                  <td>
+
+                  <td data-label="Actions">
                     <button class="btn-action btn-suspend" (click)="openModal(guide, 'suspend')"
                             title="Toggle Suspend">
                       <i class="fas fa-ban"></i>
                     </button>
                   </td>
+
                 </tr>
               }
             </tbody>

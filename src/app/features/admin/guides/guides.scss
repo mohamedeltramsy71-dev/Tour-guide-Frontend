@@ -2,8 +2,10 @@ $primary: #C85C3A;
 $dark:    #1A2340;
 $gold:    #D4A853;
 
-.page-title   { font-size:1.6rem; font-weight:700; color:$dark; margin:0; }
-.page-subtitle{ font-size:0.875rem; color:#6B7280; margin:4px 0 0; }
+.page-title    { font-size:1.6rem; font-weight:700; color:$dark; margin:0;
+  @media (max-width: 767px) { font-size: 1.3rem; }
+}
+.page-subtitle { font-size:0.875rem; color:#6B7280; margin:4px 0 0; }
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 .tabs-bar {
@@ -11,6 +13,12 @@ $gold:    #D4A853;
   gap: 8px;
   border-bottom: 2px solid #E5E7EB;
   padding-bottom: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 767px) {
+    gap: 4px;
+  }
 }
 
 .tab-btn {
@@ -27,6 +35,7 @@ $gold:    #D4A853;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s;
+  white-space: nowrap;
 
   &:hover { color: $dark; }
 
@@ -34,6 +43,11 @@ $gold:    #D4A853;
     color: $primary;
     border-bottom-color: $primary;
     font-weight: 600;
+  }
+
+  @media (max-width: 767px) {
+    padding: 10px 14px;
+    font-size: 0.83rem;
   }
 }
 
@@ -89,6 +103,11 @@ $gold:    #D4A853;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
 
 .guide-card {
@@ -147,7 +166,8 @@ $gold:    #D4A853;
 .guide-meta {
   display: flex;
   justify-content: center;
-  gap: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
   font-size: 0.78rem;
   color: #6B7280;
   margin-bottom: 12px;
@@ -259,6 +279,44 @@ $gold:    #D4A853;
   }
 }
 
+// ── All Guides Table Mobile Cards ──────────────────────────
+@media (max-width: 767px) {
+  .admin-table thead { display: none; }
+
+  .admin-table tbody tr {
+    display: block;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .admin-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 4px;
+    border-bottom: 1px solid #f8f8f8;
+    font-size: 0.85rem;
+    white-space: normal;
+
+    &:last-child { border-bottom: none; }
+
+    &::before {
+      content: attr(data-label);
+      font-weight: 600;
+      font-size: 0.72rem;
+      color: #9CA3AF;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+  }
+}
+
 .user-cell {
   display: flex;
   align-items: center;
@@ -269,6 +327,7 @@ $gold:    #D4A853;
   width: 36px; height: 36px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .user-initials {
@@ -352,6 +411,11 @@ $gold:    #D4A853;
   justify-content: center;
   padding: 16px;
   animation: fadeIn 0.15s ease;
+
+  @media (max-width: 767px) {
+    align-items: flex-end;
+    padding: 0;
+  }
 }
 
 .modal-box {
@@ -363,6 +427,13 @@ $gold:    #D4A853;
   text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,0.15);
   animation: slideUp 0.2s ease;
+
+  @media (max-width: 767px) {
+    border-radius: 20px 20px 0 0;
+    padding: 24px 16px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
 }
 
 .modal-icon {
@@ -374,9 +445,9 @@ $gold:    #D4A853;
   font-size: 1.4rem;
   margin: 0 auto 16px;
 
-  &.icon-success { background: rgba(34,197,94,0.1);   color: #16a34a; }
-  &.icon-danger  { background: rgba(239,68,68,0.1);   color: #dc2626; }
-  &.icon-warning { background: rgba(234,179,8,0.1);   color: #ca8a04; }
+  &.icon-success { background: rgba(34,197,94,0.1);  color: #16a34a; }
+  &.icon-danger  { background: rgba(239,68,68,0.1);  color: #dc2626; }
+  &.icon-warning { background: rgba(234,179,8,0.1);  color: #ca8a04; }
 }
 
 .modal-title {
@@ -416,6 +487,10 @@ $gold:    #D4A853;
   display: flex;
   gap: 10px;
   justify-content: center;
+
+  @media (max-width: 767px) {
+    flex-direction: column-reverse;
+  }
 }
 
 .btn-cancel {
@@ -428,6 +503,8 @@ $gold:    #D4A853;
   cursor: pointer;
   transition: all 0.15s;
   &:hover { background: #F9FAFB; }
+
+  @media (max-width: 767px) { width: 100%; }
 }
 
 .btn-confirm {
@@ -440,11 +517,14 @@ $gold:    #D4A853;
   transition: all 0.15s;
   display: flex;
   align-items: center;
+  justify-content: center;
 
   &.btn-success { background: #16a34a; color: #fff; &:hover { background: #15803d; } }
   &.btn-danger  { background: #dc2626; color: #fff; &:hover { background: #b91c1c; } }
   &.btn-warning { background: #ca8a04; color: #fff; &:hover { background: #a16207; } }
   &:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  @media (max-width: 767px) { width: 100%; }
 }
 
 .modal-success {
