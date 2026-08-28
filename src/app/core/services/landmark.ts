@@ -8,14 +8,13 @@ import { Landmark } from '../models/landmark';
 })
 export class LandmarkService {
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getLandmarks(params?: any): Observable<Landmark[]> {
     let query = 'landmarks';
-    if (params) {
-      const queryString = new URLSearchParams(params).toString();
-      if (queryString) query += `?${queryString}`;
-    }
+    const finalParams = { pageSize: 1000, ...params }; // ✅ هيجيب كل اللاند ماركس
+    const queryString = new URLSearchParams(finalParams).toString();
+    if (queryString) query += `?${queryString}`;
     return this.api.get<Landmark[]>(query);
   }
 

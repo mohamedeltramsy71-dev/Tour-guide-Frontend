@@ -43,7 +43,7 @@ export class Landmarks implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cityService.getCities().subscribe(data => this.cities = data);
+    this.cityService.getCities(1, 100).subscribe(data => this.cities = data);
     this.route.queryParams.subscribe(params => {
       if (params['city']) this.selectedCity = params['city'];
       this.loadLandmarks();
