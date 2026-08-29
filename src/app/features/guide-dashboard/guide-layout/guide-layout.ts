@@ -42,14 +42,12 @@ export class GuideLayoutComponent implements OnInit, OnDestroy {
       this.currentUser = user;
     });
 
-    // Notifications
     this.notifService.startConnection();
     this.notifService.loadUnreadCount();
     this.notifSub = this.notifService.unreadCount$.subscribe(count => {
       this.unreadCount = count;
     });
 
-    // Chat
     this.chatService.startConnection();
     this.chatService.loadChatUnreadCount();
     this.chatSub = this.chatService.chatUnreadCount$.subscribe(count => {
@@ -67,6 +65,12 @@ export class GuideLayoutComponent implements OnInit, OnDestroy {
 
   toggleSidebar(): void {
     this.collapsed = !this.collapsed;
+  }
+
+  closeSidebar(): void {
+    if (window.innerWidth <= 991) {
+      this.collapsed = false;
+    }
   }
 
   logout(): void {

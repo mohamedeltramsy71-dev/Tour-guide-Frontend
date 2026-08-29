@@ -1,4 +1,3 @@
-// ─── Variables (same as admin) ────────────────────────────────────────────────
 $sidebar-width:     260px;
 $sidebar-collapsed: 72px;
 $topbar-height:     64px;
@@ -9,7 +8,6 @@ $sidebar-text:      #A8B4CC;
 $sidebar-active-bg: rgba(200, 92, 58, 0.15);
 $transition:        0.25s ease;
 
-// ─── Shell ────────────────────────────────────────────────────────────────────
 .admin-shell {
   display: flex;
   min-height: 100vh;
@@ -101,11 +99,7 @@ $transition:        0.25s ease;
   overflow-y: auto;
   overflow-x: hidden;
 
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+  ul { list-style: none; margin: 0; padding: 0; }
 }
 
 .sidebar-link {
@@ -183,7 +177,6 @@ $transition:        0.25s ease;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
-// ─── Guide Badge (topbar title) ───────────────────────────────────────────────
 .guide-badge {
   display: inline-flex;
   align-items: center;
@@ -199,7 +192,6 @@ $transition:        0.25s ease;
   i { font-size: 0.8rem; }
 }
 
-// ─── Topbar Icon Buttons ──────────────────────────────────────────────────────
 .topbar-icon-btn {
   width: 38px;
   height: 38px;
@@ -211,13 +203,9 @@ $transition:        0.25s ease;
   text-decoration: none;
   transition: background $transition, color $transition;
 
-  &:hover {
-    background: #F4F6FA;
-    color: $primary;
-  }
+  &:hover { background: #F4F6FA; color: $primary; }
 }
 
-// ─── Profile Button ───────────────────────────────────────────────────────────
 .admin-profile-btn {
   display: flex;
   align-items: center;
@@ -265,26 +253,17 @@ $transition:        0.25s ease;
   }
 }
 
-// ─── Content ──────────────────────────────────────────────────────────────────
 .admin-content {
   padding: 28px;
   flex: 1;
 }
 
-// ─── Responsive ───────────────────────────────────────────────────────────────
-@media (max-width: 991px) {
-  .admin-sidebar {
-    transform: translateX(-100%);
-    .admin-shell.collapsed & { transform: translateX(0); width: $sidebar-width; }
-  }
-  .admin-main { margin-left: 0 !important; }
-}
-
+// ─── Notif Badge ──────────────────────────────────────────────────────────────
 .notif-badge {
   position: absolute;
   top: -6px;
   right: -6px;
-  background: var(--primary);
+  background: $primary;
   color: white;
   font-size: 10px;
   font-weight: 600;
@@ -295,4 +274,51 @@ $transition:        0.25s ease;
   align-items: center;
   justify-content: center;
   padding: 0 4px;
+}
+
+// ─── Mobile Menu Button ───────────────────────────────────────────────────────
+.mobile-menu-btn {
+  background: transparent;
+  border: none;
+  color: #6B7280;
+  font-size: 1.1rem;
+  cursor: pointer;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+
+  &:hover { background: #F4F6FA; color: $primary; }
+}
+
+// ─── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 991px) {
+
+  .admin-sidebar {
+    transform: translateX(-100%);
+    transition: transform $transition;
+    width: $sidebar-width !important;
+  }
+
+  .admin-shell.collapsed .admin-sidebar {
+    transform: translateX(0);
+  }
+
+  .admin-main { margin-left: 0 !important; }
+
+  // Overlay
+  .admin-shell.collapsed::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 999;
+  }
+
+  .admin-info { display: none; }
+
+  .admin-content { padding: 16px; }
 }
