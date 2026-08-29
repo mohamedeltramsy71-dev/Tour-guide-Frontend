@@ -4,6 +4,12 @@ $gold:      #D4A853;
 $light-bg:  #F4F6FA;
 $text-gray: #6B7280;
 
+// Avatar dimensions (used in multiple places)
+$avatar-size-desktop: 80px;
+$avatar-size-mobile:  72px;
+$hero-bg-desktop:    100px;
+$hero-bg-mobile:      90px;
+
 // ─── Loading ───────────────────────────────────────────────
 .loading-state {
   display: flex;
@@ -107,56 +113,37 @@ $text-gray: #6B7280;
 // ─── Hero Card ─────────────────────────────────────────────
 .hero-card {
   border-radius: 16px;
-  overflow: hidden;
   border: 1px solid #E8ECF0;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  // FIX: NO overflow:hidden — it was clipping the avatar
+  // border-radius is preserved; children get their own border-radius where needed
   position: relative;
   background: #fff;
 
   @media (max-width: 576px) { border-radius: 14px; }
 }
 
-// الشريط العلوي الداكن
+// ─── Dark strip ────────────────────────────────────────────
 .hero-bg {
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 100px;
+  height: $hero-bg-desktop;                         // 100px
   background: linear-gradient(135deg, $dark 0%, #243057 100%);
-
-  @media (max-width: 576px) { height: 90px; }
-}
-
-.hero-body {
-  position: relative;
-  // FIX: padding-top = hero-bg height + half avatar height + breathing room
-  // desktop: bg=100px, avatar=80px => top=-40px, so avatar top = 100-40=60px, bottom=140px
-  // padding-top needs to accommodate avatar bottom + gap => 100px works (avatar sticks 40px above)
-  padding: 64px 28px 28px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    padding: 64px 20px 24px;
-    gap: 16px;
-  }
+  // FIX: border-radius on top corners only (replaces overflow:hidden on parent)
+  border-radius: 16px 16px 0 0;
 
   @media (max-width: 576px) {
-    // FIX: bg=90px, avatar=68px, top=-34px => avatar top=90-34=56px, bottom=56+68=124px
-    // Need padding-top >= 124px - 90px(bg) + gap = 44px + comfortable spacing
-    // Use 88px so avatar fully clears bg and info starts with breathing room
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 88px 16px 20px;
-    gap: 12px;
+    height: $hero-bg-mobile;                        // 90px
+    border-radius: 14px 14px 0 0;
   }
 }
 
+// ─── Avatar ────────────────────────────────────────────────
+// FIX: avatar is now a direct child of hero-card (sibling of hero-bg & hero-body)
+// positioned relative to hero-card, straddling the strip/content boundary
 .hero-avatar {
-  width: 80px;
-  height: 80px;
+  width:  $avatar-size-desktop;                     // 80px
+  height: $avatar-size-desktop;                     // 80px
   border-radius: 50%;
   background: linear-gradient(135deg, $primary, darken($primary, 10%));
   display: flex;
@@ -167,12 +154,13 @@ $text-gray: #6B7280;
   font-weight: 700;
   overflow: hidden;
   border: 4px solid #fff;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
   position: absolute;
-  top: -40px;
+  // FIX: top = bg_height - avatar_height/2 = 100 - 40 = 60px  (straddles perfectly)
+  top:  calc(#{$hero-bg-desktop} - #{$avatar-size-desktop} / 2);  // 60px
   left: 28px;
+  z-index: 2;                                       // above hero-bg and hero-body
   flex-shrink: 0;
-  z-index: 1; // FIX: ensure avatar always paints above hero-bg
 
   img {
     width: 100%;
@@ -181,21 +169,45 @@ $text-gray: #6B7280;
   }
 
   @media (max-width: 576px) {
-    width: 72px;
-    height: 72px;
-    // FIX: position relative to hero-body which starts at padding-top=88px from hero-card top
-    // hero-bg = 90px, hero-body starts right after (no explicit top on hero-body, it flows)
-    // Actually hero-body flows in normal flow, so it starts after hero-bg visually via padding
-    // avatar top:-36px places it 36px above hero-body content area
-    // hero-body padding-top=88px means content starts 88px in
-    // card-relative position of avatar top = (hero-body offset from card top) - 36px
-    // This is fine as long as z-index:1 is set — avatar will show over bg strip
-    top: -36px;
-    left: 16px;
+    width:  $avatar-size-mobile;                    // 72px
+    height: $avatar-size-mobile;                    // 72px
     font-size: 1.25rem;
+    // top = 90 - 36 = 54px
+    top:  calc(#{$hero-bg-mobile} - #{$avatar-size-mobile} / 2);  // 54px
+    left: 16px;
   }
 }
 
+// ─── Hero Body ─────────────────────────────────────────────
+.hero-body {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  // FIX: padding-top clears the dark strip fully
+  //      padding-left clears the avatar (left:28px + width:80px + gap:20px = 128px)
+  padding: 116px 28px 28px 128px;
+  // 116 = bg_height(100) + gap(16)
+  // 128 = avatar_left(28) + avatar_width(80) + gap(20)
+
+  @media (max-width: 768px) {
+    padding: 116px 20px 24px 120px;
+  }
+
+  @media (max-width: 576px) {
+    // On mobile: column layout, avatar is above so no left-padding needed
+    // padding-top clears bg(90) + avatar_bottom_half(36) + gap(12) = 138px
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 138px 16px 20px 16px;
+    gap: 12px;
+  }
+}
+
+// ─── Hero Info ─────────────────────────────────────────────
 .hero-info {
   flex: 1;
   min-width: 0;
@@ -643,9 +655,7 @@ $text-gray: #6B7280;
     background: rgba($primary, 0.03);
   }
 
-  &:active {
-    background: rgba($primary, 0.06);
-  }
+  &:active { background: rgba($primary, 0.06); }
 
   &.city-checkbox-active {
     border-color: $primary;

@@ -32,12 +32,17 @@
 
     <!-- Hero Card -->
     <div class="hero-card">
+      <!-- Dark strip background -->
       <div class="hero-bg"></div>
+
+      <!-- Avatar — sibling of hero-bg, positioned on the strip boundary -->
+      <div class="hero-avatar">
+        <img *ngIf="profile.avatarUrl" [src]="profile.avatarUrl" [alt]="profile.fullName" />
+        <span *ngIf="!profile.avatarUrl">{{ getInitials(profile.fullName) }}</span>
+      </div>
+
+      <!-- Body — starts below the strip, left-padded to clear the avatar -->
       <div class="hero-body">
-        <div class="hero-avatar">
-          <img *ngIf="profile.avatarUrl" [src]="profile.avatarUrl" [alt]="profile.fullName" />
-          <span *ngIf="!profile.avatarUrl">{{ getInitials(profile.fullName) }}</span>
-        </div>
         <div class="hero-info">
           <div class="hero-name">{{ profile.fullName }}</div>
           <div class="hero-email">{{ profile.email }}</div>
