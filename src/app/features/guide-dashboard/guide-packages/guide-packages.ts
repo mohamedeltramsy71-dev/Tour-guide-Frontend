@@ -46,6 +46,10 @@ export class GuidePackages implements OnInit {
   editForm: UpdatePackageRequest = this.emptyEdit();
   landmarkForm: AddLandmarkToPackageRequest = { landmarkId: 0, dayNumber: 1, order: 1 };
 
+  // ✅ Search
+  landmarkSearch = '';
+  filteredLandmarks: Landmark[] = [];
+
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
@@ -92,14 +96,14 @@ export class GuidePackages implements OnInit {
   }
 
   loadCities(): void {
-    this.cityService.getCities().subscribe({
+    this.cityService.getCities(1, 100).subscribe({
       next: (data: City[]) => { this.cities = data; },
       error: () => {},
     });
   }
 
   loadLandmarks(): void {
-    this.landmarkService.getLandmarks().subscribe({
+    this.landmarkService.getLandmarks({ pageSize: 1000 }).subscribe({
       next: (data: Landmark[]) => { this.landmarks = data; },
       error: () => {},
     });
@@ -142,6 +146,8 @@ export class GuidePackages implements OnInit {
   openLandmarks(pkg: Package): void {
     this.selectedPkg = pkg;
     this.landmarkForm = { landmarkId: 0, dayNumber: 1, order: 1 };
+    this.landmarkSearch = '';
+    this.filteredLandmarks = [];
     this.clearAlerts();
     this.modal = 'landmarks';
   }
@@ -151,6 +157,8 @@ export class GuidePackages implements OnInit {
     this.selectedPkg = null;
     this.selectedFile = null;
     this.previewUrl = null;
+    this.landmarkSearch = '';
+    this.filteredLandmarks = [];
   }
 
   // ── CRUD ──────────────────────────────────────────────────
@@ -280,11 +288,18 @@ export class GuidePackages implements OnInit {
       next: () => {
         const lm = this.landmarks.find((l: Landmark) => l.id === this.landmarkForm.landmarkId);
         if (lm && this.selectedPkg) {
-          const newLm = { landmarkId: lm.id, nameEn: lm.nameEn, dayNumber: this.landmarkForm.dayNumber, order: this.landmarkForm.order };
+          const newLm = {
+            landmarkId: lm.id,
+            nameEn: lm.nameEn,
+            dayNumber: this.landmarkForm.dayNumber,
+            order: this.landmarkForm.order
+          };
           this.selectedPkg = { ...this.selectedPkg, landmarks: [...this.selectedPkg.landmarks, newLm] };
           this.packages = this.packages.map((p: Package) => p.id === this.selectedPkg!.id ? this.selectedPkg! : p);
         }
         this.landmarkForm = { landmarkId: 0, dayNumber: 1, order: 1 };
+        this.landmarkSearch = '';
+        this.filteredLandmarks = [];
         this.saving = false;
         this.showSuccess('Landmark added!');
       },
@@ -304,11 +319,28 @@ export class GuidePackages implements OnInit {
             ...this.selectedPkg,
             landmarks: this.selectedPkg.landmarks.filter(l => l.landmarkId !== landmarkId),
           };
-          this.packages = this.packages.map((p: Package) => p.id === this.selectedPkg!.id ? this.selectedPkg! : p);
+          this.packages = this.packages.map((p: Package) =>
+            p.id === this.selectedPkg!.id ? this.selectedPkg! : p
+          );
         }
       },
       error: () => { this.errorMsg = 'Failed to remove landmark.'; },
     });
+  }
+
+  // ── Search ────────────────────────────────────────────────
+  onLandmarkSearch(): void {
+    const q = this.landmarkSearch.toLowerCase();
+    if (!q) { this.filteredLandmarks = []; return; }
+    this.filteredLandmarks = this.availableLandmarks().filter(l =>
+      l.nameEn.toLowerCase().includes(q)
+    );
+  }
+
+  selectLandmark(lm: Landmark): void {
+    this.landmarkForm.landmarkId = lm.id;
+    this.landmarkSearch = lm.nameEn;
+    this.filteredLandmarks = [];
   }
 
   // ── Helpers ───────────────────────────────────────────────
@@ -321,7 +353,10 @@ export class GuidePackages implements OnInit {
   }
 
   availableLandmarks(): Landmark[] {
-    return this.landmarks.filter((l: Landmark) => !this.isLandmarkAlreadyAdded(l.id));
+    return this.landmarks.filter((l: Landmark) =>
+      !this.isLandmarkAlreadyAdded(l.id) &&
+      (!this.selectedPkg?.cityNameEn || l.cityNameEn === this.selectedPkg.cityNameEn)
+    );
   }
 
   private showSuccess(msg: string): void {
