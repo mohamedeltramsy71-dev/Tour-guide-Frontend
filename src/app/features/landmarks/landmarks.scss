@@ -109,6 +109,40 @@
   }
 }
 
+// ─── Pagination ───────────────────────────────────────────────
+.pagination {
+  .page-link {
+    border: 1px solid #dee2e6;
+    color: var(--dark);
+    font-size: 0.9rem;
+    min-width: 40px;
+    text-align: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(var(--primary-rgb, 200, 92, 58), 0.08);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .page-item.disabled .page-link {
+    color: #adb5bd;
+    pointer-events: none;
+  }
+}
+
 // ── Mobile ───────────────────────────────────────────
 @media (max-width: 768px) {
 
@@ -140,7 +174,6 @@
     padding-bottom: 4px;
     gap: 8px !important;
 
-    // رجّع الـ select والـ clear button يبقوا في سطر تاني
     .form-select,
     .btn.ms-auto {
       flex-shrink: 0;
@@ -157,6 +190,17 @@
       padding: .75rem;
       h6       { font-size: 0.85rem; }
       .small   { font-size: 0.75rem; }
+    }
+  }
+
+  // Pagination
+  .pagination {
+    gap: 4px !important;
+
+    .page-link {
+      font-size: 0.82rem;
+      min-width: 34px;
+      padding: 6px 8px;
     }
   }
 }
