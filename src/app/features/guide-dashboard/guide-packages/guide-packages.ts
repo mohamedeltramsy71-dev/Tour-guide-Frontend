@@ -343,7 +343,7 @@ export class GuidePackages implements OnInit {
     return this.landmarks.filter((l: Landmark) => {
       if (this.isLandmarkAlreadyAdded(l.id)) return false;
       if (this.selectedLandmarkCityId === 0) return true;
-      return l.cityId === this.selectedLandmarkCityId;
+      return l.cityId === +this.selectedLandmarkCityId;
     });
   }
 
