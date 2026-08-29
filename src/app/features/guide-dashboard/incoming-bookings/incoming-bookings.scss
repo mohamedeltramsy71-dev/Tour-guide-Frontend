@@ -4,13 +4,17 @@ $gold:      #D4A853;
 $light-bg:  #F4F6FA;
 $text-gray: #6B7280;
 
+// ─── Wrap ──────────────────────────────────────────────────
 .incoming-bookings {
   padding: 2rem;
   min-height: 100vh;
   background: $light-bg;
+
+  @media (max-width: 768px) { padding: 1.25rem; }
+  @media (max-width: 480px) { padding: 1rem; }
 }
 
-// Header
+// ─── Header ────────────────────────────────────────────────
 .page-header {
   display: flex;
   align-items: flex-start;
@@ -18,6 +22,14 @@ $text-gray: #6B7280;
   margin-bottom: 1.75rem;
   flex-wrap: wrap;
   gap: 1rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+
+    .btn-refresh { width: 100%; justify-content: center; }
+  }
 }
 
 .page-title {
@@ -25,12 +37,16 @@ $text-gray: #6B7280;
   font-weight: 700;
   color: $dark;
   margin: 0;
+
+  @media (max-width: 576px) { font-size: 1.25rem; }
 }
 
 .page-subtitle {
   color: $text-gray;
   font-size: 0.9rem;
   margin: 0.2rem 0 0;
+
+  @media (max-width: 576px) { font-size: 0.82rem; }
 }
 
 .btn-refresh {
@@ -41,11 +57,16 @@ $text-gray: #6B7280;
   border-radius: 8px;
   font-size: 0.85rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   transition: all 0.2s;
+  white-space: nowrap;
+
   &:hover { background: $primary; color: white; border-color: $primary; }
 }
 
-// Toast
+// ─── Toast ─────────────────────────────────────────────────
 .toast-msg {
   position: fixed;
   top: 1.5rem;
@@ -58,6 +79,16 @@ $text-gray: #6B7280;
   z-index: 9999;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   animation: fadeSlide 0.3s ease;
+  max-width: calc(100vw - 2rem); // ما يطلعش بره الشاشة
+
+  @media (max-width: 480px) {
+    // على الموبايل: يتمركز في الأعلى بدل اليمين
+    right: 1rem;
+    left: 1rem;
+    top: 1rem;
+    max-width: 100%;
+    text-align: center;
+  }
 }
 
 @keyframes fadeSlide {
@@ -65,12 +96,21 @@ $text-gray: #6B7280;
   to   { opacity: 1; transform: translateY(0); }
 }
 
-// Filter tabs
+// ─── Filter Tabs ───────────────────────────────────────────
 .filter-tabs {
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap;
   margin-bottom: 1.5rem;
+
+  // على الموبايل: scroll أفقي بدل wrap عشان تبقى في سطر واحد
+  @media (max-width: 640px) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px; // مساحة للـ scrollbar
+    scrollbar-width: none; // إخفاء الـ scrollbar في Firefox
+    &::-webkit-scrollbar { display: none; } // إخفاء الـ scrollbar في Chrome
+  }
 }
 
 .filter-tab {
@@ -86,6 +126,8 @@ $text-gray: #6B7280;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap; // مهم مع الـ overflow-x
+  flex-shrink: 0; // ما يتضغطش
 
   &:hover { border-color: $primary; color: $primary; }
 
@@ -94,6 +136,11 @@ $text-gray: #6B7280;
     border-color: $primary;
     color: white;
     .tab-count { background: rgba(255,255,255,0.25); color: white; }
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.85rem;
   }
 }
 
@@ -108,7 +155,7 @@ $text-gray: #6B7280;
   text-align: center;
 }
 
-// State boxes
+// ─── State Boxes ───────────────────────────────────────────
 .state-box {
   display: flex;
   flex-direction: column;
@@ -121,6 +168,8 @@ $text-gray: #6B7280;
 
   i { font-size: 2.5rem; opacity: 0.4; }
   p { margin: 0; font-size: 1rem; }
+
+  @media (max-width: 576px) { padding: 3rem 1rem; }
 }
 
 .spinner {
@@ -143,14 +192,17 @@ $text-gray: #6B7280;
   cursor: pointer;
 }
 
-// Grid
+// ─── Grid ──────────────────────────────────────────────────
 .bookings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 1.25rem;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+  @media (max-width: 480px) { gap: 0.875rem; }
 }
 
-// Booking card
+// ─── Booking Card ──────────────────────────────────────────
 .booking-card {
   background: #fff;
   border-radius: 16px;
@@ -165,22 +217,36 @@ $text-gray: #6B7280;
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     transform: translateY(-2px);
   }
+
+  @media (hover: none) {
+    &:hover { transform: none; }
+  }
+
+  @media (max-width: 480px) { border-radius: 14px; }
 }
 
+// ─── Card Header ───────────────────────────────────────────
 .card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid #F0F2F5;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.75rem;
+
+  // ما نستخدمش flex-wrap عشان الـ badges تبقى دايماً على اليمين
+  // بدله نضغط الـ tourist-info لو محتاج
+  @media (max-width: 480px) { padding: 0.875rem 1rem; }
 }
 
 .tourist-info {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0; // يسمح للنص بالـ truncate
+  flex: 1;
+
+  @media (max-width: 480px) { gap: 0.6rem; }
 }
 
 .tourist-avatar {
@@ -189,6 +255,12 @@ $text-gray: #6B7280;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #E8ECF0;
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    width: 36px;
+    height: 36px;
+  }
 }
 
 .tourist-name {
@@ -196,12 +268,18 @@ $text-gray: #6B7280;
   color: $dark;
   margin: 0;
   font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 480px) { font-size: 0.875rem; }
 }
 
 .booking-date {
   font-size: 0.78rem;
   color: $text-gray;
   margin: 0;
+  white-space: nowrap;
 }
 
 .badges {
@@ -209,9 +287,10 @@ $text-gray: #6B7280;
   flex-direction: column;
   align-items: flex-end;
   gap: 0.3rem;
+  flex-shrink: 0;
 }
 
-// Status badges
+// ─── Status Badges ─────────────────────────────────────────
 .status-badge {
   font-size: 0.72rem;
   font-weight: 600;
@@ -219,6 +298,7 @@ $text-gray: #6B7280;
   border-radius: 20px;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 .badge-pending   { background: #FEF3C7; color: #92400E; }
@@ -230,17 +310,20 @@ $text-gray: #6B7280;
 .badge-unpaid    { background: #FEF3C7; color: #92400E; }
 .badge-failed    { background: #FEE2E2; color: #991B1B; }
 
-// Card body
+// ─── Card Body ─────────────────────────────────────────────
 .card-body {
   padding: 1rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
+  flex: 1;
+
+  @media (max-width: 480px) { padding: 0.875rem 1rem; }
 }
 
 .detail-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.6rem;
   font-size: 0.875rem;
   color: $dark;
@@ -250,6 +333,13 @@ $text-gray: #6B7280;
     width: 16px;
     text-align: center;
     flex-shrink: 0;
+    margin-top: 2px; // محاذاة مع النص متعدد الأسطر
+  }
+
+  span {
+    // يسمح للنص الطويل بالالتفاف
+    word-break: break-word;
+    line-height: 1.4;
   }
 
   &.rejection {
@@ -264,7 +354,7 @@ $text-gray: #6B7280;
   color: $primary;
 }
 
-// Card actions
+// ─── Card Actions ──────────────────────────────────────────
 .card-actions {
   padding: 0.875rem 1.25rem;
   border-top: 1px solid #F0F2F5;
@@ -272,11 +362,17 @@ $text-gray: #6B7280;
   gap: 0.6rem;
   flex-wrap: wrap;
   align-items: center;
+
+  @media (max-width: 480px) {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+  }
 }
 
+// Action button base
 %action-btn {
   flex: 1;
-  min-width: 90px;
+  min-width: 80px;
   padding: 0.5rem 0.75rem;
   border: none;
   border-radius: 8px;
@@ -288,6 +384,12 @@ $text-gray: #6B7280;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
+  white-space: nowrap;
+
+  @media (max-width: 400px) {
+    font-size: 0.78rem;
+    padding: 0.5rem 0.5rem;
+  }
 }
 
 .btn-accept {
@@ -311,18 +413,32 @@ $text-gray: #6B7280;
   &:hover { background: $primary; }
 }
 
+.btn-chat {
+  @extend %action-btn;
+  background: #f0f9ff;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+
+  &:hover {
+    background: #0284c7;
+    color: white;
+    border-color: #0284c7;
+  }
+}
+
 .done-label, .closed-label {
   font-size: 0.82rem;
   color: $text-gray;
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  padding: 0.5rem 0;
   i { color: inherit; }
 }
 
 .done-label { color: #065F46; }
 
-// Modal
+// ─── Bootstrap Modal Overrides ─────────────────────────────
 .rihla-modal {
   border-radius: 16px;
   border: none;
@@ -332,27 +448,85 @@ $text-gray: #6B7280;
     color: white;
     border-radius: 16px 16px 0 0;
     padding: 1rem 1.5rem;
-    .modal-title { font-size: 1rem; font-weight: 600; margin: 0; }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
     .btn-close { filter: invert(1); }
+
+    @media (max-width: 480px) { padding: 0.875rem 1.25rem; }
   }
 
   .modal-body {
     padding: 1.5rem;
-    .modal-tourist, .modal-package { font-size: 0.9rem; color: $text-gray; margin-bottom: 0.25rem; }
-    .form-label { font-size: 0.85rem; font-weight: 600; color: $dark; }
+
+    .modal-tourist,
+    .modal-package {
+      font-size: 0.9rem;
+      color: $text-gray;
+      margin-bottom: 0.25rem;
+    }
+
+    .form-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: $dark;
+    }
+
     .form-control {
       border-radius: 8px;
       border-color: #E8ECF0;
       font-size: 0.875rem;
       resize: none;
-      &:focus { border-color: $primary; box-shadow: 0 0 0 3px rgba(200,92,58,0.12); }
+
+      &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba(200,92,58,0.12);
+      }
+
+      // iOS auto-zoom fix
+      @media (max-width: 576px) { font-size: 16px; }
     }
+
+    @media (max-width: 480px) { padding: 1.25rem; }
   }
 
   .modal-footer {
     padding: 1rem 1.5rem;
     border-top: 1px solid #E8ECF0;
     gap: 0.5rem;
+
+    @media (max-width: 480px) {
+      padding: 0.875rem 1.25rem 1.25rem;
+      flex-direction: column-reverse;
+
+      // أزرار الـ modal تبقى full-width
+      .btn-cancel-modal,
+      .btn-reject-modal,
+      .btn-complete-modal {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// الـ modal نفسه على الموبايل
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0;
+    // bottom sheet style
+    align-items: flex-end;
+    min-height: 100%;
+    display: flex;
+
+    .rihla-modal {
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+    }
   }
 }
 
@@ -365,6 +539,9 @@ $text-gray: #6B7280;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:hover { background: #E8ECF0; }
 }
 
@@ -403,28 +580,4 @@ $text-gray: #6B7280;
 .error-msg {
   color: #DC2626;
   font-size: 0.82rem;
-}
-
-// Responsive
-@media (max-width: 768px) {
-  .incoming-bookings { padding: 1.25rem; }
-  .bookings-grid { grid-template-columns: 1fr; }
-}
-
-.btn-chat {
-  background: #f0f9ff;
-  color: #0284c7;
-  border: 1px solid #bae6fd;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #0284c7;
-    color: white;
-    border-color: #0284c7;
-  }
 }

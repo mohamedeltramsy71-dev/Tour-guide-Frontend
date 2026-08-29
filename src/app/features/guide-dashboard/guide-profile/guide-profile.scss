@@ -20,6 +20,8 @@ $text-gray: #6B7280;
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  @media (max-width: 576px) { gap: 16px; }
 }
 
 // ─── Page Header ───────────────────────────────────────────
@@ -29,6 +31,14 @@ $text-gray: #6B7280;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 12px;
+
+    .page-header-actions { width: 100%; }
+    .btn-edit { width: 100%; justify-content: center; }
+  }
 }
 
 .page-title {
@@ -38,12 +48,16 @@ $text-gray: #6B7280;
   margin: 0 0 6px;
 
   i { color: $primary; margin-right: 10px; }
+
+  @media (max-width: 576px) { font-size: 1.15rem; }
 }
 
 .page-sub {
   font-size: 0.875rem;
   color: $text-gray;
   margin: 0;
+
+  @media (max-width: 480px) { font-size: 0.82rem; }
 }
 
 .btn-edit {
@@ -73,7 +87,9 @@ $text-gray: #6B7280;
   align-items: center;
   gap: 10px;
 
-  i { font-size: 1rem; }
+  i { font-size: 1rem; flex-shrink: 0; }
+
+  @media (max-width: 576px) { padding: 12px 14px; font-size: 0.82rem; }
 }
 
 .alert-success {
@@ -95,26 +111,42 @@ $text-gray: #6B7280;
   border: 1px solid #E8ECF0;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   position: relative;
+  background: #fff;
+
+  @media (max-width: 576px) { border-radius: 14px; }
 }
 
+// الشريط العلوي الداكن
 .hero-bg {
   position: absolute;
-  inset: 0;
+  top: 0; left: 0; right: 0;
   height: 100px;
   background: linear-gradient(135deg, $dark 0%, #243057 100%);
+
+  @media (max-width: 576px) { height: 80px; }
 }
 
 .hero-body {
   position: relative;
-  padding: 24px 28px 28px;
+  padding: 64px 28px 28px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 20px;
   flex-wrap: wrap;
-  padding-top: 64px;
-  background: #fff;
-  margin-top: 60px;
+
+  @media (max-width: 768px) {
+    padding: 64px 20px 24px;
+    gap: 16px;
+  }
+
+  @media (max-width: 576px) {
+    // على الموبايل: avatar + info في عمود، badges تحيهم
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 56px 16px 20px;
+    gap: 14px;
+  }
 }
 
 .hero-avatar {
@@ -133,6 +165,7 @@ $text-gray: #6B7280;
   box-shadow: 0 4px 16px rgba(0,0,0,0.12);
   position: absolute;
   top: -40px;
+  left: 28px;
   flex-shrink: 0;
 
   img {
@@ -140,11 +173,19 @@ $text-gray: #6B7280;
     height: 100%;
     object-fit: cover;
   }
+
+  @media (max-width: 576px) {
+    width: 68px;
+    height: 68px;
+    top: -34px;
+    left: 16px;
+    font-size: 1.2rem;
+  }
 }
 
 .hero-info {
   flex: 1;
-  min-width: 200px;
+  min-width: 0; // يمنع overflow
 }
 
 .hero-name {
@@ -152,12 +193,16 @@ $text-gray: #6B7280;
   font-weight: 700;
   color: $dark;
   margin-bottom: 2px;
+  word-break: break-word;
+
+  @media (max-width: 576px) { font-size: 1.1rem; }
 }
 
 .hero-email {
   font-size: 0.85rem;
   color: $text-gray;
   margin-bottom: 12px;
+  word-break: break-all; // الإيميل الطويل ما يطلعش بره الكارت
 }
 
 .hero-meta {
@@ -179,6 +224,8 @@ $text-gray: #6B7280;
   border: 1px solid #E8ECF0;
 
   i { color: $primary; }
+
+  @media (max-width: 400px) { font-size: 0.75rem; padding: 4px 10px; }
 }
 
 .meta-chip-sub {
@@ -191,6 +238,12 @@ $text-gray: #6B7280;
   gap: 10px;
   flex-wrap: wrap;
   align-self: flex-start;
+
+  // على الموبايل تنزل تحت الـ hero-info بشكل طبيعي مع flex-direction: column
+  @media (max-width: 576px) {
+    align-self: stretch;
+    margin-top: 0;
+  }
 }
 
 // ─── Status Pills ──────────────────────────────────────────
@@ -202,6 +255,7 @@ $text-gray: #6B7280;
   border-radius: 20px;
   font-size: 0.78rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .pill-approved  { background: rgba(16,185,129,0.1);  color: #059669; }
@@ -215,7 +269,7 @@ $text-gray: #6B7280;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 
-  @media (max-width: 768px) { grid-template-columns: 1fr; }
+  @media (max-width: 768px) { grid-template-columns: 1fr; gap: 14px; }
 }
 
 .detail-full { grid-column: 1 / -1; }
@@ -227,6 +281,8 @@ $text-gray: #6B7280;
   border: 1px solid #E8ECF0;
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
   overflow: hidden;
+
+  @media (max-width: 576px) { border-radius: 12px; }
 }
 
 .detail-card-header {
@@ -240,10 +296,14 @@ $text-gray: #6B7280;
   gap: 8px;
 
   i { color: $primary; }
+
+  @media (max-width: 576px) { padding: 14px 16px 12px; }
 }
 
 .detail-card-body {
   padding: 20px;
+
+  @media (max-width: 576px) { padding: 16px; }
 }
 
 .bio-text {
@@ -295,6 +355,12 @@ $text-gray: #6B7280;
   align-items: center;
   gap: 32px;
   flex-wrap: wrap;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 }
 
 .rating-big {
@@ -302,6 +368,12 @@ $text-gray: #6B7280;
   flex-direction: column;
   align-items: center;
   gap: 6px;
+
+  @media (max-width: 576px) {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
 }
 
 .rating-number {
@@ -309,6 +381,8 @@ $text-gray: #6B7280;
   font-weight: 800;
   color: $dark;
   line-height: 1;
+
+  @media (max-width: 576px) { font-size: 2rem; }
 }
 
 .stars-row {
@@ -322,6 +396,8 @@ $text-gray: #6B7280;
 .rating-count {
   font-size: 0.8rem;
   color: $text-gray;
+
+  @media (max-width: 576px) { display: none; } // بيتعرض في rating-note
 }
 
 .rating-note {
@@ -337,6 +413,12 @@ $text-gray: #6B7280;
   line-height: 1.6;
 
   i { color: $primary; margin-top: 2px; flex-shrink: 0; }
+
+  @media (max-width: 576px) {
+    max-width: 100%;
+    padding: 12px 14px;
+    font-size: 0.82rem;
+  }
 }
 
 // ─── Edit Wrap ─────────────────────────────────────────────
@@ -344,6 +426,8 @@ $text-gray: #6B7280;
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  @media (max-width: 576px) { gap: 14px; }
 }
 
 .edit-grid {
@@ -351,7 +435,7 @@ $text-gray: #6B7280;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 
-  @media (max-width: 768px) { grid-template-columns: 1fr; }
+  @media (max-width: 768px) { grid-template-columns: 1fr; gap: 14px; }
 }
 
 .edit-card {
@@ -360,6 +444,8 @@ $text-gray: #6B7280;
   border: 1px solid #E8ECF0;
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
   overflow: hidden;
+
+  @media (max-width: 576px) { border-radius: 12px; }
 }
 
 .edit-card-header {
@@ -373,6 +459,8 @@ $text-gray: #6B7280;
   gap: 8px;
 
   i { color: $primary; }
+
+  @media (max-width: 576px) { padding: 14px 16px 12px; }
 }
 
 .selected-count {
@@ -390,6 +478,8 @@ $text-gray: #6B7280;
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  @media (max-width: 576px) { padding: 16px; gap: 10px; }
 }
 
 // ─── Fields ────────────────────────────────────────────────
@@ -414,14 +504,27 @@ $text-gray: #6B7280;
   outline: none;
   transition: border-color 0.2s;
   font-family: inherit;
+  box-sizing: border-box;
 
   &:focus { border-color: $primary; }
   &::placeholder { color: #C4C9D4; }
+
+  // iOS auto-zoom fix
+  @media (max-width: 576px) { font-size: 16px; }
 }
 
 .field-row {
   display: flex;
   gap: 10px;
+  align-items: center;
+
+  @media (max-width: 400px) {
+    // على الشاشات الضيقة جداً: input فوق والزرار تحته
+    flex-direction: column;
+    align-items: stretch;
+
+    .btn-add-tag { justify-content: center; }
+  }
 }
 
 .field-input {
@@ -434,13 +537,21 @@ $text-gray: #6B7280;
   outline: none;
   transition: border-color 0.2s;
   font-family: inherit;
+  min-width: 0; // يمنع الـ flex item من الاتساع
 
   &:focus { border-color: $primary; }
   &::placeholder { color: #C4C9D4; }
+
+  @media (max-width: 576px) { font-size: 16px; }
 }
 
 .field-input-sm {
   max-width: 160px;
+
+  @media (max-width: 576px) {
+    // في edit mode الـ Experience card بياخد عرض كامل أصلاً
+    max-width: 100%;
+  }
 }
 
 .field-hint {
@@ -462,6 +573,7 @@ $text-gray: #6B7280;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: background 0.2s;
 
   &:hover { background: darken($primary, 8%); }
@@ -470,9 +582,7 @@ $text-gray: #6B7280;
 // ─── Tag Removable ─────────────────────────────────────────
 .tag-list-edit { margin-bottom: 4px; }
 
-.tag-removable {
-  padding-right: 6px;
-}
+.tag-removable { padding-right: 6px; }
 
 .tag-remove {
   background: none;
@@ -487,13 +597,25 @@ $text-gray: #6B7280;
   transition: opacity 0.15s;
 
   &:hover { opacity: 1; }
+
+  // Touch screens: دايماً ظاهر
+  @media (hover: none) { opacity: 0.9; }
 }
 
 // ─── City Grid ─────────────────────────────────────────────
 .city-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 10px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  @media (max-width: 360px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .city-checkbox {
@@ -506,6 +628,7 @@ $text-gray: #6B7280;
   cursor: pointer;
   transition: all 0.2s;
   background: #fff;
+  user-select: none; // يمنع تحديد النص على الموبايل
 
   input[type="checkbox"] { display: none; }
 
@@ -514,12 +637,19 @@ $text-gray: #6B7280;
     background: rgba($primary, 0.03);
   }
 
+  // على Touch: active state بدل hover
+  &:active {
+    background: rgba($primary, 0.06);
+  }
+
   &.city-checkbox-active {
     border-color: $primary;
     background: rgba($primary, 0.06);
 
     .city-checkbox-label { color: $primary; font-weight: 600; }
   }
+
+  @media (max-width: 480px) { padding: 9px 12px; }
 }
 
 .city-checkbox-label {
@@ -529,8 +659,13 @@ $text-gray: #6B7280;
   align-items: center;
   gap: 6px;
   transition: color 0.2s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
-  i { font-size: 0.75rem; color: $text-gray; }
+  i { font-size: 0.75rem; color: $text-gray; flex-shrink: 0; }
+
+  @media (max-width: 480px) { font-size: 0.82rem; }
 }
 
 .city-checkbox-active .city-checkbox-label i { color: $primary; }
@@ -541,6 +676,18 @@ $text-gray: #6B7280;
   justify-content: flex-end;
   gap: 12px;
   padding-top: 4px;
+
+  @media (max-width: 480px) {
+    // أزرار full-width على الموبايل
+    flex-direction: column-reverse; // Save فوق Cancel
+    gap: 10px;
+
+    .btn-cancel,
+    .btn-save {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 }
 
 .btn-cancel {

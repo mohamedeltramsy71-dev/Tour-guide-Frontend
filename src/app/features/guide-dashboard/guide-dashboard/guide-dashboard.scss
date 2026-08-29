@@ -9,6 +9,8 @@ $text-gray: #6B7280;
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  @media (max-width: 576px) { gap: 16px; }
 }
 
 // ─── Loading ───────────────────────────────────────────────
@@ -32,12 +34,22 @@ $text-gray: #6B7280;
   justify-content: space-between;
   gap: 20px;
   flex-wrap: wrap;
+
+  @media (max-width: 576px) {
+    padding: 20px 18px;
+    border-radius: 14px;
+    gap: 16px;
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .welcome-left {
   display: flex;
   align-items: center;
   gap: 16px;
+
+  @media (max-width: 576px) { gap: 12px; }
 }
 
 .welcome-avatar {
@@ -60,6 +72,12 @@ $text-gray: #6B7280;
     height: 100%;
     object-fit: cover;
   }
+
+  @media (max-width: 576px) {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+  }
 }
 
 .welcome-title {
@@ -67,18 +85,51 @@ $text-gray: #6B7280;
   font-weight: 700;
   color: #fff;
   margin: 0 0 6px;
+
+  @media (max-width: 576px) {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
 }
 
 .welcome-sub {
   font-size: 0.875rem;
   color: rgba(255,255,255,0.65);
   margin: 0;
+
+  @media (max-width: 480px) {
+    font-size: 0.78rem;
+    // Stack the three stats vertically on very small screens
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    line-height: 1.6;
+  }
 }
 
 .welcome-actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+
+  @media (max-width: 576px) {
+    // Full-width buttons, side by side
+    gap: 8px;
+
+    a {
+      flex: 1;
+      justify-content: center;
+      min-width: 0;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    flex-direction: column;
+
+    a { flex: unset; }
+  }
 }
 
 .btn-primary-outline {
@@ -125,7 +176,8 @@ $text-gray: #6B7280;
   gap: 16px;
 
   @media (max-width: 1200px) { grid-template-columns: repeat(3, 1fr); }
-  @media (max-width: 768px)  { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 768px)  { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (max-width: 400px)  { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
 
 .stat-card {
@@ -143,6 +195,12 @@ $text-gray: #6B7280;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
+
+  @media (max-width: 768px) {
+    padding: 14px 12px;
+    gap: 10px;
+    border-radius: 12px;
+  }
 }
 
 .stat-icon {
@@ -154,12 +212,20 @@ $text-gray: #6B7280;
   justify-content: center;
   font-size: 1.1rem;
   flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+  }
 }
 
 .stat-body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0; // prevent overflow
 }
 
 .stat-value {
@@ -167,12 +233,20 @@ $text-gray: #6B7280;
   font-weight: 700;
   color: $dark;
   line-height: 1;
+
+  @media (max-width: 768px) { font-size: 1.25rem; }
+  @media (max-width: 400px) { font-size: 1.1rem; }
 }
 
 .stat-label {
   font-size: 0.75rem;
   color: $text-gray;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 400px) { font-size: 0.68rem; }
 }
 
 // Stat color variants
@@ -190,6 +264,7 @@ $text-gray: #6B7280;
   gap: 20px;
 
   @media (max-width: 1024px) { grid-template-columns: 1fr; }
+  @media (max-width: 576px)  { gap: 16px; }
 }
 
 // ─── Dash Card ─────────────────────────────────────────────
@@ -199,6 +274,8 @@ $text-gray: #6B7280;
   border: 1px solid #E8ECF0;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   overflow: hidden;
+
+  @media (max-width: 576px) { border-radius: 12px; }
 }
 
 .dash-card-header {
@@ -207,6 +284,8 @@ $text-gray: #6B7280;
   justify-content: space-between;
   padding: 20px 24px 16px;
   border-bottom: 1px solid #F0F2F5;
+
+  @media (max-width: 576px) { padding: 16px 16px 12px; }
 }
 
 .dash-card-title {
@@ -216,6 +295,8 @@ $text-gray: #6B7280;
   margin: 0;
 
   i { color: $primary; }
+
+  @media (max-width: 576px) { font-size: 0.9rem; }
 }
 
 .view-all {
@@ -223,6 +304,8 @@ $text-gray: #6B7280;
   color: $primary;
   text-decoration: none;
   font-weight: 600;
+  white-space: nowrap;
+  margin-left: 8px;
 
   &:hover { text-decoration: underline; }
 }
@@ -239,17 +322,23 @@ $text-gray: #6B7280;
 
   i { font-size: 2.5rem; }
   p { margin: 0; font-size: 0.9rem; }
+
+  @media (max-width: 576px) { padding: 36px 16px; }
 }
 
 // ─── Table ─────────────────────────────────────────────────
 .table-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch; // smooth scroll on iOS
 }
 
 .dash-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
+
+  // On mobile hide less-critical columns via utility classes on the cells
+  @media (max-width: 640px) { font-size: 0.8rem; }
 
   th {
     padding: 10px 16px;
@@ -261,6 +350,9 @@ $text-gray: #6B7280;
     letter-spacing: 0.04em;
     background: #FAFBFC;
     border-bottom: 1px solid #F0F2F5;
+    white-space: nowrap;
+
+    @media (max-width: 576px) { padding: 8px 12px; font-size: 0.68rem; }
   }
 
   td {
@@ -268,16 +360,31 @@ $text-gray: #6B7280;
     border-bottom: 1px solid #F7F8FA;
     color: $dark;
     vertical-align: middle;
+    white-space: nowrap;
+
+    @media (max-width: 576px) { padding: 10px 12px; }
   }
 
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #FAFBFC; }
+
+  // Hide "Persons" column on small screens — least critical data
+  .col-persons {
+    @media (max-width: 640px) { display: none; }
+  }
+
+  // Hide "Package" on very small screens
+  .col-package {
+    @media (max-width: 480px) { display: none; }
+  }
 }
 
 .tourist-cell {
   display: flex;
   align-items: center;
   gap: 10px;
+
+  @media (max-width: 576px) { gap: 8px; }
 }
 
 .tourist-avatar {
@@ -299,6 +406,12 @@ $text-gray: #6B7280;
     height: 100%;
     object-fit: cover;
   }
+
+  @media (max-width: 576px) {
+    width: 28px;
+    height: 28px;
+    font-size: 0.68rem;
+  }
 }
 
 .fw-600 { font-weight: 600; }
@@ -310,6 +423,12 @@ $text-gray: #6B7280;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
+  white-space: nowrap;
+
+  @media (max-width: 576px) {
+    padding: 3px 8px;
+    font-size: 0.68rem;
+  }
 }
 
 .badge-pending   { background: rgba(212,168,83,0.12);  color: #B8860B; }
@@ -324,6 +443,8 @@ $text-gray: #6B7280;
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  @media (max-width: 576px) { padding: 14px 16px; gap: 14px; }
 }
 
 .summary-row {

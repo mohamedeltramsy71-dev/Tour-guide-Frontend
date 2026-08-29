@@ -25,6 +25,9 @@ export class GuideReviews implements OnInit {
   averageRating = 0;
   totalReviews = 0;
 
+  // حفظنا الـ id عشان loadMore تستخدمه
+  private guideProfileId = 0;
+
   constructor(
     private guideService: GuideService,
     private reviewService: ReviewService
@@ -39,7 +42,8 @@ export class GuideReviews implements OnInit {
       next: (profile: GuideProfile) => {
         this.averageRating = profile.averageRating;
         this.totalReviews = profile.totalReviews;
-        this.loadReviews(profile.id);
+        this.guideProfileId = profile.id;
+        this.loadReviews();
       },
       error: () => {
         this.error = 'Failed to load profile.';
@@ -48,9 +52,9 @@ export class GuideReviews implements OnInit {
     });
   }
 
-  loadReviews(guideProfileId: number) {
+  loadReviews() {
     this.loading = true;
-    this.reviewService.getGuideReviews(guideProfileId, this.page, this.pageSize).subscribe({
+    this.reviewService.getGuideReviews(this.guideProfileId, this.page, this.pageSize).subscribe({
       next: (data) => {
         this.reviews = data;
         this.hasMore = data.length === this.pageSize;
@@ -63,10 +67,11 @@ export class GuideReviews implements OnInit {
     });
   }
 
-  loadMore(guideProfileId: number) {
+  loadMore() {
+    if (this.loadingMore || !this.guideProfileId) return;
     this.page++;
     this.loadingMore = true;
-    this.reviewService.getGuideReviews(guideProfileId, this.page, this.pageSize).subscribe({
+    this.reviewService.getGuideReviews(this.guideProfileId, this.page, this.pageSize).subscribe({
       next: (data) => {
         this.reviews = [...this.reviews, ...data];
         this.hasMore = data.length === this.pageSize;
@@ -76,8 +81,8 @@ export class GuideReviews implements OnInit {
     });
   }
 
-  stars(rating: number): number[] {
-    return Array.from({ length: 5 }, (_, i) => i + 1);
+  stars(count: number): number[] {
+    return Array.from({ length: count }, (_, i) => i + 1);
   }
 
   ratingLabel(avg: number): string {
