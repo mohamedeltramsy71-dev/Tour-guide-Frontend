@@ -313,5 +313,41 @@ $gold:    #D4A853;
 
 .action-error { font-size:0.8rem; color:#dc2626; margin-bottom:12px; }
 
+.table-footer {
+  padding: 12px 16px;
+  border-top: 1px solid #F3F4F6;
+  background: #FAFBFC;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .table-count { font-size: 0.8rem; color: #6B7280; }
+}
+
+.pagination {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.pg-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  background: #fff;
+  color: #374151;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover:not(:disabled) { border-color: $primary; color: $primary; }
+  &.active { background: $primary; border-color: $primary; color: #fff; font-weight: 600; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
 @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
 @keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }

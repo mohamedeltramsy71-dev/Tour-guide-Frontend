@@ -15,21 +15,21 @@
   <div class="filters-bar mb-4">
     <div class="search-box">
       <i class="fas fa-search"></i>
-      <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
-             placeholder="Search landmarks…" class="search-input" />
+      <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" placeholder="Search landmarks…"
+        class="search-input" />
     </div>
 
     <select [(ngModel)]="filterCity" (change)="onFilterChange()" class="filter-select">
       <option value="">All Cities</option>
       @for (city of cities; track city.id) {
-        <option [value]="city.id">{{ city.nameEn }}</option>
+      <option [value]="city.id">{{ city.nameEn }}</option>
       }
     </select>
 
     <select [(ngModel)]="filterCategory" (change)="onFilterChange()" class="filter-select">
       <option value="">All Categories</option>
       @for (cat of categories; track cat.id) {
-        <option [value]="cat.name">{{ cat.name }}</option>
+      <option [value]="cat.name">{{ cat.name }}</option>
       }
     </select>
 
@@ -40,131 +40,143 @@
 
   <!-- Loading -->
   @if (loading) {
-    <div class="loading-state">
-      <div class="spinner-border" style="color:#C85C3A"></div>
-      <p>Loading landmarks…</p>
-    </div>
+  <div class="loading-state">
+    <div class="spinner-border" style="color:#C85C3A"></div>
+    <p>Loading landmarks…</p>
+  </div>
   }
 
   @if (error) {
-    <div class="alert alert-danger">
-      Failed to load landmarks.
-      <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadLandmarks()">Retry</button>
-    </div>
+  <div class="alert alert-danger">
+    Failed to load landmarks.
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadLandmarks()">Retry</button>
+  </div>
   }
 
   @if (!loading && !error) {
-    @if (landmarks.length === 0) {
-      <div class="empty-state">
-        <div class="empty-icon"><i class="fas fa-landmark"></i></div>
-        <h3>No landmarks found</h3>
-        <p>Add your first landmark to get started.</p>
-        <button class="btn-add mt-3" (click)="openAdd()">
-          <i class="fas fa-plus me-2"></i> Add Landmark
+  @if (landmarks.length === 0) {
+  <div class="empty-state">
+    <div class="empty-icon"><i class="fas fa-landmark"></i></div>
+    <h3>No landmarks found</h3>
+    <p>Add your first landmark to get started.</p>
+    <button class="btn-add mt-3" (click)="openAdd()">
+      <i class="fas fa-plus me-2"></i> Add Landmark
+    </button>
+  </div>
+  } @else {
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Landmark</th>
+            <th>Category</th>
+            <th>City</th>
+            <th>Entry Fee</th>
+            <th>Rating</th>
+            <th>Images</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (lm of landmarks; track lm.id) {
+          <tr>
+
+            <td data-label="Landmark">
+              <div class="landmark-cell">
+                @if (getThumb(lm)) {
+                <img [src]="getThumb(lm)!" [alt]="lm.nameEn" class="landmark-thumb" />
+                } @else {
+                <div class="landmark-thumb-placeholder">
+                  <i class="fas fa-landmark"></i>
+                </div>
+                }
+                <div>
+                  <span class="landmark-name">{{ lm.nameEn }}</span>
+                  <span class="landmark-name-ar">{{ lm.nameAr }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td data-label="Category">
+              <span class="category-badge">{{ lm.category }}</span>
+            </td>
+
+            <td data-label="City" class="text-muted">{{ lm.cityName }}</td>
+
+            <td data-label="Entry Fee">
+              <span [class.fee-free]="lm.entryFee === 0" [class.fee-paid]="lm.entryFee > 0">
+                {{ formatFee(lm.entryFee) }}
+              </span>
+            </td>
+
+            <td data-label="Rating">
+              <span class="rating-pill">
+                <i class="fas fa-star"></i> {{ lm.averageRating | number:'1.1-1' }}
+              </span>
+            </td>
+
+            <td data-label="Images">
+              <span class="img-count">
+                <i class="fas fa-images me-1"></i>{{ lm.images.length }}
+              </span>
+            </td>
+
+            <td data-label="Actions">
+              <div class="action-btns">
+                <button class="btn-action btn-edit" (click)="openEdit(lm)" title="Edit">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <button class="btn-action btn-delete" (click)="openDelete(lm)" title="Delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <span class="table-count">{{ totalCount }} landmark(s)</span>
+
+      @if (totalPages > 1) {
+      <div class="pagination">
+        <button class="pg-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        @for (p of pages; track p) {
+        <button class="pg-btn" [class.active]="p === currentPage" (click)="goToPage(p)">
+          {{ p }}
+        </button>
+        }
+        <button class="pg-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+          <i class="fas fa-chevron-right"></i>
         </button>
       </div>
-    } @else {
-      <div class="table-card">
-        <div class="table-responsive">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Landmark</th>
-                <th>Category</th>
-                <th>City</th>
-                <th>Entry Fee</th>
-                <th>Rating</th>
-                <th>Images</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (lm of landmarks; track lm.id) {
-                <tr>
+      }
+    </div>
 
-                  <td data-label="Landmark">
-                    <div class="landmark-cell">
-                      @if (getThumb(lm)) {
-                        <img [src]="getThumb(lm)!" [alt]="lm.nameEn" class="landmark-thumb" />
-                      } @else {
-                        <div class="landmark-thumb-placeholder">
-                          <i class="fas fa-landmark"></i>
-                        </div>
-                      }
-                      <div>
-                        <span class="landmark-name">{{ lm.nameEn }}</span>
-                        <span class="landmark-name-ar">{{ lm.nameAr }}</span>
-                      </div>
-                    </div>
-                  </td>
+    <!-- ══ ADD / EDIT MODAL ══ -->
+    @if (modalMode === 'add' || modalMode === 'edit') {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal-box modal-lg" (click)="$event.stopPropagation()">
 
-                  <td data-label="Category">
-                    <span class="category-badge">{{ lm.category }}</span>
-                  </td>
-
-                  <td data-label="City" class="text-muted">{{ lm.cityName }}</td>
-
-                  <td data-label="Entry Fee">
-                    <span [class.fee-free]="lm.entryFee === 0" [class.fee-paid]="lm.entryFee > 0">
-                      {{ formatFee(lm.entryFee) }}
-                    </span>
-                  </td>
-
-                  <td data-label="Rating">
-                    <span class="rating-pill">
-                      <i class="fas fa-star"></i> {{ lm.averageRating | number:'1.1-1' }}
-                    </span>
-                  </td>
-
-                  <td data-label="Images">
-                    <span class="img-count">
-                      <i class="fas fa-images me-1"></i>{{ lm.images.length }}
-                    </span>
-                  </td>
-
-                  <td data-label="Actions">
-                    <div class="action-btns">
-                      <button class="btn-action btn-edit" (click)="openEdit(lm)" title="Edit">
-                        <i class="fas fa-pen"></i>
-                      </button>
-                      <button class="btn-action btn-delete" (click)="openDelete(lm)" title="Delete">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                    </div>
-                  </td>
-
-                </tr>
-              }
-            </tbody>
-          </table>
+        <div class="modal-header-row">
+          <h3 class="modal-title">{{ modalMode === 'add' ? 'Add Landmark' : 'Edit Landmark' }}</h3>
+          <button class="modal-close" (click)="closeModal()"><i class="fas fa-times"></i></button>
         </div>
-        <div class="table-footer">
-          <span class="table-count">{{ landmarks.length }} landmark(s)</span>
-        </div>
-      </div>
-    }
-  }
 
-</div>
-
-<!-- ══ ADD / EDIT MODAL ══ -->
-@if (modalMode === 'add' || modalMode === 'edit') {
-  <div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-box modal-lg" (click)="$event.stopPropagation()">
-
-      <div class="modal-header-row">
-        <h3 class="modal-title">{{ modalMode === 'add' ? 'Add Landmark' : 'Edit Landmark' }}</h3>
-        <button class="modal-close" (click)="closeModal()"><i class="fas fa-times"></i></button>
-      </div>
-
-      @if (formSuccess) {
+        @if (formSuccess) {
         <div class="modal-success">
-          <i class="fas fa-check-circle"></i><p>{{ formSuccess }}</p>
+          <i class="fas fa-check-circle"></i>
+          <p>{{ formSuccess }}</p>
         </div>
-      } @else {
+        } @else {
 
         @if (formError) {
-          <div class="alert alert-danger mb-3">{{ formError }}</div>
+        <div class="alert alert-danger mb-3">{{ formError }}</div>
         }
 
         <div class="form-grid">
@@ -181,7 +193,7 @@
             <select [(ngModel)]="form.category" class="form-ctrl">
               <option value="">Select category</option>
               @for (cat of categories; track cat.id) {
-                <option [value]="cat.name">{{ cat.name }}</option>
+              <option [value]="cat.name">{{ cat.name }}</option>
               }
             </select>
           </div>
@@ -190,7 +202,7 @@
             <select [(ngModel)]="form.cityId" class="form-ctrl">
               <option [value]="null">Select city</option>
               @for (city of cities; track city.id) {
-                <option [value]="city.id">{{ city.nameEn }}</option>
+              <option [value]="city.id">{{ city.nameEn }}</option>
               }
             </select>
           </div>
@@ -204,13 +216,14 @@
           </div>
           <div class="form-group form-full">
             <label>Description</label>
-            <textarea [(ngModel)]="form.description" rows="3" placeholder="Brief description…" class="form-ctrl"></textarea>
+            <textarea [(ngModel)]="form.description" rows="3" placeholder="Brief description…"
+              class="form-ctrl"></textarea>
           </div>
           <div class="form-group form-full">
             <label>{{ modalMode === 'add' ? 'Upload Image' : 'Upload New Image' }}</label>
             <div class="upload-area">
               @if (imagePreview) {
-                <img [src]="imagePreview" alt="preview" class="img-preview" />
+              <img [src]="imagePreview" alt="preview" class="img-preview" />
               }
               <input type="file" accept="image/*" (change)="onFileChange($event)" class="file-input" id="lm-img" />
               <label for="lm-img" class="upload-label">
@@ -228,20 +241,21 @@
             {{ modalMode === 'add' ? 'Create' : 'Save Changes' }}
           </button>
         </div>
-      }
+        }
+      </div>
     </div>
-  </div>
-}
+    }
 
-<!-- ══ DELETE MODAL ══ -->
-@if (modalMode === 'delete' && selectedLandmark) {
-  <div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-box" (click)="$event.stopPropagation()">
-      @if (formSuccess) {
+    <!-- ══ DELETE MODAL ══ -->
+    @if (modalMode === 'delete' && selectedLandmark) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal-box" (click)="$event.stopPropagation()">
+        @if (formSuccess) {
         <div class="modal-success">
-          <i class="fas fa-check-circle"></i><p>{{ formSuccess }}</p>
+          <i class="fas fa-check-circle"></i>
+          <p>{{ formSuccess }}</p>
         </div>
-      } @else {
+        } @else {
         <div class="modal-icon icon-danger"><i class="fas fa-trash"></i></div>
         <h3 class="modal-title">Delete Landmark</h3>
         <p class="modal-body">
@@ -256,7 +270,7 @@
             Delete
           </button>
         </div>
-      }
+        }
+      </div>
     </div>
-  </div>
-}
+    }

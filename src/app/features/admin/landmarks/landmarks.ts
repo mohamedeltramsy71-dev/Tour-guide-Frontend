@@ -43,11 +43,20 @@ interface CategoryDto {
   styleUrls: ['./landmarks.scss'],
 })
 export class AdminLandmarksComponent implements OnInit {
+  allLandmarks: LandmarkDto[] = [];
   landmarks: LandmarkDto[] = [];
   cities: City[] = [];
   categories: CategoryDto[] = [];
   loading = true;
   error = false;
+
+  // Pagination
+  currentPage = 1;
+  pageSize = 100;
+
+  get totalCount(): number { return this.allLandmarks.length; }
+  get totalPages(): number { return Math.ceil(this.totalCount / this.pageSize); }
+  get pages(): number[] { return Array.from({ length: this.totalPages }, (_, i) => i + 1); }
 
   // Filters
   searchTerm = '';
@@ -70,7 +79,7 @@ export class AdminLandmarksComponent implements OnInit {
   constructor(
     private api: ApiService,
     private cityService: CityService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadLandmarks();
@@ -82,32 +91,49 @@ export class AdminLandmarksComponent implements OnInit {
     return { nameAr: '', nameEn: '', description: '', location: '', entryFee: 0, category: '', cityId: null };
   }
 
-  // ── Load ──────────────────────────────────────────────────────────────────
+  // ── Load ─────────────────────────────────────────────────────────────────
 
   loadLandmarks(): void {
     this.loading = true;
     this.error = false;
-    let params = new HttpParams().set('pageSize', 100);
+    let params = new HttpParams().set('pageSize', 1000);
     if (this.filterCity) params = params.set('cityId', this.filterCity);
     if (this.filterCategory) params = params.set('category', this.filterCategory);
     if (this.searchTerm) params = params.set('search', this.searchTerm);
+
     this.api.get<LandmarkDto[]>('landmarks', { params }).subscribe({
-      next: (data) => { this.landmarks = data; this.loading = false; },
+      next: (data) => {
+        this.allLandmarks = data;
+        this.currentPage = 1;
+        this.updatePage();
+        this.loading = false;
+      },
       error: () => { this.error = true; this.loading = false; },
     });
+  }
+
+  updatePage(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.landmarks = this.allLandmarks.slice(start, start + this.pageSize);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePage();
   }
 
   loadCities(): void {
     this.cityService.getCities(1, 100).subscribe({
       next: (data) => this.cities = data,
-      error: () => { },
+      error: () => {},
     });
   }
 
   loadCategories(): void {
     this.api.get<CategoryDto[]>('categories').subscribe({
       next: (data) => this.categories = data,
-      error: () => { },
+      error: () => {},
     });
   }
 
@@ -148,7 +174,7 @@ export class AdminLandmarksComponent implements OnInit {
     this.imageFile = null; this.imagePreview = null;
   }
 
-  // ── Image ────────────────────────────────────────────────────────────────
+  // ── Image ─────────────────────────────────────────────────────────────────
 
   onFileChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
