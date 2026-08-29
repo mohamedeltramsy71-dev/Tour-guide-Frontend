@@ -12,7 +12,9 @@
   </div>
 
   <!-- Toast -->
-  <div class="toast-msg" *ngIf="successMsg">{{ successMsg }}</div>
+  <div class="toast-msg" *ngIf="successMsg" [class.toast-error]="isErrorToast">
+    {{ successMsg }}
+  </div>
 
   <!-- Filter Tabs -->
   <div class="filter-tabs">

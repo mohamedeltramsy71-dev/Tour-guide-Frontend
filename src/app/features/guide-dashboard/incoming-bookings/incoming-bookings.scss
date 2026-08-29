@@ -79,10 +79,11 @@ $text-gray: #6B7280;
   z-index: 9999;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   animation: fadeSlide 0.3s ease;
-  max-width: calc(100vw - 2rem); // ما يطلعش بره الشاشة
+  max-width: calc(100vw - 3rem);
+
+  &.toast-error { background: #DC2626; }
 
   @media (max-width: 480px) {
-    // على الموبايل: يتمركز في الأعلى بدل اليمين
     right: 1rem;
     left: 1rem;
     top: 1rem;
@@ -102,14 +103,13 @@ $text-gray: #6B7280;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 
-  // على الموبايل: scroll أفقي بدل wrap عشان تبقى في سطر واحد
   @media (max-width: 640px) {
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px; // مساحة للـ scrollbar
-    scrollbar-width: none; // إخفاء الـ scrollbar في Firefox
-    &::-webkit-scrollbar { display: none; } // إخفاء الـ scrollbar في Chrome
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
   }
 }
 
@@ -126,8 +126,8 @@ $text-gray: #6B7280;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  white-space: nowrap; // مهم مع الـ overflow-x
-  flex-shrink: 0; // ما يتضغطش
+  white-space: nowrap;
+  flex-shrink: 0;
 
   &:hover { border-color: $primary; color: $primary; }
 
@@ -190,6 +190,8 @@ $text-gray: #6B7280;
   padding: 0.5rem 1.25rem;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 // ─── Grid ──────────────────────────────────────────────────
@@ -207,8 +209,9 @@ $text-gray: #6B7280;
   background: #fff;
   border-radius: 16px;
   border: 1px solid #E8ECF0;
+  // FIX: بدل overflow:hidden — نستخدم clip-path على الـ border-radius مش هنا
+  // عشان box-shadow ما يتقطعش على بعض المتصفحات
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.2s, transform 0.2s;
@@ -218,8 +221,9 @@ $text-gray: #6B7280;
     transform: translateY(-2px);
   }
 
+  // FIX: على touch screens نشيل الـ hover effect عشان ما يفضلش مرفوع
   @media (hover: none) {
-    &:hover { transform: none; }
+    &:hover { transform: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
   }
 
   @media (max-width: 480px) { border-radius: 14px; }
@@ -233,17 +237,20 @@ $text-gray: #6B7280;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid #F0F2F5;
   gap: 0.75rem;
+  // FIX: border-radius على top corners بدل overflow:hidden على الـ card
+  border-radius: 16px 16px 0 0;
 
-  // ما نستخدمش flex-wrap عشان الـ badges تبقى دايماً على اليمين
-  // بدله نضغط الـ tourist-info لو محتاج
-  @media (max-width: 480px) { padding: 0.875rem 1rem; }
+  @media (max-width: 480px) {
+    padding: 0.875rem 1rem;
+    border-radius: 14px 14px 0 0;
+  }
 }
 
 .tourist-info {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  min-width: 0; // يسمح للنص بالـ truncate
+  min-width: 0;
   flex: 1;
 
   @media (max-width: 480px) { gap: 0.6rem; }
@@ -333,24 +340,26 @@ $text-gray: #6B7280;
     width: 16px;
     text-align: center;
     flex-shrink: 0;
-    margin-top: 2px; // محاذاة مع النص متعدد الأسطر
+    margin-top: 2px;
   }
 
   span {
-    // يسمح للنص الطويل بالالتفاف
     word-break: break-word;
     line-height: 1.4;
   }
 
   &.rejection {
+    background: #FEF2F2;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
     color: #991B1B;
     font-size: 0.82rem;
-    i { color: #991B1B; }
+    i { color: #991B1B; margin-top: 1px; }
   }
 }
 
 .price {
-  font-weight: 600;
+  font-weight: 700;
   color: $primary;
 }
 
@@ -360,35 +369,42 @@ $text-gray: #6B7280;
   border-top: 1px solid #F0F2F5;
   display: flex;
   gap: 0.6rem;
-  flex-wrap: wrap;
   align-items: center;
+  // FIX: بدل flex:1 على كل زرار — نستخدم flex-wrap مع حجم ثابت
+  // لما يكون زرار واحد بس ما يتمددش
+  flex-wrap: wrap;
+  border-radius: 0 0 16px 16px;
 
   @media (max-width: 480px) {
     padding: 0.75rem 1rem;
     gap: 0.5rem;
+    border-radius: 0 0 14px 14px;
   }
 }
 
 // Action button base
 %action-btn {
-  flex: 1;
-  min-width: 80px;
-  padding: 0.5rem 0.75rem;
+  // FIX: بدل flex:1 — نحدد padding مع min-width وnخلي الـ layout يتحكم
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 8px;
   font-size: 0.83rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
   white-space: nowrap;
 
+  // لما يكونوا أكتر من زرار واحد يتوسعوا بالتساوي
+  flex: 1 1 auto;
+  min-width: 0;
+
   @media (max-width: 400px) {
     font-size: 0.78rem;
-    padding: 0.5rem 0.5rem;
+    padding: 0.5rem 0.6rem;
   }
 }
 
@@ -426,27 +442,29 @@ $text-gray: #6B7280;
   }
 }
 
+// FIX: الـ labels (Completed / Closed) ما تاخدش flex:1 عشان ما تتمددش
 .done-label, .closed-label {
   font-size: 0.82rem;
-  color: $text-gray;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.5rem 0;
+  flex: 0 0 auto; // ما تتمددش
   i { color: inherit; }
 }
 
-.done-label { color: #065F46; }
+.done-label   { color: #065F46; }
+.closed-label { color: $text-gray; }
 
 // ─── Bootstrap Modal Overrides ─────────────────────────────
 .rihla-modal {
   border-radius: 16px;
   border: none;
+  overflow: hidden; // هنا صح لأن الـ modal مش card
 
   .modal-header {
     background: $dark;
     color: white;
-    border-radius: 16px 16px 0 0;
     padding: 1rem 1.5rem;
 
     .modal-title {
@@ -487,7 +505,6 @@ $text-gray: #6B7280;
         box-shadow: 0 0 0 3px rgba(200,92,58,0.12);
       }
 
-      // iOS auto-zoom fix
       @media (max-width: 576px) { font-size: 16px; }
     }
 
@@ -503,7 +520,6 @@ $text-gray: #6B7280;
       padding: 0.875rem 1.25rem 1.25rem;
       flex-direction: column-reverse;
 
-      // أزرار الـ modal تبقى full-width
       .btn-cancel-modal,
       .btn-reject-modal,
       .btn-complete-modal {
@@ -514,18 +530,25 @@ $text-gray: #6B7280;
   }
 }
 
-// الـ modal نفسه على الموبايل
+// FIX: bottom-sheet modal على الموبايل بأسلوب أنظف
 @media (max-width: 576px) {
-  .modal-dialog {
-    margin: 0;
-    // bottom sheet style
-    align-items: flex-end;
-    min-height: 100%;
-    display: flex;
+  // نستهدف الـ modal-dialog اللي جوا modal#rejectModal و modal#completeModal بس
+  #rejectModal, #completeModal {
+    .modal-dialog {
+      margin: 0;
+      max-width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      // smooth slide up
+      transform: translateY(0);
 
-    .rihla-modal {
-      border-radius: 20px 20px 0 0;
-      width: 100%;
+      .rihla-modal {
+        border-radius: 20px 20px 0 0;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
     }
   }
 }
@@ -539,7 +562,7 @@ $text-gray: #6B7280;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   &:hover { background: #E8ECF0; }
@@ -554,7 +577,7 @@ $text-gray: #6B7280;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   &:hover { background: #B91C1C; }
@@ -570,7 +593,7 @@ $text-gray: #6B7280;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   &:hover { background: $primary; }

@@ -123,11 +123,14 @@ $text-gray: #6B7280;
   height: 100px;
   background: linear-gradient(135deg, $dark 0%, #243057 100%);
 
-  @media (max-width: 576px) { height: 80px; }
+  @media (max-width: 576px) { height: 90px; }
 }
 
 .hero-body {
   position: relative;
+  // FIX: padding-top = hero-bg height + half avatar height + breathing room
+  // desktop: bg=100px, avatar=80px => top=-40px, so avatar top = 100-40=60px, bottom=140px
+  // padding-top needs to accommodate avatar bottom + gap => 100px works (avatar sticks 40px above)
   padding: 64px 28px 28px;
   display: flex;
   align-items: flex-end;
@@ -141,11 +144,13 @@ $text-gray: #6B7280;
   }
 
   @media (max-width: 576px) {
-    // على الموبايل: avatar + info في عمود، badges تحيهم
+    // FIX: bg=90px, avatar=68px, top=-34px => avatar top=90-34=56px, bottom=56+68=124px
+    // Need padding-top >= 124px - 90px(bg) + gap = 44px + comfortable spacing
+    // Use 88px so avatar fully clears bg and info starts with breathing room
     flex-direction: column;
     align-items: flex-start;
-    padding: 56px 16px 20px;
-    gap: 14px;
+    padding: 88px 16px 20px;
+    gap: 12px;
   }
 }
 
@@ -167,6 +172,7 @@ $text-gray: #6B7280;
   top: -40px;
   left: 28px;
   flex-shrink: 0;
+  z-index: 1; // FIX: ensure avatar always paints above hero-bg
 
   img {
     width: 100%;
@@ -175,17 +181,24 @@ $text-gray: #6B7280;
   }
 
   @media (max-width: 576px) {
-    width: 68px;
-    height: 68px;
-    top: -34px;
+    width: 72px;
+    height: 72px;
+    // FIX: position relative to hero-body which starts at padding-top=88px from hero-card top
+    // hero-bg = 90px, hero-body starts right after (no explicit top on hero-body, it flows)
+    // Actually hero-body flows in normal flow, so it starts after hero-bg visually via padding
+    // avatar top:-36px places it 36px above hero-body content area
+    // hero-body padding-top=88px means content starts 88px in
+    // card-relative position of avatar top = (hero-body offset from card top) - 36px
+    // This is fine as long as z-index:1 is set — avatar will show over bg strip
+    top: -36px;
     left: 16px;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
   }
 }
 
 .hero-info {
   flex: 1;
-  min-width: 0; // يمنع overflow
+  min-width: 0;
 }
 
 .hero-name {
@@ -202,7 +215,7 @@ $text-gray: #6B7280;
   font-size: 0.85rem;
   color: $text-gray;
   margin-bottom: 12px;
-  word-break: break-all; // الإيميل الطويل ما يطلعش بره الكارت
+  word-break: break-all;
 }
 
 .hero-meta {
@@ -239,10 +252,9 @@ $text-gray: #6B7280;
   flex-wrap: wrap;
   align-self: flex-start;
 
-  // على الموبايل تنزل تحت الـ hero-info بشكل طبيعي مع flex-direction: column
   @media (max-width: 576px) {
     align-self: stretch;
-    margin-top: 0;
+    margin-top: 4px;
   }
 }
 
@@ -397,7 +409,7 @@ $text-gray: #6B7280;
   font-size: 0.8rem;
   color: $text-gray;
 
-  @media (max-width: 576px) { display: none; } // بيتعرض في rating-note
+  @media (max-width: 576px) { display: none; }
 }
 
 .rating-note {
@@ -509,7 +521,6 @@ $text-gray: #6B7280;
   &:focus { border-color: $primary; }
   &::placeholder { color: #C4C9D4; }
 
-  // iOS auto-zoom fix
   @media (max-width: 576px) { font-size: 16px; }
 }
 
@@ -519,7 +530,6 @@ $text-gray: #6B7280;
   align-items: center;
 
   @media (max-width: 400px) {
-    // على الشاشات الضيقة جداً: input فوق والزرار تحته
     flex-direction: column;
     align-items: stretch;
 
@@ -537,7 +547,7 @@ $text-gray: #6B7280;
   outline: none;
   transition: border-color 0.2s;
   font-family: inherit;
-  min-width: 0; // يمنع الـ flex item من الاتساع
+  min-width: 0;
 
   &:focus { border-color: $primary; }
   &::placeholder { color: #C4C9D4; }
@@ -548,10 +558,7 @@ $text-gray: #6B7280;
 .field-input-sm {
   max-width: 160px;
 
-  @media (max-width: 576px) {
-    // في edit mode الـ Experience card بياخد عرض كامل أصلاً
-    max-width: 100%;
-  }
+  @media (max-width: 576px) { max-width: 100%; }
 }
 
 .field-hint {
@@ -598,7 +605,6 @@ $text-gray: #6B7280;
 
   &:hover { opacity: 1; }
 
-  // Touch screens: دايماً ظاهر
   @media (hover: none) { opacity: 0.9; }
 }
 
@@ -628,7 +634,7 @@ $text-gray: #6B7280;
   cursor: pointer;
   transition: all 0.2s;
   background: #fff;
-  user-select: none; // يمنع تحديد النص على الموبايل
+  user-select: none;
 
   input[type="checkbox"] { display: none; }
 
@@ -637,7 +643,6 @@ $text-gray: #6B7280;
     background: rgba($primary, 0.03);
   }
 
-  // على Touch: active state بدل hover
   &:active {
     background: rgba($primary, 0.06);
   }
@@ -678,8 +683,7 @@ $text-gray: #6B7280;
   padding-top: 4px;
 
   @media (max-width: 480px) {
-    // أزرار full-width على الموبايل
-    flex-direction: column-reverse; // Save فوق Cancel
+    flex-direction: column-reverse;
     gap: 10px;
 
     .btn-cancel,

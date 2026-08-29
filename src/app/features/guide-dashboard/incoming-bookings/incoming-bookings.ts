@@ -32,12 +32,15 @@ export class IncomingBookingsComponent implements OnInit {
   completeTarget: BookingDto | null = null;
   completeLoading = false;
 
+  // FIX: فصلنا successMsg عن isError عشان الـ toast يعرف لونه
   successMsg = '';
+  isErrorToast = false;
+  private toastTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private bookingService: BookingService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.load();
@@ -84,9 +87,9 @@ export class IncomingBookingsComponent implements OnInit {
       next: () => {
         booking.status = 'Confirmed';
         this.applyFilter();
-        this.showSuccess('Booking accepted successfully.');
+        this.showToast('Booking accepted successfully.');
       },
-      error: () => this.showSuccess('Failed to accept booking.', true)
+      error: () => this.showToast('Failed to accept booking.', true)
     });
   }
 
@@ -109,7 +112,7 @@ export class IncomingBookingsComponent implements OnInit {
         this.selectedBooking!.rejectionReason = this.rejectReason;
         this.applyFilter();
         this.closeRejectModal();
-        this.showSuccess('Booking rejected.');
+        this.showToast('Booking rejected.');
       },
       error: () => {
         this.rejectError = 'Failed to reject booking.';
@@ -138,9 +141,10 @@ export class IncomingBookingsComponent implements OnInit {
         this.applyFilter();
         this.completeTarget = null;
         this.completeLoading = false;
-        this.showSuccess('Trip marked as completed.');
+        this.showToast('Trip marked as completed.');
       },
       error: () => {
+        this.showToast('Failed to mark trip as completed.', true);
         this.completeTarget = null;
         this.completeLoading = false;
       }
@@ -151,26 +155,32 @@ export class IncomingBookingsComponent implements OnInit {
     this.completeTarget = null;
   }
 
-  showSuccess(msg: string, isError = false) {
+  // FIX: showToast بيستخدم isError صح دلوقتي + بيلغي الـ timer القديم لو في toast شغال
+  showToast(msg: string, isError = false) {
+    if (this.toastTimer) clearTimeout(this.toastTimer);
     this.successMsg = msg;
-    setTimeout(() => this.successMsg = '', 3500);
+    this.isErrorToast = isError;
+    this.toastTimer = setTimeout(() => {
+      this.successMsg = '';
+      this.isErrorToast = false;
+    }, 3500);
   }
 
   statusClass(status: string): string {
-    return {
-      Pending: 'badge-pending',
+    return ({
+      Pending:   'badge-pending',
       Confirmed: 'badge-confirmed',
-      Rejected: 'badge-rejected',
+      Rejected:  'badge-rejected',
       Completed: 'badge-completed',
       Cancelled: 'badge-cancelled',
-    }[status] ?? '';
+    } as Record<string, string>)[status] ?? '';
   }
 
   paymentClass(status: string): string {
-    return {
-      Paid: 'badge-paid',
+    return ({
+      Paid:   'badge-paid',
       Unpaid: 'badge-unpaid',
       Failed: 'badge-failed',
-    }[status] ?? '';
+    } as Record<string, string>)[status] ?? '';
   }
 }
