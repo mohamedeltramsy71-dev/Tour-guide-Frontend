@@ -138,6 +138,10 @@
             margin-top: 2px;
             flex-shrink: 0;
         }
+
+        span {
+            word-break: break-word;
+        }
     }
 }
 
@@ -157,7 +161,7 @@
     border-radius: 12px;
     padding: 8px 12px;
     width: fit-content;
-    min-width: 160px;
+    min-width: 140px;
     transition: border-color 0.2s ease;
 
     &:hover {
@@ -202,6 +206,7 @@
 
         span {
             color: var(--primary);
+            word-break: normal;
         }
     }
 
@@ -221,4 +226,86 @@
 
 .footer-bottom-sub {
     font-size: 0.82rem;
+}
+
+// ─── Mobile ──────────────────────────────────────────────────
+@media (max-width: 767.98px) {
+
+    .footer-main {
+        padding: 40px 0 32px;
+    }
+
+    .footer-tagline {
+        max-width: 100%;
+        font-size: 0.87rem;
+    }
+
+    .footer-heading {
+        font-size: 0.9rem;
+        margin-bottom: 14px;
+    }
+
+    .footer-links {
+        a {
+            font-size: 0.85rem;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+    }
+
+    .footer-contact {
+        li {
+            font-size: 0.82rem;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        span {
+            word-break: break-all;
+        }
+    }
+
+    .payment-badges {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .payment-badge {
+        flex: 1;
+        min-width: 120px;
+        max-width: calc(50% - 5px);
+        width: auto;
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding: 16px 0;
+        font-size: 0.82rem;
+
+        .footer-bottom-sub {
+            font-size: 0.8rem;
+        }
+    }
+}
+
+// ─── Small Mobile (< 400px) ──────────────────────────────────
+@media (max-width: 399.98px) {
+
+    .social-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+
+    .payment-badge {
+        min-width: 100px;
+
+        .badge-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 0.75rem;
+        }
+    }
 }

@@ -1,8 +1,12 @@
+$primary: #C85C3A;
+
+// ─── Active Link ───────────────────────────────────────────
 .active-link {
   color: var(--primary) !important;
   font-weight: 600;
 }
 
+// ─── Avatar Circle ─────────────────────────────────────────
 .avatar-circle {
   width: 30px;
   height: 30px;
@@ -13,8 +17,11 @@
   justify-content: center;
   color: #fff;
   font-size: 0.75rem;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
+// ─── Desktop Dropdown ──────────────────────────────────────
 .dropdown-menu {
   min-width: 200px;
 
@@ -28,5 +35,74 @@
     &:hover {
       background-color: rgba(200, 92, 58, 0.08);
     }
+  }
+}
+
+// ─── Mobile: avatar button (outside collapse) ──────────────
+.mobile-avatar-btn {
+  background-color: rgba(200, 92, 58, 0.08);
+  border: 1px solid rgba(200, 92, 58, 0.2);
+  border-radius: 10px;
+  padding: 6px 10px;
+  transition: background 0.2s;
+
+  &:hover, &:focus, &:active {
+    background-color: rgba(200, 92, 58, 0.14);
+    box-shadow: none;
+    outline: none;
+  }
+}
+
+.mobile-chevron {
+  font-size: 0.65rem;
+  color: var(--text-gray);
+}
+
+// Mobile dropdown: name header (read-only label)
+.dropdown-header-user {
+  line-height: 1.3;
+
+  span {
+    font-size: 0.9rem;
+    color: var(--dark);
+    word-break: break-word;
+  }
+}
+
+// ─── Collapse: nav links spacing ───────────────────────────
+@media (max-width: 991.98px) {
+  // Add a subtle top border to separate nav links from brand
+  .navbar-collapse {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  // Nav links: full width, slight indent
+  .navbar-nav {
+    width: 100%;
+    gap: 2px !important;
+
+    .nav-link {
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: background 0.2s;
+
+      &:hover {
+        background-color: rgba(200, 92, 58, 0.06);
+      }
+
+      &.active-link {
+        background-color: rgba(200, 92, 58, 0.08);
+      }
+    }
+  }
+
+  // Guest auth buttons at bottom of collapse: already full-width via w-100
+  // Just add top separator
+  .d-lg-none.flex-column {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding-top: 12px;
+    margin-top: 4px !important;
   }
 }
