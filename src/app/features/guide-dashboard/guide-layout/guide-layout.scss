@@ -70,6 +70,15 @@ $transition:        0.25s ease;
   overflow: hidden;
   transition: opacity $transition, width $transition;
 
+  // بس على desktop
+  @media (min-width: 992px) {
+    .admin-shell.collapsed & {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+    }
+  }
+
   .admin-shell.collapsed & {
     opacity: 0;
     width: 0;
@@ -121,9 +130,13 @@ $transition:        0.25s ease;
   }
 
   .link-label {
-    transition: opacity $transition;
+  transition: opacity $transition;
+
+  // الـ collapse بيخفي النص بس على desktop
+  @media (min-width: 992px) {
     .admin-shell.collapsed & { opacity: 0; }
   }
+}
 
   &:hover {
     background: rgba(255,255,255,0.06);
@@ -157,6 +170,13 @@ $transition:        0.25s ease;
   display: flex;
   flex-direction: column;
   transition: margin-left $transition;
+
+  // الـ collapse بيغير الـ margin بس على desktop
+  @media (min-width: 992px) {
+    .admin-shell.collapsed & {
+      margin-left: $sidebar-collapsed;
+    }
+  }
 
   .admin-shell.collapsed & {
     margin-left: $sidebar-collapsed;
