@@ -46,6 +46,9 @@ export class GuidePackages implements OnInit {
   editForm: UpdatePackageRequest = this.emptyEdit();
   landmarkForm: AddLandmarkToPackageRequest = { landmarkId: 0, dayNumber: 1, order: 1 };
 
+  // ← جديد: المدينة المختارة لفلترة اللاند ماركس
+  selectedLandmarkCityId = 0;
+
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
@@ -142,6 +145,8 @@ export class GuidePackages implements OnInit {
   openLandmarks(pkg: Package): void {
     this.selectedPkg = pkg;
     this.landmarkForm = { landmarkId: 0, dayNumber: 1, order: 1 };
+    // ← reset فلتر المدينة عند فتح الـ modal
+    this.selectedLandmarkCityId = 0;
     this.clearAlerts();
     this.modal = 'landmarks';
   }
@@ -151,6 +156,7 @@ export class GuidePackages implements OnInit {
     this.selectedPkg = null;
     this.selectedFile = null;
     this.previewUrl = null;
+    this.selectedLandmarkCityId = 0;
   }
 
   // ── CRUD ──────────────────────────────────────────────────
@@ -280,9 +286,19 @@ export class GuidePackages implements OnInit {
       next: () => {
         const lm = this.landmarks.find((l: Landmark) => l.id === this.landmarkForm.landmarkId);
         if (lm && this.selectedPkg) {
-          const newLm = { landmarkId: lm.id, nameEn: lm.nameEn, dayNumber: this.landmarkForm.dayNumber, order: this.landmarkForm.order };
-          this.selectedPkg = { ...this.selectedPkg, landmarks: [...this.selectedPkg.landmarks, newLm] };
-          this.packages = this.packages.map((p: Package) => p.id === this.selectedPkg!.id ? this.selectedPkg! : p);
+          const newLm = {
+            landmarkId: lm.id,
+            nameEn: lm.nameEn,
+            dayNumber: this.landmarkForm.dayNumber,
+            order: this.landmarkForm.order,
+          };
+          this.selectedPkg = {
+            ...this.selectedPkg,
+            landmarks: [...this.selectedPkg.landmarks, newLm],
+          };
+          this.packages = this.packages.map((p: Package) =>
+            p.id === this.selectedPkg!.id ? this.selectedPkg! : p
+          );
         }
         this.landmarkForm = { landmarkId: 0, dayNumber: 1, order: 1 };
         this.saving = false;
@@ -304,7 +320,9 @@ export class GuidePackages implements OnInit {
             ...this.selectedPkg,
             landmarks: this.selectedPkg.landmarks.filter(l => l.landmarkId !== landmarkId),
           };
-          this.packages = this.packages.map((p: Package) => p.id === this.selectedPkg!.id ? this.selectedPkg! : p);
+          this.packages = this.packages.map((p: Package) =>
+            p.id === this.selectedPkg!.id ? this.selectedPkg! : p
+          );
         }
       },
       error: () => { this.errorMsg = 'Failed to remove landmark.'; },
@@ -320,8 +338,13 @@ export class GuidePackages implements OnInit {
     return this.selectedPkg?.landmarks.some(l => l.landmarkId === landmarkId) ?? false;
   }
 
+  // ← جديد: فلترة بالمدينة المختارة + إزالة المضافة مسبقاً
   availableLandmarks(): Landmark[] {
-    return this.landmarks.filter((l: Landmark) => !this.isLandmarkAlreadyAdded(l.id));
+    return this.landmarks.filter((l: Landmark) => {
+      if (this.isLandmarkAlreadyAdded(l.id)) return false;
+      if (this.selectedLandmarkCityId === 0) return true;
+      return l.cityId === this.selectedLandmarkCityId;
+    });
   }
 
   private showSuccess(msg: string): void {

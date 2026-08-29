@@ -11,7 +11,7 @@ export class CityService {
 
   constructor(private api: ApiService) {}
 
-  getCities(page = 1, pageSize = 10): Observable<City[]> {
+  getCities(page = 1, pageSize = 1000): Observable<City[]> {
     const params = new HttpParams()
       .set('page', page)
       .set('pageSize', pageSize);
