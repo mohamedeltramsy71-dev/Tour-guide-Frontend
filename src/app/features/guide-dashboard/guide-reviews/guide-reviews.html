@@ -87,7 +87,7 @@
 
     <!-- Load More -->
     <div class="load-more" *ngIf="hasMore && reviews.length > 0">
-      <button class="btn-load-more" (click)="loadMore(0)" [disabled]="loadingMore">
+      <button class="btn-load-more" (click)="loadMore()" [disabled]="loadingMore">
         <span *ngIf="loadingMore" class="spinner-border spinner-border-sm me-1"></span>
         {{ loadingMore ? 'Loading...' : 'Load More' }}
       </button>
