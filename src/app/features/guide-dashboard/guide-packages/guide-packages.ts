@@ -56,7 +56,7 @@ export class GuidePackages implements OnInit {
     private guideService: GuideService,
     private cityService: CityService,
     private landmarkService: LandmarkService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadGuideAndPackages();
@@ -91,17 +91,19 @@ export class GuidePackages implements OnInit {
     });
   }
 
+  // ✅ بيجيب الـ 20 مدينة كلها
   loadCities(): void {
-    this.cityService.getCities().subscribe({
+    this.cityService.getCities(1, 100).subscribe({
       next: (data: City[]) => { this.cities = data; },
-      error: () => {},
+      error: () => { },
     });
   }
 
+  // ✅ بيجيب كل الـ landmarks
   loadLandmarks(): void {
-    this.landmarkService.getLandmarks().subscribe({
+    this.landmarkService.getLandmarks({ pageSize: 1000 }).subscribe({
       next: (data: Landmark[]) => { this.landmarks = data; },
-      error: () => {},
+      error: () => { },
     });
   }
 
@@ -280,9 +282,19 @@ export class GuidePackages implements OnInit {
       next: () => {
         const lm = this.landmarks.find((l: Landmark) => l.id === this.landmarkForm.landmarkId);
         if (lm && this.selectedPkg) {
-          const newLm = { landmarkId: lm.id, nameEn: lm.nameEn, dayNumber: this.landmarkForm.dayNumber, order: this.landmarkForm.order };
-          this.selectedPkg = { ...this.selectedPkg, landmarks: [...this.selectedPkg.landmarks, newLm] };
-          this.packages = this.packages.map((p: Package) => p.id === this.selectedPkg!.id ? this.selectedPkg! : p);
+          const newLm = {
+            landmarkId: lm.id,
+            nameEn: lm.nameEn,
+            dayNumber: this.landmarkForm.dayNumber,
+            order: this.landmarkForm.order
+          };
+          this.selectedPkg = {
+            ...this.selectedPkg,
+            landmarks: [...this.selectedPkg.landmarks, newLm]
+          };
+          this.packages = this.packages.map((p: Package) =>
+            p.id === this.selectedPkg!.id ? this.selectedPkg! : p
+          );
         }
         this.landmarkForm = { landmarkId: 0, dayNumber: 1, order: 1 };
         this.saving = false;
@@ -304,7 +316,9 @@ export class GuidePackages implements OnInit {
             ...this.selectedPkg,
             landmarks: this.selectedPkg.landmarks.filter(l => l.landmarkId !== landmarkId),
           };
-          this.packages = this.packages.map((p: Package) => p.id === this.selectedPkg!.id ? this.selectedPkg! : p);
+          this.packages = this.packages.map((p: Package) =>
+            p.id === this.selectedPkg!.id ? this.selectedPkg! : p
+          );
         }
       },
       error: () => { this.errorMsg = 'Failed to remove landmark.'; },
@@ -320,8 +334,12 @@ export class GuidePackages implements OnInit {
     return this.selectedPkg?.landmarks.some(l => l.landmarkId === landmarkId) ?? false;
   }
 
+  // ✅ بيفلتر الـ landmarks بالـ city بتاعة الـ package
   availableLandmarks(): Landmark[] {
-    return this.landmarks.filter((l: Landmark) => !this.isLandmarkAlreadyAdded(l.id));
+    return this.landmarks.filter((l: Landmark) =>
+      !this.isLandmarkAlreadyAdded(l.id) &&
+      (!this.selectedPkg?.cityNameEn || l.cityNameEn === this.selectedPkg.cityNameEn)
+    );
   }
 
   private showSuccess(msg: string): void {

@@ -36,7 +36,7 @@ export class GuideProfile implements OnInit {
   constructor(
     private guideService: GuideService,
     private cityService: CityService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadProfile();
@@ -58,9 +58,9 @@ export class GuideProfile implements OnInit {
   }
 
   loadCities(): void {
-    this.cityService.getCities().subscribe({
+    this.cityService.getCities(1, 100).subscribe({
       next: (data: City[]) => { this.cities = data; },
-      error: () => {},
+      error: () => { },
     });
   }
 
