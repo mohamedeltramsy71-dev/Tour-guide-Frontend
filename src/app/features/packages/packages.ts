@@ -21,15 +21,15 @@ export class Packages implements OnInit {
   isLoading = true;
   currentSlide = 0;
 
-  // Filters
   searchQuery = '';
   selectedCity = '';
   selectedDuration = '';
   maxPrice = '';
 
-  // Compare
   compareList: Package[] = [];
   showCompare = false;
+
+  private readonly baseUrl = 'https://tourguidee.runasp.net/';
 
   durations = [
     { label: '1 Day', value: '1' },
@@ -102,6 +102,13 @@ export class Packages implements OnInit {
     }
 
     this.filteredPackages = result;
+  }
+
+  getImageUrl(pkg: Package): string {
+    const img = pkg.images?.[0];
+    if (!img?.imageUrl) return 'images/hero.jpg';
+    if (img.imageUrl.startsWith('http')) return img.imageUrl;
+    return this.baseUrl + img.imageUrl;
   }
 
   onFilterChange() {
