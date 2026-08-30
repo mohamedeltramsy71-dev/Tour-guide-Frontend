@@ -157,4 +157,13 @@ export class PackageDetailComponent implements OnInit {
     this.successMsg.set('');
     this.errorMsg.set('');
   }
+  private readonly baseUrl = 'https://tourguidee.runasp.net/';
+
+  getImageUrl(index: number): string {
+    const images = this.package()?.images ?? [];
+    const img = images[index];
+    if (!img?.imageUrl) return 'images/hero.jpg';
+    if (img.imageUrl.startsWith('http')) return img.imageUrl;
+    return this.baseUrl + img.imageUrl;
+  }
 }

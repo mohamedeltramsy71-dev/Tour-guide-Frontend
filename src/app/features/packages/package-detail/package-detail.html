@@ -13,7 +13,7 @@
       <!-- Main Image -->
       <div class="hero-image">
         @if (package()!.images.length > 0) {
-          <img [src]="package()!.images[activeImage()]" [alt]="package()!.title" />
+          <img [src]="getImageUrl(activeImage())" [alt]="package()!.title" />
         } @else {
           <div class="no-image">
             <i class="fas fa-image"></i>
