@@ -33,7 +33,7 @@
         <div class="thumbnails">
           @for (img of package()!.images; track $index) {
             <div class="thumb" [class.active]="activeImage() === $index" (click)="setActiveImage($index)">
-              <img [src]="img" alt="thumbnail" />
+              <img [src]="getImageUrl($index)" alt="thumbnail" />
             </div>
           }
         </div>
