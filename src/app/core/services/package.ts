@@ -14,6 +14,10 @@ export class PackageService {
   // ── Public ────────────────────────────────────────────────
   getPackages(params?: Record<string, string>): Observable<Package[]> {
     let httpParams = new HttpParams();
+
+    // ← جيب كل الباكيدجات من السيرفر
+    httpParams = httpParams.set('pageSize', '1000');
+
     if (params) {
       Object.entries(params).forEach(([k, v]) => { if (v) httpParams = httpParams.set(k, v); });
     }
