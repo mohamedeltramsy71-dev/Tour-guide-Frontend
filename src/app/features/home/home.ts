@@ -30,7 +30,7 @@ export class Home implements OnInit {
     private packageService: PackageService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // ✅ لو admin يروح للـ dashboard أوتوماتيك
@@ -55,5 +55,13 @@ export class Home implements OnInit {
     if (this.selectedPersons) params['persons'] = this.selectedPersons;
 
     this.router.navigate([`/${this.activeTab}`], { queryParams: params });
+  }
+  
+  private readonly baseUrl = 'https://tourguidee.runasp.net/';
+  getPackageImage(pkg: Package): string {
+    const img = pkg.images?.[0];
+    if (!img?.imageUrl) return 'images/hero.jpg';
+    if (img.imageUrl.startsWith('http')) return img.imageUrl;
+    return this.baseUrl + img.imageUrl;
   }
 }

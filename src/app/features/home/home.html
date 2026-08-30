@@ -191,7 +191,7 @@
     <div class="row g-4">
       <div class="col-md-3" *ngFor="let pkg of featuredPackages">
         <div class="card border-0 shadow-sm rounded-3 overflow-hidden h-100" [routerLink]="['/packages', pkg.id]" style="cursor:pointer;">
-          <img [src]="pkg.images[0]" [alt]="pkg.title" class="card-img-top" style="height: 200px; object-fit: cover;">
+          <img [src]="getPackageImage(pkg)" [alt]="pkg.title" class="card-img-top" style="height: 200px; object-fit: cover;">
           <div class="card-body">
             <h6 class="fw-bold mb-1">{{ pkg.title }}</h6>
             <p class="text-muted small mb-2"><i class="fas fa-clock me-1"></i>{{ pkg.durationDays }} Days</p>

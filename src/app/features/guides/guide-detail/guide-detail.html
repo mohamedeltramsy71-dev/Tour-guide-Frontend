@@ -171,7 +171,7 @@
                   <a [routerLink]="['/packages', pkg.id]" class="gd-pkg-card">
                     <div class="gd-pkg-img-wrap">
                       @if (pkg.images.length) {
-                        <img [src]="pkg.images[0]" [alt]="pkg.title" class="gd-pkg-img" />
+                        <img [src]="getPackageImage(pkg)" [alt]="pkg.title" class="gd-pkg-img" />
                       } @else {
                         <div class="gd-pkg-img gd-pkg-img--placeholder">
                           <i class="fas fa-image"></i>

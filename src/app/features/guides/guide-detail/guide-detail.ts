@@ -126,4 +126,12 @@ export class GuideDetailComponent implements OnInit {
             .toUpperCase()
             .slice(0, 2);
     }
+    private readonly baseUrl = 'https://tourguidee.runasp.net/';
+
+    getPackageImage(pkg: Package): string {
+        const img = pkg.images?.[0];
+        if (!img?.imageUrl) return 'images/hero.jpg';
+        if (img.imageUrl.startsWith('http')) return img.imageUrl;
+        return this.baseUrl + img.imageUrl;
+    }
 }
