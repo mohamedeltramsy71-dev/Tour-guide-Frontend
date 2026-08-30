@@ -9,6 +9,7 @@
 - **Styling:** Bootstrap 5 + SCSS + FontAwesome
 - **API:** https://tourguidee.runasp.net/api
 - **Local:** http://localhost:4200
+- **Live:** https://tour-guide-frontend-sable.vercel.app/
 - **Language:** English only (no Arabic text in UI)
 - **File naming:** without `.component` (e.g. `profile.ts` not `profile.component.ts`)
 
@@ -32,7 +33,7 @@ rihla/
 │   │   │   ├── models/
 │   │   │   │   ├── city.ts                                 ✅
 │   │   │   │   ├── landmark.ts                             ✅
-│   │   │   │   ├── package.ts                              ✅ (+ Create/Update/AddLandmark + guideProfileId)
+│   │   │   │   ├── package.ts                              ✅ (+ Create/Update/AddLandmark + guideProfileId + PackageImageDto)
 │   │   │   │   ├── guide.ts                                ✅ (+ UpdateGuideRequest)
 │   │   │   │   ├── auth.ts                                 ✅ (+ userId + avatarUrl?)
 │   │   │   │   ├── admin.ts                                ✅
@@ -46,9 +47,9 @@ rihla/
 │   │   │   └── services/
 │   │   │       ├── api.ts                                  ✅ (+ putForm)
 │   │   │       ├── auth.ts                                 ✅ (+ updateAvatarInStorage)
-│   │   │       ├── city.ts                                 ✅ (+ getCityById)
+│   │   │       ├── city.ts                                 ✅ (+ getCityById, pageSize default 1000)
 │   │   │       ├── landmark.ts                             ✅ (+ getLandmarkById)
-│   │   │       ├── package.ts                              ✅ (+ CRUD + toggle + images + landmarks + getById)
+│   │   │       ├── package.ts                              ✅ (+ CRUD + toggle + images + landmarks + getById + pageSize 1000)
 │   │   │       ├── guide.ts                                ✅
 │   │   │       ├── admin.service.ts                        ✅
 │   │   │       ├── booking.service.ts                      ✅ (Tourist + Guide + Admin + getBookingById)
@@ -62,7 +63,7 @@ rihla/
 │   │   │   ├── navbar/                                     ✅ (+ Custom Trip link in Tourist dropdown)
 │   │   │   └── footer/                                     ✅ (+ Social links + Payment badges)
 │   │   ├── features/
-│   │   │   ├── home/                                       ✅
+│   │   │   ├── home/                                       ✅ (+ getPackageImage() fix)
 │   │   │   ├── about/                                      ✅ (Hero + What is Rihla + How It Works + Why Choose Us + CTA)
 │   │   │   ├── cities/
 │   │   │   │   ├── cities/                                 ✅
@@ -71,11 +72,11 @@ rihla/
 │   │   │   │   ├── landmarks/                              ✅
 │   │   │   │   └── landmark-detail/                        ✅
 │   │   │   ├── packages/
-│   │   │   │   ├── packages/                               ✅
-│   │   │   │   └── package-detail/                         ✅
+│   │   │   │   ├── packages/                               ✅ (+ pagination 100/page + pageSize 1000 fix)
+│   │   │   │   └── package-detail/                         ✅ (+ getImageUrl() fix)
 │   │   │   ├── guides/
 │   │   │   │   ├── guides/                                 ✅
-│   │   │   │   └── guide-detail/                           ✅
+│   │   │   │   └── guide-detail/                           ✅ (+ getPackageImage() fix)
 │   │   │   ├── auth/
 │   │   │   │   ├── login/                                  ✅
 │   │   │   │   ├── register-select/                        ✅
@@ -104,7 +105,7 @@ rihla/
 │   │   │   │   ├── guide-layout/                           ✅ (+ bell badge + chat badge + SignalR)
 │   │   │   │   ├── guide-dashboard/                        ✅
 │   │   │   │   ├── guide-profile/                          ✅
-│   │   │   │   ├── guide-packages/                         ✅
+│   │   │   │   ├── guide-packages/                         ✅ (+ city filter fix + landmark cityId cast fix)
 │   │   │   │   ├── incoming-bookings/                      ✅ (+ Chat with Tourist button)
 │   │   │   │   └── guide-reviews/                          ✅
 │   │   │   └── admin/
@@ -316,7 +317,7 @@ rihla/
 - payment-callback.ts: reads success query param من Paymob redirect
 - My Bookings: Pay Now button → navigate to /payment?bookingId=X (Confirmed + Unpaid فقط)
 - Paymob Dashboard: رابط الويب هوك = https://tourguidee.runasp.net/api/payments/webhook
-- Paymob Dashboard: الرابط (Response URL) = http://localhost:4200/payment/callback
+- Paymob Dashboard: الرابط (Response URL) = https://tour-guide-frontend-sable.vercel.app/payment/callback
 - environment.ts: paymobIframeId: '1069052'
 - Test Card: 5123456789012346 | 12/27 | 123
 
@@ -360,7 +361,7 @@ rihla/
 - Path: features/packages/package-detail/
 - Route: /packages/:id
 - GET /api/packages/{id} → packageService.getPackageById(id)
-- Image gallery: main image + thumbnails
+- Image gallery: main image + thumbnails — getImageUrl(index) fix (PackageImageDto)
 - Package info: title, city, duration, maxPersons, avgRating stars
 - Description block
 - Day-by-day itinerary: landmarks grouped by dayNumber, sorted by order
@@ -376,6 +377,7 @@ rihla/
 - Hero: avatar (initials fallback), name, rating, experience, availability
 - Left: About, Languages, Cities, Rating Breakdown bars
 - Right tabs: Packages grid | Reviews list
+- getPackageImage() fix → pkg.images[0].imageUrl (PackageImageDto)
 - Back link → /guides
 
 ### About Page ✅
@@ -472,6 +474,9 @@ rihla/
 - Full CRUD + toggle + images + landmarks
 - 5 modals: Create / Edit / Delete / Images / Landmarks
 - Image delete enabled after Backend fix (PackageImageDto with Id)
+- Landmarks modal: Filter by City dropdown → filters landmarks by cityId
+- selectedLandmarkCityId fix: +this.selectedLandmarkCityId (cast string → number)
+- city.service.ts: pageSize default → 1000 (جيب كل المدن)
 
 ### Guide — Incoming Bookings ✅
 - Filter tabs: All / Pending / Confirmed / Rejected / Completed
@@ -542,9 +547,10 @@ UpdateGuideRequest { bio?, languages[], experienceYears, coveredCityIds[] }
 
 ### package.ts
 ```
+PackageImageDto { id: number, imageUrl: string }
 Package { id, title, description, price, durationDays, maxPersons, isActive,
           averageRating, cityNameEn, guideId, guideProfileId, guideName,
-          images: string[], landmarks: PackageLandmark[] }
+          images: PackageImageDto[], landmarks: PackageLandmark[] }
 PackageLandmark { landmarkId, nameEn, dayNumber, order }
 CreatePackageRequest { title, description?, price, durationDays, maxPersons, cityId }
 UpdatePackageRequest { title, description?, price, durationDays, maxPersons }
@@ -599,6 +605,29 @@ putForm<T>(endpoint, FormData)     — PUT image upload (avatar)
 delete<T>(endpoint)
 ```
 
+### city.ts
+```
+getCities(page = 1, pageSize = 1000)   GET /api/cities  ← pageSize 1000 جيب كل المدن
+getCityById(id)                         GET /api/cities/{id}
+getTrendingCities()                     GET /api/cities/trending
+createCity(data) / updateCity / deleteCity
+```
+
+### package.ts service
+```
+getPackages(params?)             GET /api/packages  ← pageSize: 1000 مضاف افتراضياً
+getPackageById(id)               GET /api/packages/{id}
+comparePackages(ids)             GET /api/packages/compare
+createPackage(request)           POST /api/packages
+updatePackage(id, request)       PUT /api/packages/{id}
+deletePackage(id)                DELETE /api/packages/{id}
+togglePackage(id)                PUT /api/packages/{id}/toggle
+uploadImage(packageId, file)     POST /api/packages/{id}/images
+deleteImage(packageId, imageId)  DELETE /api/packages/{id}/images/{imageId}
+addLandmark(packageId, req)      POST /api/packages/{id}/landmarks
+removeLandmark(pkgId, lmId)      DELETE /api/packages/{id}/landmarks/{landmarkId}
+```
+
 ### custom-trip.service.ts
 ```
 calculatePrice(request)      POST /api/custom-trips/calculate → CalculatePriceResponse
@@ -625,10 +654,7 @@ markConversationAsRead(bookingId)           PUT /api/chat/{bookingId}/read
 setActiveConversation(bookingId?)           — set active + join group (phantom support)
 decrementUnreadCount(amount)                — local update للـ chatUnreadCount$ badge
 isUserOnline(userId)                        — check online status
-conversations$                              BehaviorSubject<ConversationDto[]>
-messages$                                   BehaviorSubject<MessageDto[]>
-onlineUsers$                                BehaviorSubject<string[]>
-chatUnreadCount$                            BehaviorSubject<number>
+conversations$, messages$, onlineUsers$, chatUnreadCount$  BehaviorSubjects
 ```
 
 ### booking.service.ts
@@ -667,24 +693,23 @@ loadNotifications(page?)  GET /api/notifications
 loadUnreadCount()         GET /api/notifications/count
 markAsRead(id)            PUT /api/notifications/{id}/read
 markAllAsRead()           PUT /api/notifications/read-all
-notifications$            BehaviorSubject<NotificationDto[]>
-unreadCount$              BehaviorSubject<number>
+notifications$, unreadCount$  BehaviorSubjects
 ```
 
-### package.ts service
-```
-getPackages(params?)             GET /api/packages
-getPackageById(id)               GET /api/packages/{id}
-comparePackages(ids)             GET /api/packages/compare
-createPackage(request)           POST /api/packages
-updatePackage(id, request)       PUT /api/packages/{id}
-deletePackage(id)                DELETE /api/packages/{id}
-togglePackage(id)                PUT /api/packages/{id}/toggle
-uploadImage(packageId, file)     POST /api/packages/{id}/images
-deleteImage(packageId, imageId)  DELETE /api/packages/{id}/images/{imageId}
-addLandmark(packageId, req)      POST /api/packages/{id}/landmarks
-removeLandmark(pkgId, lmId)     DELETE /api/packages/{id}/landmarks/{landmarkId}
-```
+---
+
+## 🔧 Bug Fixes Applied (Post-Launch)
+
+| Bug | Fix |
+|-----|-----|
+| المدن بتظهر 10 بس في packages filter | city.service.ts: pageSize default → 1000 |
+| الباكيدجات بتظهر 10 بس في packages page | package.service.ts: pageSize: '1000' مضاف في getPackages() |
+| صور الباكيدجات مش بتظهر في Home | home.ts: getPackageImage() — pkg.images[0].imageUrl بدل pkg.images[0] |
+| صور الباكيدجات مش بتظهر في Guide Detail | guide-detail.ts: getPackageImage() — نفس الـ fix |
+| صور الباكيدجات مش بتظهر في Package Detail | package-detail.ts: getImageUrl(index) — img.imageUrl بدل img مباشرة |
+| اللاند ماركس مش بتتفلتر بالمدينة | guide-packages.ts: selectedLandmarkCityId + availableLandmarks() filter |
+| فلتر اللاند ماركس بالمدينة مش شغال | +this.selectedLandmarkCityId (cast string → number في المقارنة) |
+| Packages pagination مش شغالة | packages.ts: pagedPackages + applyPagination() — 100 per page |
 
 ---
 
@@ -734,40 +759,6 @@ removeLandmark(pkgId, lmId)     DELETE /api/packages/{id}/landmarks/{landmarkId}
 
 ---
 
-## ⚠️ Production Checklist
-
-```json
-// appsettings.json
-"Frontend": { "BaseUrl": "https://your-app.vercel.app" }
-```
-
-```csharp
-// Program.cs CORS
-WithOrigins("http://localhost:4200", "https://your-app.vercel.app")
-```
-
-```
-// Google Console
-Authorized JavaScript origins: add Vercel URL
-Authorized redirect URIs: add Vercel URL
-```
-
-```typescript
-// environment.ts — update for production
-hubUrl: 'https://tourguidee.runasp.net'
-paymobIframeId: '1069052'
-
-// EmailService.cs → SendNewMessageEmailAsync
-// غير href="http://localhost:4200/chat" → href="https://your-app.vercel.app/chat"
-```
-
-```
-// Paymob Dashboard → تكاملات الدفع → الرابط (Response URL)
-// Local:      http://localhost:4200/payment/callback
-// Production: https://your-app.vercel.app/payment/callback
-```
-
----
 
 ## 🧪 Test Data
 
@@ -793,3 +784,4 @@ CVV         : 123
 ---
 
 > 🎉 **Project Complete — 42/42 pages & features done!**
+> 🚀 **Live at: https://tour-guide-frontend-sable.vercel.app/**
