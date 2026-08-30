@@ -35,7 +35,8 @@
 </section>
 
 <!-- Filters -->
-<section class="py-3 sticky-top" style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 100;">
+<section class="py-3 sticky-top"
+  style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 100;">
   <div class="container">
     <div class="d-flex gap-3 align-items-center flex-wrap">
 
@@ -95,7 +96,9 @@
     </div>
 
     <div class="row g-4" *ngIf="!isLoading">
-      <div class="col-md-4 col-lg-3" *ngFor="let pkg of filteredPackages">
+
+      <!-- ← pagedPackages بدل filteredPackages -->
+      <div class="col-md-4 col-lg-3" *ngFor="let pkg of pagedPackages">
         <div class="package-card card border-0 shadow-sm rounded-4 overflow-hidden h-100">
 
           <!-- Image -->
@@ -170,6 +173,45 @@
           Clear Filters
         </button>
       </div>
+
     </div>
+
+    <!-- ── Pagination ──────────────────────────────────────── -->
+    <div class="d-flex justify-content-center align-items-center gap-2 mt-5 flex-wrap"
+      *ngIf="!isLoading && totalPages > 1">
+
+      <!-- Previous -->
+      <button class="pagination-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <!-- Page Numbers -->
+      <ng-container *ngFor="let page of pages">
+        <!-- عرض 3 صفحات حوالين الصفحة الحالية بس -->
+        <button class="pagination-btn" [class.pagination-active]="page === currentPage"
+          (click)="goToPage(page)"
+          *ngIf="page === 1 || page === totalPages || (page >= currentPage - 2 && page <= currentPage + 2)">
+          {{ page }}
+        </button>
+        <!-- dots -->
+        <span class="pagination-dots"
+          *ngIf="(page === currentPage - 3 && currentPage - 3 > 1) || (page === currentPage + 3 && currentPage + 3 < totalPages)">
+          ...
+        </span>
+      </ng-container>
+
+      <!-- Next -->
+      <button class="pagination-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <!-- Info -->
+      <span class="text-muted small ms-2">
+        Page {{ currentPage }} of {{ totalPages }}
+        · showing {{ pagedPackages.length }} of {{ filteredPackages.length }}
+      </span>
+
+    </div>
+
   </div>
 </section>

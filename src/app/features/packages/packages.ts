@@ -17,6 +17,7 @@ export class Packages implements OnInit {
 
   packages: Package[] = [];
   filteredPackages: Package[] = [];
+  pagedPackages: Package[] = [];
   cities: City[] = [];
   isLoading = true;
   currentSlide = 0;
@@ -28,6 +29,12 @@ export class Packages implements OnInit {
 
   compareList: Package[] = [];
   showCompare = false;
+
+  // ── Pagination ─────────────────────────────────────────
+  currentPage = 1;
+  readonly pageSize = 100;
+  totalPages = 1;
+  pages: number[] = [];
 
   private readonly baseUrl = 'https://tourguidee.runasp.net/';
 
@@ -79,6 +86,7 @@ export class Packages implements OnInit {
 
     this.packageService.getPackages(params).subscribe(data => {
       this.packages = data;
+      this.currentPage = 1;
       this.applyLocalFilters();
       this.isLoading = false;
     });
@@ -102,6 +110,22 @@ export class Packages implements OnInit {
     }
 
     this.filteredPackages = result;
+    this.currentPage = 1;
+    this.applyPagination();
+  }
+
+  applyPagination() {
+    this.totalPages = Math.ceil(this.filteredPackages.length / this.pageSize) || 1;
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.pagedPackages = this.filteredPackages.slice(start, start + this.pageSize);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.applyPagination();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   getImageUrl(pkg: Package): string {
