@@ -25,7 +25,7 @@ export class ChatService implements OnDestroy {
 
   private activeBookingId: number | null = null;
 
-  constructor(private api: ApiService, private auth: AuthService) {}
+  constructor(private api: ApiService, private auth: AuthService) { }
 
   // ── SignalR ───────────────────────────────────────────────
 
@@ -59,10 +59,16 @@ export class ChatService implements OnDestroy {
   }
 
   private registerHandlers(): void {
+    // ✅ استبدل الـ handler ده بالكامل
     this.hub.on('ReceiveMessage', (message: MessageDto) => {
+      console.log('🔴 ReceiveMessage fired:', {
+        messageBookingId: message.bookingId,
+        activeBookingId: this.activeBookingId,
+        match: message.bookingId === this.activeBookingId
+      });
+
       if (message.bookingId === this.activeBookingId) {
         const current = this.messagesSubject.value;
-        // ✅ Duplicate check شغال صح — نفس الـ id من الـ DB
         const alreadyExists = current.some(m => m.id === message.id && message.id > 0);
         if (!alreadyExists) {
           this.messagesSubject.next([...current, message]);
@@ -123,6 +129,7 @@ export class ChatService implements OnDestroy {
   // ── helper مركزي للـ JoinBookingGroup ───────────────────
   private invokeJoinGroup(bookingId: number): void {
     this.hub.invoke('JoinBookingGroup', bookingId)
+      .then(() => console.log('✅ Joined booking group:', bookingId))
       .catch((err: unknown) => console.error('JoinBookingGroup error:', err));
   }
 
