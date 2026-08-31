@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { ApiService } from './api';
@@ -25,12 +25,15 @@ export class ChatService implements OnDestroy {
 
   private activeBookingId: number | null = null;
 
-  constructor(private api: ApiService, private auth: AuthService) { }
+  constructor(
+    private api: ApiService,
+    private auth: AuthService,
+    private zone: NgZone
+  ) { }
 
   // ── SignalR ───────────────────────────────────────────────
 
   startConnection(): void {
-    // ✅ Fix 1: مش بس نشوف لو hub موجود — لازم نشوف الـ state
     if (
       this.hub &&
       this.hub.state !== signalR.HubConnectionState.Disconnected
@@ -41,7 +44,6 @@ export class ChatService implements OnDestroy {
 
     this.hub = new signalR.HubConnectionBuilder()
       .withUrl(`${environment.hubUrl}/hubs/chat`, {
-        // ✅ Fix 2: دايماً بنجيب fresh token مش بنحفظه
         accessTokenFactory: () => this.auth.getToken() ?? ''
       })
       .withAutomaticReconnect()
@@ -59,43 +61,55 @@ export class ChatService implements OnDestroy {
   }
 
   private registerHandlers(): void {
-    // ✅ استبدل الـ handler ده بالكامل
     this.hub.on('ReceiveMessage', (message: MessageDto) => {
-      console.log('🔴 ReceiveMessage fired:', {
-        messageBookingId: message.bookingId,
-        activeBookingId: this.activeBookingId,
-        match: message.bookingId === this.activeBookingId
-      });
+      this.zone.run(() => {
+        console.log('🔴 ReceiveMessage fired:', {
+          messageBookingId: message.bookingId,
+          activeBookingId: this.activeBookingId,
+          match: message.bookingId === this.activeBookingId
+        });
 
-      if (message.bookingId === this.activeBookingId) {
-        const current = this.messagesSubject.value;
-        const alreadyExists = current.some(m => m.id === message.id && message.id > 0);
-        if (!alreadyExists) {
-          this.messagesSubject.next([...current, message]);
+        if (message.bookingId === this.activeBookingId) {
+          const current = this.messagesSubject.value;
+          const alreadyExists = current.some(m => m.id === message.id && message.id > 0);
+          if (!alreadyExists) {
+            this.messagesSubject.next([...current, message]);
+          }
         }
-      }
-      this.updateConversationLastMessage(message);
+        this.updateConversationLastMessage(message);
+      });
     });
 
-    // ✅ Fix 5: Handler جديد للـ MessageRead من الـ Backend
     this.hub.on('MessageRead', (messageId: number) => {
-      const updated = this.messagesSubject.value.map(m =>
-        m.id === messageId ? { ...m, isRead: true } : m
-      );
-      this.messagesSubject.next(updated);
+      this.zone.run(() => {
+        const updated = this.messagesSubject.value.map(m =>
+          m.id === messageId ? { ...m, isRead: true } : m
+        );
+        this.messagesSubject.next(updated);
+      });
     });
 
     this.hub.on('UserOnline', (userId: string) => {
-      const current = this.onlineUsersSubject.value;
-      if (!current.includes(userId)) {
-        this.onlineUsersSubject.next([...current, userId]);
-      }
+      this.zone.run(() => {
+        const current = this.onlineUsersSubject.value;
+        if (!current.includes(userId)) {
+          this.onlineUsersSubject.next([...current, userId]);
+        }
+      });
     });
 
     this.hub.on('UserOffline', (userId: string) => {
-      this.onlineUsersSubject.next(
-        this.onlineUsersSubject.value.filter(id => id !== userId)
-      );
+      this.zone.run(() => {
+        this.onlineUsersSubject.next(
+          this.onlineUsersSubject.value.filter(id => id !== userId)
+        );
+      });
+    });
+
+    this.hub.on('OnlineUsersList', (userIds: string[]) => {
+      this.zone.run(() => {
+        this.onlineUsersSubject.next(userIds);
+      });
     });
 
     this.hub.onreconnected(() => {
@@ -111,7 +125,6 @@ export class ChatService implements OnDestroy {
 
   sendMessage(receiverId: string, content: string, bookingId: number): void {
     if (this.hub?.state === signalR.HubConnectionState.Connected) {
-      // ✅ Fix 3: مش بننادي JoinBookingGroup هنا — بتنادى مرة واحدة في loadMessages
       this.hub.invoke('SendMessage', receiverId, content, bookingId)
         .catch((err: unknown) => console.error('Send error:', err));
     } else {
@@ -162,7 +175,7 @@ export class ChatService implements OnDestroy {
 
   loadMessages(bookingId: number, page = 1, pageSize = 50): void {
     this.activeBookingId = bookingId;
-    this.joinBookingGroup(bookingId); // ✅ بتنادى هنا بس مرة واحدة
+    this.joinBookingGroup(bookingId);
 
     const params = new HttpParams()
       .set('page', page)
@@ -203,7 +216,6 @@ export class ChatService implements OnDestroy {
     const currentUserId = this.auth.getUserFromStorage()?.userId ?? '';
     const isIncoming = message.senderId !== currentUserId;
 
-    // ✅ Fix 4: بنزود الـ unread بس لو الرسالة مش من الـ conversation اللي إنت شايفه دلوقتي
     const isActiveConversation = message.bookingId === this.activeBookingId;
 
     if (isIncoming && !isActiveConversation) {
