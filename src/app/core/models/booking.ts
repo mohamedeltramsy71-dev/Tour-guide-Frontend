@@ -12,6 +12,7 @@ export interface BookingDto {
   touristName: string;
   touristAvatar?: string;
   guideProfileId: number;
+  guideUserId: string; 
   guideName: string;
   guideAvatar?: string;
   packageId?: number;

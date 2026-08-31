@@ -1,4 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, signal } from '@angular/core';
+import {
+  Component, OnInit, OnDestroy, ViewChild,
+  ElementRef, AfterViewChecked, signal
+} from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -26,7 +29,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   loadingConversations = true;
   loadingMessages = false;
 
-  /** Controls mobile panel visibility — true = show messages, false = show sidebar */
   showMessages = signal(false);
 
   private subs: Subscription[] = [];
@@ -39,7 +41,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     private bookingService: BookingService,
     private location: Location,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.currentUserId = this.auth.getUserFromStorage()?.userId ?? '';
@@ -81,12 +83,19 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   private loadPhantomConversation(bookingId: number): void {
     this.bookingService.getBookingById(bookingId).subscribe({
       next: (booking) => {
-        const currentUserId = this.auth.getUserFromStorage()?.userId ?? '';
-        const isTourist = booking.touristId === currentUserId;
+        const isTourist = booking.touristId === this.currentUserId;
+
+        // ✅ Fix 6: THE MAIN BUG
+        // guideProfileId ده ID الـ GuideProfile entity (رقم زي 5)
+        // إحنا محتاجين guideUserId اللي هو الـ ApplicationUser.Id (GUID)
+        // لازم الـ Booking DTO يرجع guideUserId من الـ Backend
+        const otherUserId = isTourist
+          ? (booking.guideUserId ?? booking.guideProfileId?.toString())
+          : booking.touristId;
 
         const phantom: ConversationDto = {
           bookingId: booking.id,
-          otherUserId: isTourist ? booking.guideProfileId.toString() : booking.touristId,
+          otherUserId: otherUserId,
           otherUserName: isTourist ? booking.guideName : booking.touristName,
           otherUserAvatar: isTourist ? booking.guideAvatar : booking.touristAvatar,
           lastMessage: '',
@@ -117,7 +126,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.chatService.markConversationAsRead(conv.bookingId);
   }
 
-  /** Back arrow inside chat header — returns to sidebar on mobile */
   backToSidebar(): void {
     this.showMessages.set(false);
   }
@@ -126,16 +134,12 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     const text = this.messageText.trim();
     if (!text || !this.activeConversation) return;
 
-    const bookingId = this.activeConversation.bookingId;
+    const { bookingId, otherUserId } = this.activeConversation;
 
-    this.chatService.sendMessage(
-      this.activeConversation.otherUserId,
-      text,
-      bookingId
-    );
-
+    this.chatService.sendMessage(otherUserId, text, bookingId);
     this.messageText = '';
 
+    // لو الـ conversation دي phantom (مش في الـ list)، ضيفها
     const exists = this.conversations.find(c => c.bookingId === bookingId);
     if (!exists && this.activeConversation) {
       this.conversations = [this.activeConversation, ...this.conversations];
@@ -191,12 +195,11 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   private scrollToBottom(): void {
     try {
       this.messagesEnd?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
-    } catch { }
+    } catch {}
   }
 
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe());
     this.chatService.setActiveConversation(null);
-    // مش بنوقف الـ connection — الـ Guide Layout محتاجه
   }
 }

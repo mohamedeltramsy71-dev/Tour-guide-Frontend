@@ -25,32 +25,58 @@ export class ChatService implements OnDestroy {
 
   private activeBookingId: number | null = null;
 
-  constructor(private api: ApiService, private auth: AuthService) { }
+  constructor(private api: ApiService, private auth: AuthService) {}
 
   // ── SignalR ───────────────────────────────────────────────
 
   startConnection(): void {
-    if (this.hub) return;
+    // ✅ Fix 1: مش بس نشوف لو hub موجود — لازم نشوف الـ state
+    if (
+      this.hub &&
+      this.hub.state !== signalR.HubConnectionState.Disconnected
+    ) return;
 
     const token = this.auth.getToken();
     if (!token) return;
 
     this.hub = new signalR.HubConnectionBuilder()
       .withUrl(`${environment.hubUrl}/hubs/chat`, {
-        accessTokenFactory: () => token
+        // ✅ Fix 2: دايماً بنجيب fresh token مش بنحفظه
+        accessTokenFactory: () => this.auth.getToken() ?? ''
       })
       .withAutomaticReconnect()
       .build();
 
+    this.registerHandlers();
+
+    this.hub.start()
+      .then(() => {
+        if (this.activeBookingId) {
+          this.invokeJoinGroup(this.activeBookingId);
+        }
+      })
+      .catch((err: unknown) => console.error('Chat SignalR error:', err));
+  }
+
+  private registerHandlers(): void {
     this.hub.on('ReceiveMessage', (message: MessageDto) => {
       if (message.bookingId === this.activeBookingId) {
         const current = this.messagesSubject.value;
+        // ✅ Duplicate check شغال صح — نفس الـ id من الـ DB
         const alreadyExists = current.some(m => m.id === message.id && message.id > 0);
         if (!alreadyExists) {
           this.messagesSubject.next([...current, message]);
         }
       }
       this.updateConversationLastMessage(message);
+    });
+
+    // ✅ Fix 5: Handler جديد للـ MessageRead من الـ Backend
+    this.hub.on('MessageRead', (messageId: number) => {
+      const updated = this.messagesSubject.value.map(m =>
+        m.id === messageId ? { ...m, isRead: true } : m
+      );
+      this.messagesSubject.next(updated);
     });
 
     this.hub.on('UserOnline', (userId: string) => {
@@ -68,17 +94,9 @@ export class ChatService implements OnDestroy {
 
     this.hub.onreconnected(() => {
       if (this.activeBookingId) {
-        this.joinBookingGroup(this.activeBookingId);
+        this.invokeJoinGroup(this.activeBookingId);
       }
     });
-
-    this.hub.start()
-      .then(() => {
-        if (this.activeBookingId) {
-          this.joinBookingGroup(this.activeBookingId);
-        }
-      })
-      .catch((err: unknown) => console.error('Chat SignalR error:', err));
   }
 
   stopConnection(): void {
@@ -87,8 +105,8 @@ export class ChatService implements OnDestroy {
 
   sendMessage(receiverId: string, content: string, bookingId: number): void {
     if (this.hub?.state === signalR.HubConnectionState.Connected) {
-      this.hub.invoke('JoinBookingGroup', bookingId)
-        .then(() => this.hub.invoke('SendMessage', receiverId, content, bookingId))
+      // ✅ Fix 3: مش بننادي JoinBookingGroup هنا — بتنادى مرة واحدة في loadMessages
+      this.hub.invoke('SendMessage', receiverId, content, bookingId)
         .catch((err: unknown) => console.error('Send error:', err));
     } else {
       console.warn('SignalR not connected — state:', this.hub?.state);
@@ -102,12 +120,17 @@ export class ChatService implements OnDestroy {
     }
   }
 
+  // ── helper مركزي للـ JoinBookingGroup ───────────────────
+  private invokeJoinGroup(bookingId: number): void {
+    this.hub.invoke('JoinBookingGroup', bookingId)
+      .catch((err: unknown) => console.error('JoinBookingGroup error:', err));
+  }
+
   private joinBookingGroup(bookingId: number): void {
     if (!this.hub) return;
 
     if (this.hub.state === signalR.HubConnectionState.Connected) {
-      this.hub.invoke('JoinBookingGroup', bookingId)
-        .catch((err: unknown) => console.error('JoinBookingGroup error:', err));
+      this.invokeJoinGroup(bookingId);
     } else if (
       this.hub.state === signalR.HubConnectionState.Connecting ||
       this.hub.state === signalR.HubConnectionState.Reconnecting
@@ -115,8 +138,7 @@ export class ChatService implements OnDestroy {
       const interval = setInterval(() => {
         if (this.hub.state === signalR.HubConnectionState.Connected) {
           clearInterval(interval);
-          this.hub.invoke('JoinBookingGroup', bookingId)
-            .catch((err: unknown) => console.error('JoinBookingGroup error:', err));
+          this.invokeJoinGroup(bookingId);
         }
       }, 100);
       setTimeout(() => clearInterval(interval), 5000);
@@ -133,7 +155,7 @@ export class ChatService implements OnDestroy {
 
   loadMessages(bookingId: number, page = 1, pageSize = 50): void {
     this.activeBookingId = bookingId;
-    this.joinBookingGroup(bookingId);
+    this.joinBookingGroup(bookingId); // ✅ بتنادى هنا بس مرة واحدة
 
     const params = new HttpParams()
       .set('page', page)
@@ -161,10 +183,9 @@ export class ChatService implements OnDestroy {
 
   decrementUnreadCount(amount: number): void {
     const current = this.chatUnreadCountSubject.value;
-    const newCount = Math.max(0, current - amount);
-    this.chatUnreadCountSubject.next(newCount);
+    this.chatUnreadCountSubject.next(Math.max(0, current - amount));
   }
-  
+
   markConversationAsRead(bookingId: number): void {
     this.api.put(`chat/${bookingId}/read`, {}).subscribe();
   }
@@ -175,7 +196,10 @@ export class ChatService implements OnDestroy {
     const currentUserId = this.auth.getUserFromStorage()?.userId ?? '';
     const isIncoming = message.senderId !== currentUserId;
 
-    if (isIncoming) {
+    // ✅ Fix 4: بنزود الـ unread بس لو الرسالة مش من الـ conversation اللي إنت شايفه دلوقتي
+    const isActiveConversation = message.bookingId === this.activeBookingId;
+
+    if (isIncoming && !isActiveConversation) {
       this.chatUnreadCountSubject.next(this.chatUnreadCountSubject.value + 1);
     }
 
@@ -185,7 +209,9 @@ export class ChatService implements OnDestroy {
           ...c,
           lastMessage: message.content,
           lastMessageAt: message.createdAt,
-          unreadCount: isIncoming ? c.unreadCount + 1 : c.unreadCount
+          unreadCount: isIncoming && !isActiveConversation
+            ? c.unreadCount + 1
+            : c.unreadCount
         };
       }
       return c;
