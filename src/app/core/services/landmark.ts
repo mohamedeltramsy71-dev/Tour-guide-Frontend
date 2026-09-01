@@ -10,11 +10,14 @@ export class LandmarkService {
 
   constructor(private api: ApiService) { }
 
-  getLandmarks(params?: any): Observable<Landmark[]> {
+  getLandmarks(params?: Record<string, any>): Observable<Landmark[]> {
     let query = 'landmarks';
-    const finalParams = { pageSize: 1000, ...params }; // ✅ هيجيب كل اللاند ماركس
-    const queryString = new URLSearchParams(finalParams).toString();
-    if (queryString) query += `?${queryString}`;
+    if (params) {
+      const queryString = new URLSearchParams(
+        Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)]))
+      ).toString();
+      if (queryString) query += `?${queryString}`;
+    }
     return this.api.get<Landmark[]>(query);
   }
 

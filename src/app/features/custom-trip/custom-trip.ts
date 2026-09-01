@@ -2,7 +2,6 @@ import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpParams } from '@angular/common/http';
 import { CustomTripService } from '../../core/services/custom-trip.service';
 import { CityService } from '../../core/services/city';
 import { LandmarkService } from '../../core/services/landmark';
@@ -24,38 +23,31 @@ export class CustomTripComponent implements OnInit {
   private landmarkSvc   = inject(LandmarkService);
   private router        = inject(Router);
 
-  // ── Wizard state ──────────────────────────────────
   step = signal(1);
 
-  // ── Step 1 ────────────────────────────────────────
   cities           = signal<City[]>([]);
   selectedCityId   = signal<number | null>(null);
   startDate        = signal('');
   durationDays     = signal(1);
   numberOfPersons  = signal(1);
 
-  // ── Step 2 ────────────────────────────────────────
   landmarks            = signal<Landmark[]>([]);
   selectedLandmarkIds  = signal<Set<number>>(new Set());
   landmarksLoading     = signal(false);
 
-  // ── Step 3 ────────────────────────────────────────
   availableGuides = signal<Guide[]>([]);
   selectedGuide   = signal<Guide | null>(null);
   guidesLoading   = signal(false);
 
-  // ── Step 4 ────────────────────────────────────────
   priceResult  = signal<CalculatePriceResponse | null>(null);
   priceLoading = signal(false);
 
-  // ── Submit ────────────────────────────────────────
   submitting = signal(false);
   error      = signal('');
   success    = signal(false);
 
   today = new Date().toISOString().split('T')[0];
 
-  // ── Computed ──────────────────────────────────────
   selectedCity = computed(() =>
     this.cities().find(c => c.id === this.selectedCityId()) ?? null
   );
@@ -79,7 +71,6 @@ export class CustomTripComponent implements OnInit {
   step2Valid = computed(() => this.selectedLandmarkIds().size > 0);
   step3Valid = computed(() => !!this.selectedGuide());
 
-  // ── Lifecycle ─────────────────────────────────────
   ngOnInit() {
     this.citySvc.getCities().subscribe({
       next: (data: any) => {
@@ -88,14 +79,10 @@ export class CustomTripComponent implements OnInit {
     });
   }
 
-  // ── Navigation ────────────────────────────────────
   nextStep1() {
     if (!this.step1Valid()) return;
     this.landmarksLoading.set(true);
-    const params = new HttpParams()
-      .set('cityId', this.selectedCityId()!.toString())
-      .set('pageSize', '100');
-    this.landmarkSvc.getLandmarks(params).subscribe({
+    this.landmarkSvc.getLandmarks({ cityId: this.selectedCityId(), pageSize: 100 }).subscribe({
       next: (data: any) => {
         this.landmarks.set(Array.isArray(data) ? data : (data.items ?? []));
         this.landmarksLoading.set(false);
@@ -144,7 +131,6 @@ export class CustomTripComponent implements OnInit {
     if (this.step() > 1) this.step.update(s => s - 1);
   }
 
-  // ── Actions ───────────────────────────────────────
   toggleLandmark(id: number) {
     const s = new Set(this.selectedLandmarkIds());
     s.has(id) ? s.delete(id) : s.add(id);
@@ -163,11 +149,11 @@ export class CustomTripComponent implements OnInit {
     this.submitting.set(true);
     this.error.set('');
     this.customTripSvc.createCustomTrip({
-      landmarkIds:    [...this.selectedLandmarkIds()],
-      guideProfileId: this.selectedGuide()!.guideProfileId,
-      startDate:      this.startDate(),
+      landmarkIds:     [...this.selectedLandmarkIds()],
+      guideProfileId:  this.selectedGuide()!.guideProfileId,
+      startDate:       this.startDate(),
       numberOfPersons: this.numberOfPersons(),
-      durationDays:   this.durationDays()
+      durationDays:    this.durationDays()
     }).subscribe({
       next: () => {
         this.success.set(true);
@@ -181,7 +167,6 @@ export class CustomTripComponent implements OnInit {
     });
   }
 
-  // ── Helpers ───────────────────────────────────────
   starsArr = [0, 1, 2, 3, 4];
 
   getInitials(name: string): string {
