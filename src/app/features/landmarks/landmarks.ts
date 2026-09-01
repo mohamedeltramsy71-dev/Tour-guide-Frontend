@@ -104,7 +104,7 @@ export class Landmarks implements OnInit {
   loadLandmarks() {
     this.isLoading = true;
 
-    const params: any = {};
+    const params: any = { pageSize: 1000 };
     if (this.selectedCity)     params['cityId']   = this.selectedCity;
     if (this.selectedCategory) params['category'] = this.selectedCategory;
     if (this.searchQuery)      params['search']   = this.searchQuery;
