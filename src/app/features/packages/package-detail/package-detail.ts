@@ -5,7 +5,7 @@ import { PackageService } from '../../../core/services/package';
 import { BookingService } from '../../../core/services/booking.service';
 import { AuthService } from '../../../core/services/auth';
 import { Package } from '../../../core/models/package';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-package-detail',
@@ -31,7 +31,7 @@ export class PackageDetailComponent implements OnInit {
   errorMsg = signal('');
 
   bookingForm = this.fb.group({
-    startDate: ['', Validators.required],
+    startDate: ['', [Validators.required, this.futureDateValidator()]],
     numberOfPersons: [1, [Validators.required, Validators.min(1)]]
   });
 
@@ -76,6 +76,21 @@ export class PackageDetailComponent implements OnInit {
 
   getDayRange(): number[] {
     return Array.from({ length: this.maxDay }, (_, i) => i + 1);
+  }
+
+  private futureDateValidator() {
+    return (control: AbstractControl) => {
+      if (!control.value) return null;
+      const today = new Date().toISOString().split('T')[0];
+      return control.value >= today ? null : { pastDate: true };
+    };
+  }
+
+  onStartDateChange(value: string) {
+    const today = new Date().toISOString().split('T')[0];
+    if (value < today) {
+      this.bookingForm.get('startDate')?.setValue(today);
+    }
   }
 
   ngOnInit() {
@@ -157,6 +172,7 @@ export class PackageDetailComponent implements OnInit {
     this.successMsg.set('');
     this.errorMsg.set('');
   }
+
   private readonly baseUrl = 'https://tourguidee.runasp.net/';
 
   getImageUrl(index: number): string {

@@ -146,10 +146,14 @@
                     class="form-control"
                     formControlName="startDate"
                     [min]="today"
+                    (change)="onStartDateChange($any($event.target).value)"
                     [class.is-invalid]="bookingForm.get('startDate')?.invalid && bookingForm.get('startDate')?.touched"
                   />
                   @if (bookingForm.get('startDate')?.touched && bookingForm.get('startDate')?.hasError('required')) {
                     <div class="invalid-feedback">Start date is required</div>
+                  }
+                  @if (bookingForm.get('startDate')?.touched && bookingForm.get('startDate')?.hasError('pastDate')) {
+                    <div class="invalid-feedback">Start date cannot be in the past</div>
                   }
                 </div>
                 <div class="mb-3">

@@ -46,7 +46,9 @@ export class CustomTripComponent implements OnInit {
   error      = signal('');
   success    = signal(false);
 
-  today = new Date().toISOString().split('T')[0];
+  get today(): string {
+    return new Date().toISOString().split('T')[0];
+  }
 
   selectedCity = computed(() =>
     this.cities().find(c => c.id === this.selectedCityId()) ?? null
@@ -63,10 +65,12 @@ export class CustomTripComponent implements OnInit {
     this.landmarks().filter(l => this.selectedLandmarkIds().has(l.id))
   );
 
-  step1Valid = computed(() =>
-    !!this.selectedCityId() && !!this.startDate() &&
-    this.durationDays() >= 1 && this.numberOfPersons() >= 1
-  );
+  step1Valid = computed(() => {
+    if (!this.selectedCityId() || !this.startDate()) return false;
+    if (this.durationDays() < 1 || this.numberOfPersons() < 1) return false;
+    const today = new Date().toISOString().split('T')[0];
+    return this.startDate() >= today;
+  });
 
   step2Valid = computed(() => this.selectedLandmarkIds().size > 0);
   step3Valid = computed(() => !!this.selectedGuide());
@@ -77,6 +81,11 @@ export class CustomTripComponent implements OnInit {
         this.cities.set(Array.isArray(data) ? data : (data.items ?? []));
       }
     });
+  }
+
+  onStartDateChange(value: string) {
+    const today = new Date().toISOString().split('T')[0];
+    this.startDate.set(value < today ? today : value);
   }
 
   nextStep1() {
